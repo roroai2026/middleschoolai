@@ -75,10 +75,24 @@
     .badge.plan-plus { background: rgba(245,158,11,0.16); color: #fcd34d; }
     .badge.plan-enterprise { background: rgba(52,211,153,0.16); color: #86efac; }
 
+    .badge.tier-free-preview {
+      background: rgba(96,165,250,0.14);
+      color: #93c5fd;
+      border: 1px solid rgba(96,165,250,0.3);
+      font-size: 0.7rem;
+    }
+    .badge.tier-plus {
+      background: rgba(245,158,11,0.16);
+      color: #fcd34d;
+      border: 1px solid rgba(245,158,11,0.35);
+      font-size: 0.7rem;
+    }
+
     .btn-sm,
     .btn-primary,
     .btn-secondary,
-    .btn-pro {
+    .btn-pro,
+    .btn-enterprise {
       border: none;
       border-radius: 999px;
       font-family: inherit;
@@ -98,7 +112,8 @@
     .btn-sm:hover,
     .btn-primary:hover,
     .btn-secondary:hover,
-    .btn-pro:hover { transform: translateY(-1px); }
+    .btn-pro:hover,
+    .btn-enterprise:hover { transform: translateY(-1px); }
 
     .btn-sm.danger {
       background: rgba(239,68,68,0.14);
@@ -340,6 +355,12 @@
       font-weight: 700;
     }
 
+    .price-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
     .plan-note {
       color: var(--muted);
       line-height: 1.6;
@@ -367,7 +388,8 @@
 
     .btn-primary,
     .btn-pro,
-    .btn-secondary {
+    .btn-secondary,
+    .btn-enterprise {
       padding: 14px 22px;
       font-size: 1rem;
       width: 100%;
@@ -386,6 +408,11 @@
 
     .btn-pro {
       background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: #fff;
+    }
+
+    .btn-enterprise {
+      background: linear-gradient(135deg, #059669, #0891b2);
       color: #fff;
     }
 
@@ -648,7 +675,8 @@
 
     .chat-input-row textarea,
     .form-group input,
-    .form-group select {
+    .form-group select,
+    .form-group textarea {
       width: 100%;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.16);
@@ -662,6 +690,11 @@
 
     .chat-input-row textarea {
       min-height: 72px;
+      resize: vertical;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
       resize: vertical;
     }
 
@@ -743,6 +776,12 @@
     .two-up {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .three-up {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
     }
 
@@ -838,6 +877,105 @@
       transform: translateY(0);
     }
 
+    .video-placeholder {
+      background: rgba(99,102,241,0.08);
+      border: 1px dashed rgba(167,139,250,0.4);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .video-placeholder .vp-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .video-placeholder .vp-title { font-weight: 900; font-size: 1.1rem; margin-bottom: 6px; color: #c4b5fd; }
+    .video-placeholder .vp-sub { color: var(--muted); font-size: 0.92rem; }
+
+    .yt-embed-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      background: #000;
+    }
+    .yt-embed-wrap iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 16px;
+    }
+
+    /* Guest blur treatment for locked module cards */
+    .module-card-locked-wrap {
+      position: relative;
+      cursor: pointer;
+    }
+    .module-card-locked-wrap .module-card {
+      filter: blur(4px);
+      opacity: 0.5;
+      pointer-events: none;
+      user-select: none;
+    }
+    .module-card-locked-wrap .lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+    .module-card-locked-wrap .lock-badge {
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 0.92rem;
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .leaderboard-section {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 48px;
+    }
+
+    .leaderboard-card {
+      border-radius: 24px;
+      border: 1px solid rgba(52,211,153,0.2);
+      background: rgba(52,211,153,0.04);
+      backdrop-filter: blur(14px);
+      padding: 28px;
+    }
+
+    .leaderboard-card h3 {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 14px;
+      color: #86efac;
+    }
+
+    .upgrade-cta-box {
+      margin-top: 18px;
+      padding: 18px 20px;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.32);
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .upgrade-cta-box p {
+      color: #fcd34d;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
     @media (max-width: 760px) {
       .auth-bar {
         justify-content: center;
@@ -845,6 +983,7 @@
       }
 
       .two-up,
+      .three-up,
       .chat-input-row {
         grid-template-columns: 1fr;
       }
@@ -883,88 +1022,124 @@
   </section>
 
   <nav>
-    <a href="#plans">💳 Plans</a>
     <a href="#modules">🧠 Modules</a>
+    <a href="#plans">💳 Plans</a>
     <a href="#facts">🤯 Facts</a>
     <a href="#final-quiz">🎮 Final Quiz</a>
     <a href="#ai-help">💬 AI Help</a>
   </nav>
 
-  <section class="section reveal" id="plans">
-    <div class="section-header">
-      <span class="emoji">💳</span>
-      <h2>Choose the Right Plan</h2>
-      <p>
-        Free is great for getting started. Plus unlocks lesson deep-dives, module quizzes, saved progress, and AI help.
-        School Enterprise adds classroom management and teacher reporting on top of everything in Plus.
-      </p>
-    </div>
-    <div class="plans-grid">
-      <div class="plan-card">
-        <div class="plan-label">Free</div>
-        <h3>Explorer Free</h3>
-        <div class="price">$0 <span>forever</span></div>
-        <p class="plan-note">
-          Best for casual learners who want the main content and one final quiz at the end.
-        </p>
-        <ul>
-          <li>All 8 module overview cards</li>
-          <li>Final quiz only</li>
-          <li>Email or Google login through Supabase</li>
-          <li>No paid lesson deep-dives</li>
-        </ul>
-        <button class="btn-primary" onclick="openSignupForPlan('free','student')">Start Free</button>
-        <!-- no payment needed for free -->
-      </div>
-      <div class="plan-card pro">
-        <div class="plan-label">Plus</div>
-        <h3>AI Explorer Plus</h3>
-        <div class="price">$2 <span>/ module</span></div>
-        <p class="plan-note">
-          Pick and choose modules. Each module unlocks a full lesson + 3-question quiz for $2/month.
-        </p>
-        <ul>
-          <li>Everything in Free</li>
-          <li>$2 per module per month</li>
-          <li>Each module: deep-dive lesson + 3-question quiz</li>
-          <li>Saved progress and AI chatbot</li>
-        </ul>
-        <button class="btn-pro" onclick="goToCheckout('plus')">Get Modules - $2 each</button>
-      </div>
-      <div class="plan-card enterprise">
-        <div class="plan-label">School Enterprise</div>
-        <h3>School Enterprise</h3>
-        <div class="price">$7 <span>/ student seat</span></div>
-        <p class="plan-note">
-          Includes Plus for students, plus reporting and management for teachers.
-          Teachers/classes are also billed at $7 per class-teacher setup.
-        </p>
-        <ul>
-          <li>Everything in Plus</li>
-          <li>$7 per student seat</li>
-          <li>$7 per class / teacher setup</li>
-          <li>Teacher dashboard, class tracking, and SSO onboarding request capture</li>
-        </ul>
-        <button class="btn-pro" onclick="goToCheckout('enterprise')">Get School Plan - $7/seat</button>
-      </div>
-    </div>
-  </section>
-
+  <!-- MODULES SECTION (moved above plans) -->
   <section class="section reveal" id="modules">
     <div class="section-header">
       <span class="emoji">🧠</span>
       <h2>Explore the Modules</h2>
       <p>
-        Free users can browse the overview cards. Plus and School users can click each card for a full lesson and a module quiz.
+        Free users get a lesson preview + 1 quiz question per module. Plus and Enterprise users unlock the full lesson, all 5 questions, and a video lesson.
       </p>
     </div>
     <div class="module-highlight" style="margin-bottom:24px;">
       <h3 style="font-size:1.2rem;margin-bottom:8px;">How access works</h3>
       <p id="access-copy">
-        You are currently browsing as a guest. Sign in to save progress. Upgrade to Plus or School Enterprise to unlock lesson deep-dives, per-module quizzes, and AI help.
+        You are currently browsing as a guest. Sign in to save progress. Click any module for a free preview. Upgrade to Plus or School Enterprise to unlock full lessons, 5 quiz questions, and video content.
       </p>
     </div>
     <div class="module-grid" id="module-grid"></div>
+  </section>
+
+  <!-- Enterprise leaderboard (shown for enterprise students) -->
+  <div class="leaderboard-section hidden" id="enterprise-leaderboard">
+    <div class="leaderboard-card">
+      <h3>🏆 Class Leaderboard</h3>
+      <p style="color:var(--muted);margin-bottom:16px;">Top students in your class by modules completed.</p>
+      <div id="leaderboard-content">
+        <div class="row-list">
+          <div class="row-item">
+            <span>🥇 Alex M.</span><span style="color:#34d399;">8 modules</span>
+          </div>
+          <div class="row-item">
+            <span>🥈 Jordan T.</span><span style="color:#34d399;">6 modules</span>
+          </div>
+          <div class="row-item">
+            <span>🥉 Sam K.</span><span style="color:#34d399;">5 modules</span>
+          </div>
+          <div class="row-item">
+            <span>4. Riley P.</span><span style="color:#a78bfa;">4 modules</span>
+          </div>
+          <div class="row-item">
+            <span>5. You</span><span style="color:#60a5fa;">Loading...</span>
+          </div>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin-top:12px;">Live leaderboard data hookup coming soon — complete modules to climb the ranks!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANS/PRICING SECTION (moved below modules) -->
+  <section class="section reveal" id="plans">
+    <div class="section-header">
+      <span class="emoji">💳</span>
+      <h2>Choose the Right Plan</h2>
+      <p>
+        Free gets you a preview of every module. Plus unlocks everything for $3/month. School Enterprise adds classrooms, teacher dashboards, and SSO.
+      </p>
+    </div>
+    <div class="plans-grid">
+      <!-- Free Plan -->
+      <div class="plan-card">
+        <div class="plan-label">Free</div>
+        <h3>Explorer Free</h3>
+        <div class="price">$0 <span>forever</span></div>
+        <p class="plan-note">
+          Get a taste of every module — 2 lesson paragraphs + 1 quiz question each. Plus the final quiz.
+        </p>
+        <ul>
+          <li>All 8 module preview cards</li>
+          <li>2-paragraph lesson preview per module</li>
+          <li>1 quiz question per module</li>
+          <li>Final quiz (all 5 questions)</li>
+          <li>Email or Google login</li>
+        </ul>
+        <button class="btn-primary" onclick="openSignupForPlan('free','student')">Start Free</button>
+      </div>
+
+      <!-- Plus Plan -->
+      <div class="plan-card pro">
+        <div class="plan-label">Plus</div>
+        <h3>AI Explorer Plus</h3>
+        <div class="price">$3 <span>/ month</span></div>
+        <p class="plan-note">
+          Unlock the complete experience — full lessons, 5 questions per module, video placeholders, and AI help.
+        </p>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Full lesson text for all 8 modules</li>
+          <li>5 quiz questions per module</li>
+          <li>📹 Video lesson per module (coming soon)</li>
+          <li>Saved progress &amp; AI chatbot</li>
+        </ul>
+        <button class="btn-pro" onclick="goToCheckout('plus')">Get Plus — $3/month</button>
+      </div>
+
+      <!-- Enterprise Plan -->
+      <div class="plan-card enterprise">
+        <div class="plan-label">School Enterprise</div>
+        <h3>School Enterprise</h3>
+        <div class="price" style="font-size:2rem;">$3 <span>/ student / mo</span></div>
+        <p class="price-sub">+ $3 / teacher / month</p>
+        <p class="plan-note">
+          Everything in Plus for every student, plus class management, teacher dashboards, and SSO onboarding.
+        </p>
+        <ul>
+          <li>Everything in Plus for all students</li>
+          <li>Class leaderboard per class</li>
+          <li>Teacher progress dashboard</li>
+          <li>Admin view: all teachers, classes, students</li>
+          <li>SSO via school domain</li>
+        </ul>
+        <button class="btn-enterprise" onclick="openModal('enterprise-register')">Register Your School</button>
+      </div>
+    </div>
   </section>
 
   <section class="section reveal" id="facts">
@@ -976,8 +1151,8 @@
     <div class="facts-grid">
       <div class="fact-card"><span class="fact-num">1956</span><p>The term "Artificial Intelligence" was officially introduced at the Dartmouth workshop.</p></div>
       <div class="fact-card"><span class="fact-num">100M</span><p>ChatGPT reached 100 million users faster than almost any consumer app before it.</p></div>
-      <div class="fact-card"><span class="fact-num">8</span><p>This site now has eight modules, and paid learners can take a quiz after every single one.</p></div>
-      <div class="fact-card"><span class="fact-num">$5</span><p>Plus is built as a lightweight paid plan for individual learners who want more than just the free overview.</p></div>
+      <div class="fact-card"><span class="fact-num">8</span><p>This site has eight modules — free users get a preview, Plus users get the full experience with video.</p></div>
+      <div class="fact-card"><span class="fact-num">$3</span><p>Plus is just $3/month — full lessons, 5 questions per module, and video content for every learner.</p></div>
     </div>
   </section>
 
@@ -986,7 +1161,7 @@
       <span class="emoji">🎮</span>
       <h2>Final Quiz</h2>
       <p>
-        Everyone can take the final quiz. Paid learners also get quizzes inside every module.
+        Everyone can take the final quiz. Plus and Enterprise learners also get quizzes inside every module.
       </p>
     </div>
     <div class="quiz-shell">
@@ -1002,7 +1177,7 @@
       <span class="emoji">💬</span>
       <h2>Ask the AI Tutor</h2>
       <p>
-        Plus and School learners can ask follow-up questions here. This UI is ready to connect to your secure AI endpoint when you want to add the key-backed backend.
+        Plus and School Enterprise learners can ask follow-up questions here. This UI is ready to connect to your secure AI endpoint.
       </p>
     </div>
     <div class="chat-shell">
@@ -1024,6 +1199,7 @@
     <p style="margin-top:8px;">Supabase powers auth, profiles, and progress. Paid chatbot access is ready for your secure backend later.</p>
   </footer>
 
+  <!-- LOGIN MODAL -->
   <div class="modal-overlay" id="modal-login">
     <div class="modal narrow">
       <button class="modal-close" onclick="closeModal('login')">✕</button>
@@ -1053,6 +1229,7 @@
     </div>
   </div>
 
+  <!-- SIGNUP MODAL -->
   <div class="modal-overlay" id="modal-signup">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('signup')">✕</button>
@@ -1089,7 +1266,7 @@
           <label for="signup-plan">Plan</label>
           <select id="signup-plan" onchange="toggleEnterpriseFields()">
             <option value="free">Free</option>
-            <option value="plus">Plus - $5/month</option>
+            <option value="plus">Plus — $3/month</option>
             <option value="enterprise">School Enterprise</option>
           </select>
         </div>
@@ -1138,6 +1315,7 @@
     </div>
   </div>
 
+  <!-- DASHBOARD MODAL -->
   <div class="modal-overlay" id="modal-dashboard">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('dashboard')">✕</button>
@@ -1147,12 +1325,70 @@
     </div>
   </div>
 
+  <!-- MODULE MODAL -->
   <div class="modal-overlay" id="modal-module">
     <div class="modal">
       <button class="modal-close" onclick="closeModal('module')">✕</button>
       <h2 id="module-modal-title">Module</h2>
       <p class="subtitle" id="module-modal-subtitle"></p>
       <div id="module-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ENTERPRISE REGISTRATION MODAL -->
+  <div class="modal-overlay" id="modal-enterprise-register">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('enterprise-register')">✕</button>
+      <h2>🏫 Register Your School</h2>
+      <p class="subtitle">Tell us about your school and we'll get your Enterprise account set up. $3/student/month + $3/teacher/month.</p>
+      <div class="form-error" id="enterprise-error"></div>
+      <div class="form-success hidden" id="enterprise-success"></div>
+      <div id="enterprise-form">
+        <div class="form-group">
+          <label for="ent-school-name">School / Organization Name</label>
+          <input type="text" id="ent-school-name" placeholder="Lincoln Middle School" />
+        </div>
+        <div class="two-up">
+          <div class="form-group">
+            <label for="ent-admin-first">Admin First Name</label>
+            <input type="text" id="ent-admin-first" placeholder="Jane" />
+          </div>
+          <div class="form-group">
+            <label for="ent-admin-last">Admin Last Name</label>
+            <input type="text" id="ent-admin-last" placeholder="Smith" />
+          </div>
+        </div>
+        <div class="two-up">
+          <div class="form-group">
+            <label for="ent-admin-email">Admin Email</label>
+            <input type="email" id="ent-admin-email" placeholder="admin@school.edu" />
+          </div>
+          <div class="form-group">
+            <label for="ent-domain">School Domain</label>
+            <input type="text" id="ent-domain" placeholder="school.edu" />
+          </div>
+        </div>
+        <p class="small-note" style="margin-bottom:14px;">The school domain (e.g. school.edu) is used for automatic login routing so students and teachers get to the right sign-in page.</p>
+        <div class="three-up">
+          <div class="form-group">
+            <label for="ent-students">Est. Students</label>
+            <input type="number" min="1" id="ent-students" placeholder="120" />
+          </div>
+          <div class="form-group">
+            <label for="ent-teachers">Est. Teachers</label>
+            <input type="number" min="1" id="ent-teachers" placeholder="6" />
+          </div>
+          <div class="form-group">
+            <label for="ent-classes">Number of Classes</label>
+            <input type="number" min="1" id="ent-classes" placeholder="4" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ent-notes">Optional Message / Notes</label>
+          <textarea id="ent-notes" placeholder="Any questions, timeline, or details..."></textarea>
+        </div>
+        <button class="btn-enterprise" id="ent-submit-btn" onclick="submitEnterpriseInquiry()">Request Enterprise Access</button>
+      </div>
     </div>
   </div>
 
@@ -1181,7 +1417,9 @@
           questions: [
             { question: 'Which of these is a real AI assistant used by millions in 2025?', options: ['ChatGPT', 'R2-D2', 'HAL 9000', 'JARVIS'], answer: 0 },
             { question: 'How does a language model like ChatGPT generate answers?', options: ['It looks up answers in a book', 'It predicts the most useful next words based on training data', 'It calls a human expert', 'It searches Wikipedia in real time'], answer: 1 },
-            { question: 'Which best describes AI in 2025?', options: ['Used only by scientists in labs', 'Part of everyday apps like search, photos, and chat', 'Still a future idea', 'Only useful for robots'], answer: 1 }
+            { question: 'Which best describes AI in 2025?', options: ['Used only by scientists in labs', 'Part of everyday apps like search, photos, and chat', 'Still a future idea', 'Only useful for robots'], answer: 1 },
+            { question: 'What does it mean when we say AI is "narrow"?', options: ['It only works on small screens', 'It is designed to do one specific type of task well', 'It has limited battery life', 'It can only read narrow text'], answer: 1 },
+            { question: 'Which company created ChatGPT?', options: ['Google', 'Meta', 'OpenAI', 'Apple'], answer: 2 }
           ]
         }
       },
@@ -1201,7 +1439,9 @@
           questions: [
             { question: 'What does RLHF stand for?', options: ['Really Large Human Files', 'Reinforcement Learning from Human Feedback', 'Random Learning from Hard Facts', 'Repeated Logic from Historical Forms'], answer: 1 },
             { question: 'What are the adjustable settings inside a neural network called?', options: ['Pixels', 'Weights', 'Buttons', 'Tokens'], answer: 1 },
-            { question: 'How did large language models like GPT-4 learn language?', options: ['By reading one textbook', 'By predicting the next word across trillions of text examples', 'By watching YouTube videos only', 'By copying a dictionary'], answer: 1 }
+            { question: 'How did large language models like GPT-4 learn language?', options: ['By reading one textbook', 'By predicting the next word across trillions of text examples', 'By watching YouTube videos only', 'By copying a dictionary'], answer: 1 },
+            { question: 'What is supervised learning?', options: ['Learning with a human teacher in the room', 'Training where examples have correct answers already attached', 'AI watching supervised TV', 'Learning only from images'], answer: 1 },
+            { question: 'What is a neural network?', options: ['A physical brain inside a computer', 'A structure of weighted connections that adjusts during training', 'A type of internet cable', 'A database of facts'], answer: 1 }
           ]
         }
       },
@@ -1221,7 +1461,9 @@
           questions: [
             { question: 'Which of these is a generative AI model?', options: ['DALL-E 3', 'A calculator', 'A search filter', 'A barcode scanner'], answer: 0 },
             { question: 'What does multimodal AI mean?', options: ['AI that works on multiple devices', 'AI that can handle text, images, audio, and more together', 'AI that speaks multiple languages only', 'AI with multiple login options'], answer: 1 },
-            { question: 'What is AGI?', options: ['A type of graphics card', 'A hypothetical AI that can reason like a human across all domains', 'An AI app for gaming', 'A coding language'], answer: 1 }
+            { question: 'What is AGI?', options: ['A type of graphics card', 'A hypothetical AI that can reason like a human across all domains', 'An AI app for gaming', 'A coding language'], answer: 1 },
+            { question: 'Which company created DALL-E 3?', options: ['Google', 'Meta', 'Anthropic', 'OpenAI'], answer: 3 },
+            { question: 'What can multimodal AI do that text-only AI cannot?', options: ['Run faster', 'Accept and combine different input types like text and images', 'Cost less money', 'Work without internet'], answer: 1 }
           ]
         }
       },
@@ -1241,7 +1483,9 @@
           questions: [
             { question: 'Which education platform added AI tutoring features powered by GPT-4?', options: ['MySpace', 'Khan Academy', 'Napster', 'Ask Jeeves'], answer: 1 },
             { question: 'What does AI do in fraud detection?', options: ['It guesses passwords', 'It spots unusual patterns in transactions to flag suspicious activity', 'It replaces bank tellers entirely', 'It deletes accounts automatically'], answer: 1 },
-            { question: 'Why does AI often feel invisible?', options: ['Because it only runs at night', 'Because it works quietly inside apps without being labeled as AI', 'Because it is always hidden on purpose', 'Because nobody has built AI yet'], answer: 1 }
+            { question: 'Why does AI often feel invisible?', options: ['Because it only runs at night', 'Because it works quietly inside apps without being labeled as AI', 'Because it is always hidden on purpose', 'Because nobody has built AI yet'], answer: 1 },
+            { question: 'What does a recommendation algorithm do?', options: ['Prints shopping lists', 'Predicts content you are likely to enjoy based on past behavior', 'Blocks ads automatically', 'Replaces customer service'], answer: 1 },
+            { question: 'How does autocorrect use AI?', options: ['It downloads the right spelling', 'It predicts the most likely intended word based on context', 'It calls a dictionary API', 'It copies from nearby text'], answer: 1 }
           ]
         }
       },
@@ -1261,7 +1505,9 @@
           questions: [
             { question: 'What architecture, invented in 2017, became the foundation of modern AI language models?', options: ['The Matrix', 'The Transformer', 'The Algorithm', 'The Encoder'], answer: 1 },
             { question: 'How fast did ChatGPT reach 100 million users after launch?', options: ['10 years', 'Two months', 'Five years', 'One decade'], answer: 1 },
-            { question: 'Which AI defeated the world Go champion in 2016?', options: ['DeepBlue', 'Watson', 'AlphaGo', 'ChatGPT'], answer: 2 }
+            { question: 'Which AI defeated the world Go champion in 2016?', options: ['DeepBlue', 'Watson', 'AlphaGo', 'ChatGPT'], answer: 2 },
+            { question: 'What happened when GPT-3 was released in 2020?', options: ['It was immediately banned', 'It showed that scaling up models produced surprising new capabilities', 'It replaced all search engines', 'Nothing significant'], answer: 1 },
+            { question: 'What made the transformer architecture important in 2017?', options: ['It was the cheapest AI ever built', 'It became the foundation for modern large language models', 'It was the first AI to walk', 'It invented the internet'], answer: 1 }
           ]
         }
       },
@@ -1281,7 +1527,9 @@
           questions: [
             { question: 'What did the EU AI Act do in 2024?', options: ['Banned all AI in Europe', 'Created the first major law regulating AI systems by risk level', 'Required all AI to be open source', 'Gave AI systems voting rights'], answer: 1 },
             { question: 'What is a deepfake?', options: ['A type of underwater robot', 'AI-generated fake media that looks real', 'A broken AI model', 'A deep learning textbook'], answer: 1 },
-            { question: 'Which is a real documented problem with AI bias?', options: ['AI that refuses to answer questions', 'Hiring algorithms that disadvantage certain groups due to biased training data', 'AI that charges too much money', 'Models that only work in English'], answer: 1 }
+            { question: 'Which is a real documented problem with AI bias?', options: ['AI that refuses to answer questions', 'Hiring algorithms that disadvantage certain groups due to biased training data', 'AI that charges too much money', 'Models that only work in English'], answer: 1 },
+            { question: 'What makes AI-generated misinformation especially dangerous?', options: ['It is always obvious', 'It can be highly convincing and difficult to detect', 'Only robots read it', 'It only spreads on one platform'], answer: 1 },
+            { question: 'Why does it matter that a few big companies control the most powerful AI?', options: ['It makes AI cheaper', 'It concentrates influence over important technology in very few hands', 'It speeds up progress always', 'It has no effect'], answer: 1 }
           ]
         }
       },
@@ -1301,7 +1549,9 @@
           questions: [
             { question: 'What does a red teamer do in an AI company?', options: ['They design the logo', 'They try to find ways to make AI models behave badly or unsafely', 'They write marketing copy', 'They run the servers'], answer: 1 },
             { question: 'What is prompt engineering?', options: ['Building a physical device', 'Designing effective inputs to get better outputs from AI models', 'Writing code in a new language', 'Setting up computer hardware'], answer: 1 },
-            { question: 'Which skills are most valuable for AI careers?', options: ['Only math', 'Curiosity, writing, math, and problem-solving', 'Only coding', 'Only art skills'], answer: 1 }
+            { question: 'Which skills are most valuable for AI careers?', options: ['Only math', 'Curiosity, writing, math, and problem-solving', 'Only coding', 'Only art skills'], answer: 1 },
+            { question: 'What does an AI trainer do?', options: ['Teaches gym classes using AI', 'Evaluates model outputs to help improve AI responses', 'Trains robots to run', 'Builds physical computers'], answer: 1 },
+            { question: 'Why do communication skills matter in AI careers?', options: ['AI only needs coders', 'Explaining AI clearly to non-technical people is increasingly valuable', 'Communication replaced coding', 'Only managers need to communicate'], answer: 1 }
           ]
         }
       },
@@ -1321,7 +1571,9 @@
           questions: [
             { question: 'What is the most common reason AI projects fail?', options: ['The computers are too slow', 'The problem was not clearly defined', 'Too many people used it', 'The AI was too smart'], answer: 1 },
             { question: 'Why does data quality matter in AI projects?', options: ['Better data makes the screen brighter', 'Biased or incomplete data leads to biased or incomplete model behavior', 'Data quality only matters for databases', 'It does not matter at all'], answer: 1 },
-            { question: 'What does human oversight mean in an AI product?', options: ['Humans watch AI all day', 'Having ways for users to flag errors, appeal decisions, or reach a human', 'Turning off the AI sometimes', 'Only humans make decisions, not AI'], answer: 1 }
+            { question: 'What does human oversight mean in an AI product?', options: ['Humans watch AI all day', 'Having ways for users to flag errors, appeal decisions, or reach a human', 'Turning off the AI sometimes', 'Only humans make decisions, not AI'], answer: 1 },
+            { question: 'What should you do before collecting data for an AI project?', options: ['Start coding immediately', 'Ask who owns the data, what is safe to use, and how it will be stored', 'Download everything available', 'Skip data and use a pre-built model'], answer: 1 },
+            { question: 'What is the risk of an AI system that is "confidently wrong"?', options: ['It is too slow', 'Users may trust incorrect outputs without questioning them', 'It costs more money', 'It breaks the internet'], answer: 1 }
           ]
         }
       }
@@ -1329,7 +1581,7 @@
 
     const finalQuizQuestions = [
       { q: "What does AI stand for?", options: ["Automated Internet", "Artificial Intelligence", "Actual Interface", "Applied Invention"], answer: 1 },
-      { q: "Which plan unlocks a lesson and quiz for every module?", options: ["Free only", "Plus and School Enterprise", "No plans", "Guest browsing"], answer: 1 },
+      { q: "Which plan unlocks a full lesson and 5 quiz questions for every module?", options: ["Free only", "Plus and School Enterprise", "No plans", "Guest browsing"], answer: 1 },
       { q: "Which login method is wired to Supabase in this page?", options: ["Google", "Fax machine", "Pager", "None"], answer: 0 },
       { q: "What extra dashboard does School Enterprise add?", options: ["A game console", "Teacher reporting dashboard", "A music player", "Nothing new"], answer: 1 },
       { q: "What should the AI chatbot use on the backend?", options: ["A secure endpoint like a Supabase Edge Function", "A secret hard-coded in the page", "No backend at all", "A random spreadsheet"], answer: 0 }
@@ -1386,29 +1638,66 @@
       return ['plus', 'enterprise'].includes(getPlanTier());
     }
 
+    function isEnterpriseUser() {
+      if (adminMode) return adminView === 'teacher' || adminView === 'student';
+      const tier = getPlanTier();
+      const role = userProfile?.role || '';
+      return tier === 'enterprise' || ['enterprise_student', 'enterprise_teacher', 'enterprise_admin'].includes(role);
+    }
+
     function isTeacherDashboardUser() {
       if (adminMode) return adminView === 'teacher';
-      return getPlanTier() === 'enterprise' && ['teacher', 'admin'].includes(userProfile?.role);
+      return getPlanTier() === 'enterprise' && ['teacher', 'admin', 'enterprise_teacher', 'enterprise_admin'].includes(userProfile?.role);
+    }
+
+    function isEnterpriseAdmin() {
+      if (adminMode) return false;
+      return getPlanTier() === 'enterprise' && ['admin', 'enterprise_admin'].includes(userProfile?.role);
     }
 
     function renderModuleGrid() {
       const grid = document.getElementById('module-grid');
-      grid.innerHTML = modules.map(module => {
-        const locked = !hasPaidAccess();
+      const paid = hasPaidAccess();
+      // Guests (no login, no admin mode) see first 2 modules open, rest blurred
+      const isGuest = !currentUser && !adminMode;
+
+      grid.innerHTML = modules.map((module, index) => {
         const complete = moduleCompletionSet.has(module.number);
-        const actionText = locked ? 'Upgrade to open lesson' : 'Open lesson + quiz';
-        const stateText = complete ? 'Completed' : locked ? 'Preview only' : 'Ready';
-        return `
+        const stateText = complete ? 'Completed' : paid ? 'Ready' : 'Free Preview';
+        const tierBadge = paid
+          ? `<span class="badge tier-plus">Plus</span>`
+          : `<span class="badge tier-free-preview">Free Preview</span>`;
+        const accessLabel = paid
+          ? 'Full lesson + 5 questions + video'
+          : '2 lesson paragraphs + 2 questions';
+
+        const cardHtml = `
           <article class="module-card card ${module.gradient}" onclick="openModule(${module.number})">
             <span class="module-emoji">${module.emoji}</span>
             <h3>${module.number}. ${module.title}</h3>
             <p>${module.teaser}</p>
             <div class="module-meta">
-              <span>${actionText}</span>
+              <span>${accessLabel}</span>
               <span class="module-state">${stateText}</span>
             </div>
+            <div style="margin-top:10px;">${tierBadge}</div>
           </article>
         `;
+
+        // For guest users, blur modules 3–8 (index >= 2)
+        if (isGuest && index >= 2) {
+          return `
+            <div class="module-card-locked-wrap"
+                 onclick="openModal('login');showToast('Sign in to unlock all modules', 'error');">
+              ${cardHtml}
+              <div class="lock-overlay">
+                <span class="lock-badge">🔒 Sign in to unlock</span>
+              </div>
+            </div>
+          `;
+        }
+
+        return cardHtml;
       }).join('');
     }
 
@@ -1452,6 +1741,7 @@
       const accessCopy = document.getElementById('access-copy');
       const aiHelp = document.getElementById('ai-help');
       const adminBar = document.getElementById('admin-bar');
+      const leaderboard = document.getElementById('enterprise-leaderboard');
 
       if (adminMode) {
         const plan = getPlanTier();
@@ -1469,30 +1759,36 @@
         adminBar.classList.add('visible');
 
         if (plan === 'free') {
-          accessCopy.textContent = 'Admin preview: free user view. Module cards are in preview mode, final quiz only.';
+          accessCopy.textContent = 'Admin preview: free user view. Module cards show a 2-paragraph preview + 1 quiz question.';
           aiHelp.classList.add('hidden');
+          leaderboard.classList.add('hidden');
         } else if (plan === 'plus') {
-          accessCopy.textContent = 'Admin preview: Plus user view. Module lessons, quizzes, and AI help are available.';
+          accessCopy.textContent = 'Admin preview: Plus user view. Full lessons, 5 questions, video placeholders, and AI help are available.';
           aiHelp.classList.remove('hidden');
           aiHelp.classList.add('revealed');
+          leaderboard.classList.add('hidden');
         } else {
           accessCopy.textContent = adminView === 'teacher'
             ? 'Admin preview: teacher dashboard view (School Enterprise).'
-            : 'Admin preview: school student view - full Plus experience inside the school plan.';
+            : 'Admin preview: enterprise student view — full Plus experience + class leaderboard.';
           aiHelp.classList.remove('hidden');
           aiHelp.classList.add('revealed');
+          leaderboard.classList.remove('hidden');
+          leaderboard.classList.add('reveal', 'revealed');
         }
       } else if (currentUser && userProfile) {
         const plan = getPlanTier();
         const badgeClass = `plan-${plan === 'enterprise' ? 'enterprise' : plan}`;
         const displayName = userProfile.full_name || currentUser.email?.split('@')[0] || 'Learner';
-        const roleLabel = userProfile.role ? `${userProfile.role}` : 'student';
+        // Only show role label for enterprise users (students/teachers added by a school admin)
+        const isEnterpriseUser = plan === 'enterprise';
+        const roleLabel = isEnterpriseUser && userProfile.role ? `${userProfile.role}` : '';
 
         userInfo.innerHTML = `
           <span class="user-pill">
             Hi, <strong style="color:#fff;">${escapeHtml(displayName)}</strong>
             <span class="badge ${badgeClass}">${plan === 'enterprise' ? 'School Enterprise' : plan}</span>
-            <span style="color:#64748b;">${escapeHtml(roleLabel)}</span>
+            ${roleLabel ? `<span style="color:#64748b;">${escapeHtml(roleLabel)}</span>` : ''}
           </span>
         `;
 
@@ -1503,16 +1799,24 @@
         adminBar.classList.remove('visible');
 
         if (plan === 'free') {
-          accessCopy.textContent = 'You are on the Free plan. You can browse all module previews and take the final quiz. Upgrade to Plus or School Enterprise to open lesson deep-dives and module quizzes.';
+          accessCopy.textContent = 'You are on the Free plan. Click any module for a 2-paragraph preview and 1 quiz question. Upgrade to Plus for full lessons, 5 questions, and video.';
           aiHelp.classList.add('hidden');
+          leaderboard.classList.add('hidden');
         } else if (plan === 'plus') {
-          accessCopy.textContent = 'You are on Plus. Every module card now opens a lesson and a module quiz, and your progress can be saved to Supabase.';
+          accessCopy.textContent = 'You are on Plus. Every module opens a full lesson, 5-question quiz, and video placeholder. Progress saves to your account.';
           aiHelp.classList.remove('hidden');
           aiHelp.classList.add('revealed');
+          leaderboard.classList.add('hidden');
         } else {
-          accessCopy.textContent = 'You are on School Enterprise. Students get the full Plus experience, and teachers/admins also get the classroom dashboard and SSO onboarding fields.';
+          accessCopy.textContent = 'You are on School Enterprise. Full Plus experience for all students, plus class leaderboard and teacher dashboard.';
           aiHelp.classList.remove('hidden');
           aiHelp.classList.add('revealed');
+          // Show leaderboard for enterprise students (not teachers/admins — they use the dashboard)
+          if (!isTeacherDashboardUser()) {
+            leaderboard.classList.remove('hidden');
+          } else {
+            leaderboard.classList.add('hidden');
+          }
         }
 
         await refreshModuleCompletions();
@@ -1524,7 +1828,8 @@
         btnLogout.classList.add('hidden');
         adminBar.classList.remove('visible');
         aiHelp.classList.add('hidden');
-        accessCopy.textContent = 'You are currently browsing as a guest. Sign in to save progress. Upgrade to Plus or School Enterprise to unlock lesson deep-dives, per-module quizzes, and AI help.';
+        leaderboard.classList.add('hidden');
+        accessCopy.textContent = 'You are currently browsing as a guest. Click any module for a free preview. Sign in to save progress. Upgrade to Plus or School Enterprise to unlock full lessons, 5 quiz questions, and video.';
         moduleCompletionSet = new Set();
       }
 
@@ -1576,30 +1881,13 @@
       errorEl.textContent = '';
       successEl.textContent = '';
 
-      if (!payload.full_name) {
-        errorEl.textContent = 'Please enter your full name.';
-        return;
-      }
-
-      if (!email) {
-        errorEl.textContent = 'Please enter your email.';
-        return;
-      }
-
-      if (password.length < 8) {
-        errorEl.textContent = 'Password must be at least 8 characters.';
-        return;
-      }
+      if (!payload.full_name) { errorEl.textContent = 'Please enter your full name.'; return; }
+      if (!email) { errorEl.textContent = 'Please enter your email.'; return; }
+      if (password.length < 8) { errorEl.textContent = 'Password must be at least 8 characters.'; return; }
 
       if (payload.plan_tier === 'enterprise') {
-        if (!payload.school_name) {
-          errorEl.textContent = 'School Enterprise needs a school name.';
-          return;
-        }
-        if (!payload.work_email) {
-          errorEl.textContent = 'Please add the school work email for the Enterprise request.';
-          return;
-        }
+        if (!payload.school_name) { errorEl.textContent = 'School Enterprise needs a school name.'; return; }
+        if (!payload.work_email) { errorEl.textContent = 'Please add the school work email for the Enterprise request.'; return; }
       }
 
       savePendingSignupContext();
@@ -1618,14 +1906,8 @@
       btn.disabled = false;
       btn.textContent = 'Create Account';
 
-      if (error) {
-        errorEl.textContent = error.message;
-        return;
-      }
-
-      if (data.user) {
-        await ensureProfile();
-      }
+      if (error) { errorEl.textContent = error.message; return; }
+      if (data.user) { await ensureProfile(); }
 
       successEl.textContent = payload.plan_tier === 'enterprise'
         ? 'Account created. Check your email to confirm, and your Enterprise onboarding details were saved.'
@@ -1648,7 +1930,6 @@
 
       errorEl.textContent = '';
 
-      // Admin shortcut - no Supabase call needed
       if (email === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
         adminMode = true;
         adminView = 'teacher';
@@ -1656,7 +1937,6 @@
         localStorage.setItem('aiExplorerAdminView', 'teacher');
         closeModal('login');
         await updateAuthUI();
-        // Force-reveal all sections so admin can see everything immediately
         document.querySelectorAll('.reveal').forEach(el => el.classList.add('revealed'));
         document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
         showToast('Admin preview mode enabled. Viewing as: teacher (Enterprise).', 'success');
@@ -1671,55 +1951,28 @@
       btn.disabled = false;
       btn.textContent = 'Sign In';
 
-      if (error) {
-        errorEl.textContent = error.message;
-        return;
-      }
+      if (error) { errorEl.textContent = error.message; return; }
 
       closeModal('login');
       showToast('Signed in successfully.', 'success');
     }
 
     async function signInWithGoogle(source) {
-      if (source === 'signup') {
-        savePendingSignupContext();
-      }
-
+      if (source === 'signup') { savePendingSignupContext(); }
       const { error } = await sb.auth.signInWithOAuth({
         provider: 'google',
-        options: {
-          redirectTo: window.location.href
-        }
+        options: { redirectTo: window.location.href }
       });
-
-      if (error) {
-        showToast(error.message, 'error');
-      }
+      if (error) { showToast(error.message, 'error'); }
     }
 
     async function signInWithSSO() {
       const rawValue = document.getElementById('login-sso-domain').value.trim().toLowerCase();
-      if (!rawValue) {
-        showToast('Enter your school email or domain first.', 'error');
-        return;
-      }
-
+      if (!rawValue) { showToast('Enter your school email or domain first.', 'error'); return; }
       const domain = rawValue.includes('@') ? rawValue.split('@').pop() : rawValue;
-      if (!domain || !domain.includes('.')) {
-        showToast('Enter a valid school domain like school.org.', 'error');
-        return;
-      }
-
-      const { error } = await sb.auth.signInWithSSO({
-        domain,
-        options: {
-          redirectTo: window.location.href
-        }
-      });
-
-      if (error) {
-        showToast(error.message, 'error');
-      }
+      if (!domain || !domain.includes('.')) { showToast('Enter a valid school domain like school.org.', 'error'); return; }
+      const { error } = await sb.auth.signInWithSSO({ domain, options: { redirectTo: window.location.href } });
+      if (error) { showToast(error.message, 'error'); }
     }
 
     async function signOut() {
@@ -1740,18 +1993,28 @@
     }
 
     async function refreshModuleCompletions() {
-      if (!currentUser) {
-        moduleCompletionSet = new Set();
-        return;
-      }
-
+      if (!currentUser) { moduleCompletionSet = new Set(); return; }
       const { data } = await sb.from('module_progress').select('module_number').eq('user_id', currentUser.id);
       moduleCompletionSet = new Set((data || []).map(item => item.module_number));
     }
 
+    // Stripe payment links
+    // Plus: prod_UVQYWYVUenBUnV / price_1TWPh2RxSUtozYBPWuCp0FGq ($3/mo)
     const CHECKOUT_LINKS = {
-      plus: 'https://buy.stripe.com/test_9B63cxbpmehw3DA8CheZ201',
+      plus: 'https://buy.stripe.com/test_00w5kF8dagpEca65q5eZ203',
       enterprise: 'https://buy.stripe.com/test_3cIfZj2SQ5L04HEcSxeZ202'
+    };
+
+    // YouTube video IDs for each module (shown to Plus/Enterprise users)
+    const moduleVideos = {
+      1: 'a0_lo_GDcFw',  // CrashCourse AI #1 — What Is Artificial Intelligence?
+      2: 'KNAWp2S3w94',  // Google — Intro to Machine Learning
+      3: 'G2fqAlgmoPo',  // Google — Introduction to Generative AI
+      4: 'ZJixNvx9BAc',  // WIRED — Machine Learning: Living in the Age of AI
+      5: 'UwsrzCVZAb8',  // YouTube Originals — How Far is Too Far? | The Age of A.I.
+      6: 'tJQSyzBUAew',  // Ethics & AI: Equal Access and Algorithmic Bias
+      7: '5q87K1WaoFI',  // WIRED — Computer Scientist Explains ML in 5 Levels
+      8: 'GdTBqBnqhaQ',  // 4 Experiments Where the AI Outsmarted Its Creators
     };
 
     function goToCheckout(plan) {
@@ -1766,14 +2029,14 @@
     function redirectAfterAuth() {
       const plan = getPlanTier();
       if (plan === 'free') {
-        document.getElementById('plans').scrollIntoView({ behavior: 'smooth' });
-        showToast('You\'re on the Free plan. Upgrade to unlock full lessons!', 'success');
+        document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
+        showToast('You\'re on the Free plan. Click any module for a free preview!', 'success');
       } else if (plan === 'plus') {
         document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
-        showToast('Welcome! Your Plus lessons are unlocked - click any module to start.', 'success');
+        showToast('Welcome! Your Plus lessons are unlocked — click any module to start.', 'success');
       } else {
         document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
-        showToast('Welcome! School Enterprise - all lessons and teacher dashboard are ready.', 'success');
+        showToast('Welcome! School Enterprise — all lessons, video, and teacher dashboard ready.', 'success');
       }
     }
 
@@ -1784,10 +2047,7 @@
         showToast(`Admin preview: module ${moduleNumber} marked complete.`, 'success');
         return;
       }
-      if (!currentUser) {
-        openModal('login');
-        return;
-      }
+      if (!currentUser) { openModal('login'); return; }
 
       const { error } = await sb.from('module_progress').upsert({
         user_id: currentUser.id,
@@ -1795,17 +2055,14 @@
         completed_at: new Date().toISOString()
       }, { onConflict: 'user_id,module_number' });
 
-      if (error) {
-        showToast('Could not save module completion yet.', 'error');
-        return;
-      }
+      if (error) { showToast('Could not save module completion yet.', 'error'); return; }
 
       moduleCompletionSet.add(moduleNumber);
       renderModuleGrid();
       showToast(`Module ${moduleNumber} marked complete.`, 'success');
     }
 
-    function renderModuleQuestion(moduleNumber) {
+    function renderModuleQuestion(moduleNumber, freeMode) {
       const module = modules.find(m => m.number === moduleNumber);
       if (!module) return;
       const questions = module.quiz.questions;
@@ -1817,14 +2074,15 @@
       const nextBtn = document.getElementById('module-quiz-next');
       if (!optionsContainer || !resultEl || !progressEl) return;
 
-      progressEl.textContent = `Question ${idx + 1} of ${questions.length}`;
+      const totalShown = freeMode ? 2 : questions.length;
+      progressEl.textContent = `Question ${idx + 1} of ${totalShown}`;
       resultEl.textContent = '';
       resultEl.style.color = '';
       if (nextBtn) nextBtn.style.display = 'none';
 
       document.getElementById('module-quiz-question-text').textContent = q.question;
       optionsContainer.innerHTML = q.options.map((option, index) =>
-        `<button class="quiz-btn" onclick="gradeModuleQuiz(${moduleNumber}, ${index})">${option}</button>`
+        `<button class="quiz-btn" onclick="gradeModuleQuiz(${moduleNumber}, ${index}, ${!!freeMode})">${option}</button>`
       ).join('');
     }
 
@@ -1832,20 +2090,50 @@
       const module = modules.find(item => item.number === moduleNumber);
       if (!module) return;
 
-      if (!hasPaidAccess()) {
-        openModal('signup');
-        document.getElementById('signup-plan').value = 'plus';
-        toggleEnterpriseFields();
-        showToast('Plus or School Enterprise unlocks the full lesson and module quiz.', 'error');
-        return;
-      }
-
-      // Reset quiz state
       module._quizIndex = 0;
       module._quizScore = 0;
 
+      if (!hasPaidAccess()) {
+        // FREE MODE: show 2 paragraphs + 2 quiz questions
+        module._freeMode = true;
+        document.getElementById('module-modal-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
+        document.getElementById('module-modal-subtitle').textContent = 'Free Preview — 2 paragraphs + 2 questions. Upgrade to Plus for the full lesson, 5 questions, and video.';
+        document.getElementById('module-modal-content').innerHTML = `
+          <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">
+            ${module.summary}
+          </div>
+          <div class="dashboard-card" style="margin-bottom:18px;">
+            ${module.lesson.slice(0, 2).map(paragraph => `<p style="margin-bottom:14px;">${paragraph}</p>`).join('')}
+          </div>
+          <div class="quiz-shell" style="text-align:left;">
+            <div style="font-size:1.1rem;font-weight:900;margin-bottom:6px;">Quick Questions</div>
+            <div id="module-quiz-progress" style="font-size:0.9rem;color:#a5b4fc;margin-bottom:10px;">Question 1 of 2</div>
+            <div id="module-quiz-question-text" class="quiz-question" style="text-align:left;font-size:1.1rem;margin-bottom:14px;"></div>
+            <div class="quiz-options" id="module-quiz-options"></div>
+            <div class="quiz-result" id="module-quiz-result"></div>
+            <button id="free-next-btn" class="btn-primary" style="width:auto;display:none;margin-top:10px;" onclick="advanceFreeModuleQuiz(${module.number})">Next Question →</button>
+            <div id="free-upgrade-cta" class="hidden upgrade-cta-box">
+              <p>Upgrade to Plus for the full lesson, 5 questions &amp; video — $3/month</p>
+              <button class="btn-pro" style="width:auto;padding:10px 24px;font-size:0.95rem;" onclick="openSignupForPlan('plus','student');closeModal('module')">Upgrade to Plus — $3/month</button>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
+              <button class="btn-secondary" style="width:auto;" onclick="closeModal('module')">Close</button>
+            </div>
+          </div>
+        `;
+        openModal('module');
+        renderModuleQuestion(moduleNumber, true);
+        return;
+      }
+
+      // PAID MODE: full lesson + YouTube video + 5 questions
+      module._freeMode = false;
+      const ytId = moduleVideos[module.number];
+      const videoEmbed = ytId
+        ? `<div class="yt-embed-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1" title="Module ${module.number} video lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+        : `<div class="video-placeholder"><div class="vp-icon">📹</div><div class="vp-title">Video Lesson — Coming Soon</div><div class="vp-sub">Video lessons are being produced for each module.</div></div>`;
       document.getElementById('module-modal-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
-      document.getElementById('module-modal-subtitle').textContent = 'Read the lesson, then take the 3-question quiz to save progress.';
+      document.getElementById('module-modal-subtitle').textContent = 'Read the full lesson, watch the video, then take the 5-question quiz to save progress.';
       document.getElementById('module-modal-content').innerHTML = `
         <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">
           ${module.summary}
@@ -1853,9 +2141,10 @@
         <div class="dashboard-card" style="margin-bottom:18px;">
           ${module.lesson.map(paragraph => `<p style="margin-bottom:14px;">${paragraph}</p>`).join('')}
         </div>
+        ${videoEmbed}
         <div class="quiz-shell" style="text-align:left;">
           <div style="font-size:1.1rem;font-weight:900;margin-bottom:6px;">Module Quiz</div>
-          <div id="module-quiz-progress" style="font-size:0.9rem;color:#a5b4fc;margin-bottom:10px;">Question 1 of 3</div>
+          <div id="module-quiz-progress" style="font-size:0.9rem;color:#a5b4fc;margin-bottom:10px;">Question 1 of 5</div>
           <div id="module-quiz-question-text" class="quiz-question" style="text-align:left;font-size:1.1rem;margin-bottom:14px;"></div>
           <div class="quiz-options" id="module-quiz-options"></div>
           <div class="quiz-result" id="module-quiz-result"></div>
@@ -1867,7 +2156,23 @@
         </div>
       `;
       openModal('module');
-      renderModuleQuestion(moduleNumber);
+      renderModuleQuestion(moduleNumber, false);
+    }
+
+    function advanceFreeModuleQuiz(moduleNumber) {
+      const module = modules.find(m => m.number === moduleNumber);
+      if (!module) return;
+      // Hide the Next button before loading next question
+      const freeNextBtn = document.getElementById('free-next-btn');
+      if (freeNextBtn) freeNextBtn.style.display = 'none';
+      module._quizIndex++;
+      if (module._quizIndex < 2) {
+        renderModuleQuestion(moduleNumber, true);
+      } else {
+        // Shouldn't reach here (gradeModuleQuiz shows CTA on last question)
+        const ctaEl = document.getElementById('free-upgrade-cta');
+        if (ctaEl) ctaEl.classList.remove('hidden');
+      }
     }
 
     function advanceModuleQuiz(moduleNumber) {
@@ -1875,9 +2180,8 @@
       if (!module) return;
       module._quizIndex++;
       if (module._quizIndex < module.quiz.questions.length) {
-        renderModuleQuestion(moduleNumber);
+        renderModuleQuestion(moduleNumber, false);
       } else {
-        // Show final score
         const total = module.quiz.questions.length;
         const score = module._quizScore;
         const optionsContainer = document.getElementById('module-quiz-options');
@@ -1899,7 +2203,7 @@
       }
     }
 
-    function gradeModuleQuiz(moduleNumber, selectedIndex) {
+    function gradeModuleQuiz(moduleNumber, selectedIndex, freeMode) {
       const module = modules.find(item => item.number === moduleNumber);
       const buttons = Array.from(document.querySelectorAll('#module-quiz-options .quiz-btn'));
       const result = document.getElementById('module-quiz-result');
@@ -1922,17 +2226,24 @@
       if (isCorrect) module._quizScore++;
 
       result.textContent = isCorrect
-        ? 'Correct!'
+        ? 'Correct! 🎉'
         : `Not quite. The right answer is "${currentQ.options[correctAnswer]}".`;
       result.style.color = isCorrect ? '#34d399' : '#f87171';
 
-      const isLastQuestion = module._quizIndex >= module.quiz.questions.length - 1;
-      if (nextBtn) {
-        if (!isLastQuestion) {
-          nextBtn.textContent = 'Next Question';
-          nextBtn.style.display = 'inline-block';
+      if (freeMode) {
+        // Free mode: 2 questions. After Q1 show Next, after Q2 show upgrade CTA.
+        const isLastFreeQuestion = module._quizIndex >= 1; // indices 0 and 1 = 2 questions
+        if (isLastFreeQuestion) {
+          const ctaEl = document.getElementById('free-upgrade-cta');
+          if (ctaEl) ctaEl.classList.remove('hidden');
         } else {
-          nextBtn.textContent = 'See Final Score';
+          const freeNextBtn = document.getElementById('free-next-btn');
+          if (freeNextBtn) freeNextBtn.style.display = 'inline-block';
+        }
+      } else {
+        const isLastQuestion = module._quizIndex >= module.quiz.questions.length - 1;
+        if (nextBtn) {
+          nextBtn.textContent = isLastQuestion ? 'See Final Score' : 'Next Question';
           nextBtn.style.display = 'inline-block';
         }
       }
@@ -2030,7 +2341,7 @@
       questionEl.textContent = `You scored ${finalQuizScore}/${finalQuizQuestions.length} (${pct}%)`;
       optionsEl.innerHTML = `
         <p style="grid-column:1/-1;color:#cbd5e1;line-height:1.7;">
-          ${pct >= 80 ? 'Great job. You clearly understand the big ideas behind AI Explorer.' : 'Nice work. Review the modules again and try another round if you want to improve your score.'}
+          ${pct >= 80 ? 'Great job. You clearly understand the big ideas behind AI Explorer.' : 'Nice work. Review the modules and try another round to improve your score.'}
         </p>
         <button class="quiz-btn" style="grid-column:1/-1;margin-top:8px;" onclick="retakeFinalQuiz()">🔄 Retake Quiz</button>
       `;
@@ -2064,6 +2375,13 @@
             <div class="dashboard-card">
               <h3>Teacher Dashboard Preview</h3>
               <p>This is what a School Enterprise teacher sees. Real class and student data appears here once Supabase tables are populated.</p>
+            </div>
+            <div class="dashboard-card" style="margin-top:18px;">
+              <h3>My Classes</h3>
+              <div class="row-list">
+                <div class="row-item"><span>Period 1 — AI Basics</span><span style="color:#a78bfa;">3 students</span></div>
+                <div class="row-item"><span>Period 3 — AI Ethics</span><span style="color:#a78bfa;">4 students</span></div>
+              </div>
             </div>`;
         } else {
           content.innerHTML = `
@@ -2075,12 +2393,13 @@
         return;
       }
 
-      if (!currentUser || !userProfile) {
-        openModal('login');
-        return;
-      }
+      if (!currentUser || !userProfile) { openModal('login'); return; }
 
-      if (isTeacherDashboardUser()) {
+      if (isEnterpriseAdmin()) {
+        title.textContent = 'Admin Dashboard';
+        subtitle.textContent = 'Enterprise admin view — all teachers, classes, and students.';
+        await renderAdminDashboard(content);
+      } else if (isTeacherDashboardUser()) {
         title.textContent = 'Teacher Dashboard';
         subtitle.textContent = 'See students, classes, quiz progress, and Enterprise onboarding details.';
         await renderTeacherDashboard(content);
@@ -2101,12 +2420,26 @@
       const moduleQuizCount = (scores || []).filter(item => item.quiz_type === 'module' || item.module_number).length;
       const plan = getPlanTier();
 
+      const enterpriseLeaderboardHtml = isEnterpriseUser() && !isTeacherDashboardUser() ? `
+        <div class="dashboard-card" style="margin-top:24px;border-color:rgba(52,211,153,0.25);">
+          <h3 style="color:#86efac;">🏆 Class Leaderboard</h3>
+          <p style="margin-bottom:14px;">Your ranking among classmates by modules completed.</p>
+          <div class="row-list">
+            <div class="row-item"><span>🥇 Alex M.</span><span style="color:#34d399;">8 modules</span></div>
+            <div class="row-item"><span>🥈 Jordan T.</span><span style="color:#34d399;">6 modules</span></div>
+            <div class="row-item"><span>🥉 Sam K.</span><span style="color:#34d399;">5 modules</span></div>
+            <div class="row-item"><span>You</span><span style="color:#60a5fa;">${completed} modules</span></div>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;margin-top:10px;">Live leaderboard hookup coming soon.</p>
+        </div>
+      ` : '';
+
       container.innerHTML = `
         <div class="dashboard-grid">
           <div class="dashboard-card">
             <h3>Plan</h3>
             <p><strong style="color:#fff;text-transform:capitalize;">${plan === 'enterprise' ? 'School Enterprise' : plan}</strong></p>
-            <p style="margin-top:10px;">${plan === 'free' ? 'Upgrade for module lessons, AI help, and saved lesson quizzes.' : 'You have lesson deep-dives, saved progress, and module quiz access.'}</p>
+            <p style="margin-top:10px;">${plan === 'free' ? 'Upgrade for full module lessons, AI help, and saved quiz scores.' : 'Full lessons, 5 questions, video, and saved progress.'}</p>
           </div>
           <div class="dashboard-card">
             <h3>Overall Progress</h3>
@@ -2132,10 +2465,11 @@
             `).join('')}
           </div>
         </div>
+        ${enterpriseLeaderboardHtml}
         ${plan === 'enterprise' && userProfile.work_email ? `
           <div class="dashboard-card" style="margin-top:24px;">
             <h3>Enterprise Request Info</h3>
-            <p>Work email saved for follow-up: <strong style="color:#fff;">${escapeHtml(userProfile.work_email)}</strong></p>
+            <p>Work email saved: <strong style="color:#fff;">${escapeHtml(userProfile.work_email)}</strong></p>
             <p style="margin-top:10px;">School: <strong style="color:#fff;">${escapeHtml(userProfile.school_name || 'Not set')}</strong></p>
           </div>
         ` : ''}
@@ -2167,18 +2501,18 @@
               </tr>
             `;
           }).join('')
-        : `<tr><td colspan="3" class="teacher-empty">No student enrollment data yet. The dashboard is ready once your school tables are populated.</td></tr>`;
+        : `<tr><td colspan="3" class="teacher-empty">No student enrollment data yet. Dashboard is ready once Supabase class tables are populated.</td></tr>`;
 
       container.innerHTML = `
         <div class="dashboard-grid">
           <div class="dashboard-card">
-            <h3>Enterprise Billing Model</h3>
-            <p>$7 per student seat and $7 per class / teacher setup.</p>
-            <p style="margin-top:10px;">Saved school: <strong style="color:#fff;">${escapeHtml(userProfile.school_name || 'Not set')}</strong></p>
+            <h3>Enterprise Billing</h3>
+            <p>$3 per student / month + $3 per teacher / month.</p>
+            <p style="margin-top:10px;">School: <strong style="color:#fff;">${escapeHtml(userProfile.school_name || 'Not set')}</strong></p>
           </div>
           <div class="dashboard-card">
             <h3>SSO Follow-up</h3>
-            <p>Work email to contact: <strong style="color:#fff;">${escapeHtml(userProfile.work_email || 'Not provided')}</strong></p>
+            <p>Work email: <strong style="color:#fff;">${escapeHtml(userProfile.work_email || 'Not provided')}</strong></p>
             <p style="margin-top:10px;">SSO requested: <strong style="color:#fff;">${userProfile.wants_sso ? 'Yes' : 'No'}</strong></p>
           </div>
           <div class="dashboard-card">
@@ -2189,10 +2523,10 @@
         </div>
 
         <div class="dashboard-card" style="margin-top:24px;">
-          <h3>Your Classes</h3>
+          <h3>My Classes</h3>
           ${classes.length
             ? `<div class="row-list">${classes.map(item => `<div class="row-item"><span>${escapeHtml(item.name)}</span><span style="color:#a78bfa;">${escapeHtml(item.code || '')}</span></div>`).join('')}</div>`
-            : '<p class="teacher-empty">No classes found yet. Once you start creating classes in Supabase, they will show up here.</p>'
+            : '<p class="teacher-empty">No classes found yet. Once you create classes in Supabase, they will show here.</p>'
           }
         </div>
 
@@ -2203,6 +2537,57 @@
               <tr><th>Student</th><th>Modules</th><th>Latest Quiz</th></tr>
             </thead>
             <tbody>${overviewRows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function renderAdminDashboard(container) {
+      // Fetch aggregate stats for enterprise admin
+      const { data: allStudents } = await sb.from('profiles').select('id,full_name,role').eq('plan_tier', 'enterprise');
+      const allProfiles = allStudents || [];
+      const totalStudents = allProfiles.filter(p => ['student', 'enterprise_student'].includes(p.role)).length;
+      const totalTeachers = allProfiles.filter(p => ['teacher', 'enterprise_teacher'].includes(p.role)).length;
+      const { data: allClasses } = await sb.from('classes').select('id,name');
+      const totalClasses = (allClasses || []).length;
+
+      container.innerHTML = `
+        <div class="dashboard-grid">
+          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
+            <h3 style="color:#86efac;">Total Students</h3>
+            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalStudents}</p>
+            <p>Enterprise student accounts</p>
+          </div>
+          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
+            <h3 style="color:#86efac;">Total Teachers</h3>
+            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalTeachers}</p>
+            <p>Enterprise teacher accounts</p>
+          </div>
+          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
+            <h3 style="color:#86efac;">Total Classes</h3>
+            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalClasses}</p>
+            <p>Classes across all teachers</p>
+          </div>
+        </div>
+        <div class="dashboard-card" style="margin-top:24px;">
+          <h3>All Teachers &amp; Classes</h3>
+          <div class="row-list">
+            ${(allClasses || []).length
+              ? (allClasses || []).map(c => `<div class="row-item"><span>${escapeHtml(c.name)}</span><span style="color:#a78bfa;">Class ID: ${escapeHtml(String(c.id))}</span></div>`).join('')
+              : '<div style="color:var(--muted);">No classes found yet. Classes appear here once Supabase tables are populated.</div>'
+            }
+          </div>
+        </div>
+        <div class="dashboard-card" style="margin-top:24px;">
+          <h3>All Enterprise Accounts</h3>
+          <table class="teacher-table">
+            <thead><tr><th>Name</th><th>Role</th></tr></thead>
+            <tbody>
+              ${allProfiles.length
+                ? allProfiles.map(p => `<tr><td>${escapeHtml(p.full_name || 'Unknown')}</td><td>${escapeHtml(p.role || 'student')}</td></tr>`).join('')
+                : '<tr><td colspan="2" class="teacher-empty">No enterprise accounts found.</td></tr>'
+              }
+            </tbody>
           </table>
         </div>
       `;
@@ -2246,6 +2631,86 @@
       div.textContent = text;
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Enterprise Registration Modal
+    async function submitEnterpriseInquiry() {
+      const btn = document.getElementById('ent-submit-btn');
+      const errorEl = document.getElementById('enterprise-error');
+      const successEl = document.getElementById('enterprise-success');
+      const formEl = document.getElementById('enterprise-form');
+
+      const schoolName = document.getElementById('ent-school-name').value.trim();
+      const adminFirst = document.getElementById('ent-admin-first').value.trim();
+      const adminLast = document.getElementById('ent-admin-last').value.trim();
+      const adminEmail = document.getElementById('ent-admin-email').value.trim();
+      const domain = document.getElementById('ent-domain').value.trim();
+      const estStudents = parseInt(document.getElementById('ent-students').value || '0', 10) || null;
+      const estTeachers = parseInt(document.getElementById('ent-teachers').value || '0', 10) || null;
+      const estClasses = parseInt(document.getElementById('ent-classes').value || '0', 10) || null;
+      const notes = document.getElementById('ent-notes').value.trim();
+
+      errorEl.textContent = '';
+
+      if (!schoolName) { errorEl.textContent = 'Please enter your school name.'; return; }
+      if (!adminFirst || !adminLast) { errorEl.textContent = 'Please enter the admin first and last name.'; return; }
+      if (!adminEmail || !adminEmail.includes('@')) { errorEl.textContent = 'Please enter a valid admin email.'; return; }
+      if (!domain) { errorEl.textContent = 'Please enter your school domain.'; return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const { error } = await sb.from('enterprise_inquiries').insert({
+          school_name: schoolName,
+          admin_first: adminFirst,
+          admin_last: adminLast,
+          admin_email: adminEmail,
+          domain: domain,
+          est_students: estStudents,
+          est_teachers: estTeachers,
+          est_classes: estClasses,
+          notes: notes || null,
+          created_at: new Date().toISOString()
+        });
+
+        btn.disabled = false;
+        btn.textContent = 'Request Enterprise Access';
+
+        if (error) {
+          // Try without created_at if there's a schema issue
+          const { error: error2 } = await sb.from('enterprise_inquiries').insert({
+            school_name: schoolName,
+            admin_first: adminFirst,
+            admin_last: adminLast,
+            admin_email: adminEmail,
+            domain: domain,
+            est_students: estStudents,
+            est_teachers: estTeachers,
+            est_classes: estClasses,
+            notes: notes || null
+          });
+          if (error2) {
+            errorEl.textContent = 'There was a problem submitting. Please email us directly at enterprise@aiexplorer.com.';
+            return;
+          }
+        }
+
+        // Success
+        formEl.classList.add('hidden');
+        successEl.classList.remove('hidden');
+        successEl.innerHTML = `
+          <div style="text-align:center;padding:20px 0;">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🎉</div>
+            <div style="font-size:1.15rem;font-weight:900;margin-bottom:8px;color:#34d399;">Request received!</div>
+            <div style="color:#cbd5e1;line-height:1.7;">Thanks! We'll review your request and reach out to <strong style="color:#fff;">${escapeHtml(adminEmail)}</strong> within 1–2 business days.</div>
+          </div>
+        `;
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Request Enterprise Access';
+        errorEl.textContent = 'Something went wrong. Please try again or contact us directly.';
+      }
     }
 
     function openModal(name) {
@@ -2308,7 +2773,6 @@
       const plan = urlParams.get('plan');
       if (payment === 'success' && plan) {
         history.replaceState({}, '', window.location.pathname);
-        // Wait for auth to restore, then upgrade plan
         const { data } = await sb.auth.getSession();
         const user = data.session?.user;
         if (user) {
