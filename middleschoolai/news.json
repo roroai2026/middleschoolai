@@ -1,0 +1,48 @@
+{
+  "current": [
+    {
+      "title": "Khan Academy Expands Khanmigo AI Tutor to All Free Users",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "Khan Academy is rolling out its GPT-4 powered tutoring assistant Khanmigo to all users at no cost, marking a major shift in free AI-powered education."
+    },
+    {
+      "title": "UNESCO Releases Global Framework for AI Literacy in Schools",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "UNESCO published a new framework recommending that all students aged 10 and up receive foundational AI literacy education by 2027."
+    },
+    {
+      "title": "Study: Students Who Learn AI Concepts Early Score Higher in STEM",
+      "tag": "Research",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "A new Stanford study found that middle schoolers introduced to AI concepts showed a 23% improvement in computational thinking scores compared to control groups."
+    }
+  ],
+  "archives": [
+    {
+      "title": "Google Releases Free AI Essentials Course for K-12 Teachers",
+      "tag": "Innovation",
+      "tagColor": "teal",
+      "date": "April 2026",
+      "summary": "Google launched a self-paced AI Essentials curriculum specifically designed for K-12 educators, covering AI basics, ethics, and classroom integration."
+    },
+    {
+      "title": "EU Mandates AI Education in All Member State Curricula by 2028",
+      "tag": "Global",
+      "tagColor": "green",
+      "date": "April 2026",
+      "summary": "The European Union passed legislation requiring AI literacy to be part of the official school curriculum across all 27 member states within two years."
+    },
+    {
+      "title": "Microsoft Partners with 500 School Districts for AI Literacy Push",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "March 2026",
+      "summary": "Microsoft announced a partnership with over 500 US school districts to provide free AI literacy tools and teacher training through its Education suite."
+    }
+  ]
+}
