@@ -3057,6 +3057,25 @@
           }
         }
 
+        // Send email notification via Formsubmit
+        try {
+          await fetch('https://formsubmit.co/ajax/RoROAI2026@gmail.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              _subject: 'New Enterprise Inquiry: ' + schoolName,
+              school_name: schoolName,
+              admin_name: adminFirst + ' ' + adminLast,
+              admin_email: adminEmail,
+              domain: domain,
+              est_students: estStudents,
+              est_teachers: estTeachers,
+              est_classes: estClasses,
+              notes: notes || 'None'
+            })
+          });
+        } catch (e) { /* email failure is non-blocking */ }
+
         // Success
         formEl.classList.add('hidden');
         successEl.classList.remove('hidden');
