@@ -1,6 +1,20 @@
 {
   "current": [
     {
+      "title": "Humanoid Robots Are Heading to Factory Floors",
+      "tag": "Robotics",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "A British company called Humanoid has signed a deal to deploy up to 2,000 humanoid robots at Schaeffler's global manufacturing sites by 2032. Meanwhile, a South Korean startup is recording hotel and warehouse workers' movements to teach robots how to fold napkins and move goods. Physical AI is becoming very real, very fast — and it's changing what jobs on the factory floor look like."
+    },
+    {
+      "title": "Fake AI Model on Hugging Face Was Actually Malware",
+      "tag": "Security",
+      "tagColor": "red",
+      "date": "May 2026",
+      "summary": "Security researchers found malicious software hiding on Hugging Face, disguised as an official OpenAI model release. Six other fake repositories were part of the same attack. This is a reminder that AI platforms aren't just for ideas — they run real code, and bad actors are starting to exploit them. Knowing what you download and where it comes from matters more than ever."
+    },
+    {
       "title": "Khan Academy Expands Khanmigo AI Tutor to All Free Users",
       "tag": "Classroom AI",
       "tagColor": "purple",
