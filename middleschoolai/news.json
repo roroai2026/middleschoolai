@@ -1,6 +1,20 @@
 {
   "current": [
     {
+      "title": "AI Fake News Site Exposed: Every Reporter Was Made Up",
+      "tag": "Media Literacy",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "Investigators discovered that the \"South Florida Standard\" \u2014 which published up to three AI-generated stories a day \u2014 had a full roster of completely fabricated journalists. Every reporter had a fake headshot, a fake bio, and no real digital footprint. After investigators started asking questions, the site quietly went offline. It's a striking example of how AI can be used to manufacture fake credibility at scale."
+    },
+    {
+      "title": "AI-Generated Papers Are Flooding Academic Journals",
+      "tag": "AI in Society",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "Journal editors and peer reviewers are reporting an overwhelming surge of AI-generated research papers that are nearly impossible to detect. The crisis is threatening the integrity of the academic peer-review system, with no clear industry-wide solution in sight \u2014 raising big questions about trust in science."
+    },
+    {
       "title": "Humanoid Robots Are Heading to Factory Floors",
       "tag": "Robotics",
       "tagColor": "blue",
