@@ -1,19 +1,28 @@
 {
   "current": [
     {
-      "title": "Humanoid Robots Are Heading to Factory Floors",
-      "tag": "Robotics",
-      "tagColor": "blue",
+      "title": "Wake County Student Petitions for Fair AI Detection Policies After False Cheating Accusation",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
       "date": "May 2026",
-      "summary": "A British company called Humanoid has signed a deal to deploy up to 2,000 humanoid robots at Schaeffler's global manufacturing sites by 2032. Meanwhile, a South Korean startup is recording hotel and warehouse workers' movements to teach robots how to fold napkins and move goods. Physical AI is becoming very real, very fast — and it's changing what jobs on the factory floor look like."
+      "summary": "A North Carolina high school freshman launched a Change.org petition after AI detection tools flagged her original writing as 87% AI-generated, sparking a national debate over the accuracy and fairness of AI plagiarism detectors in K-12 classrooms."
     },
     {
-      "title": "Fake AI Model on Hugging Face Was Actually Malware",
-      "tag": "Security",
-      "tagColor": "red",
+      "title": "31 States Introduce 134 AI Education Bills in Record 2026 Legislative Push",
+      "tag": "Policy",
+      "tagColor": "orange",
       "date": "May 2026",
-      "summary": "Security researchers found malicious software hiding on Hugging Face, disguised as an official OpenAI model release. Six other fake repositories were part of the same attack. This is a reminder that AI platforms aren't just for ideas — they run real code, and bad actors are starting to exploit them. Knowing what you download and where it comes from matters more than ever."
+      "summary": "A new tracking report reveals that 134 AI-in-education bills have been introduced across 31 states this legislative session, covering student data privacy, classroom use restrictions, and mandatory AI literacy curriculum requirements."
     },
+    {
+      "title": "AI Literacy Added to 2029 PISA Global Student Assessment for the First Time",
+      "tag": "Global",
+      "tagColor": "green",
+      "date": "May 2026",
+      "summary": "The international PISA exam will measure AI literacy among 15-year-olds worldwide for the first time in 2029, pushing policymakers to accelerate AI education standards so students can compete on a global stage."
+    }
+  ],
+  "archives": [
     {
       "title": "Khan Academy Expands Khanmigo AI Tutor to All Free Users",
       "tag": "Classroom AI",
@@ -34,9 +43,7 @@
       "tagColor": "blue",
       "date": "May 2026",
       "summary": "A new Stanford study found that middle schoolers introduced to AI concepts showed a 23% improvement in computational thinking scores compared to control groups."
-    }
-  ],
-  "archives": [
+    },
     {
       "title": "Google Releases Free AI Essentials Course for K-12 Teachers",
       "tag": "Innovation",
