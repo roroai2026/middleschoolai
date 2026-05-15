@@ -1,0 +1,26 @@
+{
+  "current": [
+    {
+      "title": "31 States Introduce 134 AI Education Bills Targeting Student Data Privacy and Classroom Rules",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "A surge of 2026 state legislation is placing guardrails around AI in schools, with bills banning student data from being used to train AI models, requiring human oversight for high-stakes decisions, and adding AI instruction to graduation standards."
+    },
+    {
+      "title": "Schools Worldwide Shift From AI Bans to Structured Deployment as UNESCO and EU Frameworks Take Hold",
+      "tag": "Global",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "A 2026 review finds schools globally have moved past the ban-or-allow debate, now deploying AI as a productivity layer for teachers and administrators guided by UNESCO's generative AI guidance and the EU AI Act's phased rollout."
+    },
+    {
+      "title": "Georgia and Mississippi Lead Push to Require AI Literacy Credits for High School Graduation",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "Multiple states are mandating AI instruction as part of computer science graduation requirements, signaling a national push to build foundational AI literacy among K-12 students before they enter the workforce."
+    }
+  ],
+  "archives": []
+}
