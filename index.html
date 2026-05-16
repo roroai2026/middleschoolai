@@ -1,0 +1,3237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Explorer | Free, Plus, and School Enterprise</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+    :root {
+      --bg: #0f0c29;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.1);
+      --line: rgba(255,255,255,0.12);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --violet: #a78bfa;
+      --blue: #60a5fa;
+      --green: #34d399;
+      --gold: #f59e0b;
+      --red: #f87171;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,58,237,0.22), transparent 32%),
+        radial-gradient(circle at top right, rgba(37,99,235,0.2), transparent 28%),
+        linear-gradient(180deg, #0f0c29 0%, #151031 42%, #091324 100%);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; }
+
+    .auth-bar {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      background: rgba(7, 10, 24, 0.76);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(14px);
+    }
+
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .badge.plan-free { background: rgba(96,165,250,0.16); color: #bfdbfe; }
+    .badge.plan-plus { background: rgba(245,158,11,0.16); color: #fcd34d; }
+    .badge.plan-enterprise { background: rgba(52,211,153,0.16); color: #86efac; }
+
+    .badge.tier-free-preview {
+      background: rgba(96,165,250,0.14);
+      color: #93c5fd;
+      border: 1px solid rgba(96,165,250,0.3);
+      font-size: 0.7rem;
+    }
+    .badge.tier-plus {
+      background: rgba(245,158,11,0.16);
+      color: #fcd34d;
+      border: 1px solid rgba(245,158,11,0.35);
+      font-size: 0.7rem;
+    }
+
+    .btn-sm,
+    .btn-primary,
+    .btn-secondary,
+    .btn-pro,
+    .btn-enterprise {
+      border: none;
+      border-radius: 999px;
+      font-family: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      background: rgba(99,102,241,0.18);
+      color: #ddd6fe;
+      border: 1px solid rgba(99,102,241,0.35);
+    }
+
+    .btn-sm:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .btn-pro:hover,
+    .btn-enterprise:hover { transform: translateY(-1px); }
+
+    .btn-sm.danger {
+      background: rgba(239,68,68,0.14);
+      color: var(--red);
+      border-color: rgba(239,68,68,0.34);
+    }
+
+    .admin-bar {
+      display: none;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      background: rgba(12,20,36,0.9);
+      border-bottom: 1px solid rgba(255,220,0,0.2);
+      position: sticky;
+      top: 61px;
+      z-index: 199;
+      backdrop-filter: blur(12px);
+    }
+    .admin-bar.visible { display: flex; }
+    .admin-label {
+      font-size: 0.82rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #fcd34d;
+      margin-right: 6px;
+    }
+
+    .hero {
+      position: relative;
+      padding: 88px 20px 72px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(60px);
+      opacity: 0.55;
+      z-index: 0;
+    }
+
+    .hero::before {
+      width: 280px;
+      height: 280px;
+      top: 40px;
+      left: -40px;
+      background: rgba(124,58,237,0.45);
+    }
+
+    .hero::after {
+      width: 320px;
+      height: 320px;
+      right: -50px;
+      top: 10px;
+      background: rgba(37,99,235,0.32);
+    }
+
+    .hero > * { position: relative; z-index: 1; }
+
+    .hero-emoji {
+      display: inline-block;
+      font-size: 4.8rem;
+      margin-bottom: 18px;
+      animation: bob 2.4s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.7rem, 7vw, 5rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, #c4b5fd 0%, #93c5fd 30%, #6ee7b7 62%, #fcd34d 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0 auto 22px;
+      font-size: 1.18rem;
+      color: #cbd5e1;
+      line-height: 1.65;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #ddd6fe;
+      font-weight: 800;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 18px 20px 24px;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(12px);
+    }
+
+    nav a {
+      text-decoration: none;
+      padding: 9px 16px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 0.95rem;
+      border: 1px solid transparent;
+    }
+
+    nav a:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .section {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 78px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 42px;
+    }
+
+    .section-header .emoji {
+      display: block;
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      max-width: 720px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+
+    .cards,
+    .plans-grid,
+    .facts-grid,
+    .dashboard-grid {
+      display: grid;
+      gap: 24px;
+    }
+
+    .plans-grid,
+    .facts-grid,
+    .dashboard-grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .cards {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .card,
+    .plan-card,
+    .fact-card,
+    .dashboard-card,
+    .chat-shell,
+    .quiz-shell,
+    .module-highlight {
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+    }
+
+    .plan-card {
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-card.pro {
+      background: linear-gradient(180deg, rgba(245,158,11,0.14), rgba(255,255,255,0.05));
+      border-color: rgba(245,158,11,0.38);
+    }
+
+    .plan-card.enterprise {
+      background: linear-gradient(180deg, rgba(52,211,153,0.14), rgba(255,255,255,0.05));
+      border-color: rgba(52,211,153,0.32);
+    }
+
+    .plan-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 900;
+      color: var(--muted);
+    }
+
+    .plan-card h3 {
+      font-size: 1.6rem;
+      margin: 12px 0 6px;
+      font-weight: 900;
+    }
+
+    .price {
+      font-size: 2.9rem;
+      font-weight: 900;
+      margin: 18px 0 8px;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .price-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .plan-note {
+      color: var(--muted);
+      line-height: 1.6;
+      min-height: 72px;
+    }
+
+    .plan-card ul {
+      list-style: none;
+      margin: 22px 0 26px;
+    }
+
+    .plan-card li {
+      padding: 8px 0;
+      color: #dbeafe;
+      line-height: 1.45;
+    }
+
+    .plan-card li::before {
+      content: "✓";
+      display: inline-block;
+      margin-right: 10px;
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .btn-primary,
+    .btn-pro,
+    .btn-secondary,
+    .btn-enterprise {
+      padding: 14px 22px;
+      font-size: 1rem;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #fff;
+    }
+
+    .btn-pro {
+      background: linear-gradient(135deg, #f59e0b, #ef4444);
+      color: #fff;
+    }
+
+    .btn-enterprise {
+      background: linear-gradient(135deg, #059669, #0891b2);
+      color: #fff;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 22px;
+    }
+
+    .module-card {
+      position: relative;
+      overflow: hidden;
+      padding: 26px;
+      border-radius: 22px;
+      min-height: 255px;
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .module-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 22px 46px rgba(0,0,0,0.28);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .module-card .module-emoji {
+      font-size: 2.2rem;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+
+    .module-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      font-weight: 900;
+    }
+
+    .module-card p {
+      color: rgba(255,255,255,0.86);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .module-meta {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      color: #d8e2ff;
+      font-size: 0.84rem;
+      font-weight: 800;
+    }
+
+    .module-state {
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    .gradient-1 { background: linear-gradient(135deg, #4c1d95, #7c3aed); }
+    .gradient-2 { background: linear-gradient(135deg, #1d4ed8, #2563eb); }
+    .gradient-3 { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+    .gradient-4 { background: linear-gradient(135deg, #166534, #22c55e); }
+    .gradient-5 { background: linear-gradient(135deg, #92400e, #f59e0b); }
+    .gradient-6 { background: linear-gradient(135deg, #7f1d1d, #ef4444); }
+    .gradient-7 { background: linear-gradient(135deg, #0f3d68, #0891b2); }
+    .gradient-8 { background: linear-gradient(135deg, #6d28d9, #ec4899); }
+
+    .module-highlight,
+    .quiz-shell,
+    .chat-shell {
+      padding: 28px;
+    }
+
+    .module-highlight p,
+    .chat-intro,
+    .dashboard-card p,
+    .teacher-empty,
+    .small-note {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .facts-grid { margin-top: 28px; }
+
+    .fact-card {
+      padding: 26px;
+      text-align: center;
+    }
+
+    .fact-num {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 2.4rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #c4b5fd, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .quiz-shell {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(99,102,241,0.16), rgba(255,255,255,0.05));
+    }
+
+    .quiz-question {
+      font-size: 1.38rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .quiz-btn {
+      border: 2px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      border-radius: 18px;
+      padding: 15px 16px;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .quiz-btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(167,139,250,0.8);
+      background: rgba(124,58,237,0.28);
+    }
+
+    .quiz-btn.correct {
+      background: rgba(52,211,153,0.26);
+      border-color: rgba(52,211,153,0.9);
+    }
+
+    .quiz-btn.wrong {
+      background: rgba(248,113,113,0.26);
+      border-color: rgba(248,113,113,0.9);
+    }
+
+    .quiz-result {
+      min-height: 28px;
+      font-weight: 800;
+      margin-bottom: 16px;
+    }
+
+    .dashboard-grid { align-items: start; }
+
+    .dashboard-card {
+      padding: 26px;
+    }
+
+    .dashboard-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      font-weight: 900;
+    }
+
+    .progress-rail {
+      height: 10px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
+    }
+
+    .row-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .row-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.94rem;
+    }
+
+    .row-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .teacher-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    .teacher-table th,
+    .teacher-table td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .teacher-table th {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .teacher-table tr:last-child td { border-bottom: none; }
+
+    .chat-shell {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .chat-messages {
+      margin: 18px 0 16px;
+      display: grid;
+      gap: 12px;
+      max-height: 340px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .chat-message {
+      padding: 14px 16px;
+      border-radius: 18px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .chat-message.user {
+      background: rgba(99,102,241,0.22);
+      border: 1px solid rgba(99,102,241,0.3);
+    }
+
+    .chat-message.bot {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .chat-input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+    }
+
+    .chat-input-row textarea,
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+      padding: 14px 16px;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .form-group input:-webkit-autofill,
+    .form-group input:-webkit-autofill:hover,
+    .form-group input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0px 1000px rgba(30,30,50,1) inset !important;
+      -webkit-text-fill-color: #fff !important;
+      caret-color: #fff;
+    }
+
+    .chat-input-row textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .form-group select option {
+      background: #17152a;
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 52px 20px 64px;
+      color: #64748b;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      width: min(760px, 100%);
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      background: #15172a;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 28px;
+      padding: 34px;
+      position: relative;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+    }
+
+    .modal.narrow { width: min(480px, 100%); }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.35rem;
+      cursor: pointer;
+    }
+
+    .modal h2 {
+      font-size: 1.7rem;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.65;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .three-up {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .divider-or {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: #64748b;
+      font-size: 0.84rem;
+      margin: 14px 0;
+    }
+
+    .divider-or::before,
+    .divider-or::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .btn-oauth {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #fff;
+      padding: 13px 16px;
+      font-family: inherit;
+      font-size: 0.96rem;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn-oauth:hover {
+      background: rgba(255,255,255,0.11);
+    }
+
+    .form-error,
+    .form-success {
+      min-height: 22px;
+      font-size: 0.88rem;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .form-error { color: var(--red); }
+    .form-success { color: var(--green); }
+
+    .modal-toggle {
+      margin-top: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .modal-toggle a {
+      color: var(--violet);
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .hidden { display: none !important; }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 1500;
+      max-width: 340px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #15172a;
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.35);
+    }
+
+    .toast.success { color: var(--green); border-color: rgba(52,211,153,0.4); }
+    .toast.error { color: var(--red); border-color: rgba(248,113,113,0.38); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .video-placeholder {
+      background: rgba(99,102,241,0.08);
+      border: 1px dashed rgba(167,139,250,0.4);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .video-placeholder .vp-icon { font-size: 2.2rem; margin-bottom: 8px; }
+    .video-placeholder .vp-title { font-weight: 900; font-size: 1.1rem; margin-bottom: 6px; color: #c4b5fd; }
+    .video-placeholder .vp-sub { color: var(--muted); font-size: 0.92rem; }
+
+    .yt-embed-wrap {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 16px;
+      margin-bottom: 18px;
+      background: #000;
+    }
+    .yt-embed-wrap iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      border-radius: 16px;
+    }
+
+    /* Guest blur treatment for locked module cards */
+    .module-card-locked-wrap {
+      position: relative;
+      cursor: pointer;
+    }
+    .module-card-locked-wrap .module-card {
+      filter: blur(4px);
+      opacity: 0.5;
+      pointer-events: none;
+      user-select: none;
+    }
+    .module-card-locked-wrap .lock-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+    .module-card-locked-wrap .lock-badge {
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 0.92rem;
+      color: #fff;
+      pointer-events: none;
+    }
+
+    .leaderboard-section {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 0 0 48px;
+    }
+
+    .leaderboard-card {
+      border-radius: 24px;
+      border: 1px solid rgba(52,211,153,0.2);
+      background: rgba(52,211,153,0.04);
+      backdrop-filter: blur(14px);
+      padding: 28px;
+    }
+
+    .leaderboard-card h3 {
+      font-size: 1.15rem;
+      font-weight: 900;
+      margin-bottom: 14px;
+      color: #86efac;
+    }
+
+    .upgrade-cta-box {
+      margin-top: 18px;
+      padding: 18px 20px;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.32);
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .upgrade-cta-box p {
+      color: #fcd34d;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    /* News Section */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 8px;
+    }
+
+    .news-card {
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      padding: 22px 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .news-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.26);
+    }
+
+    .news-tag {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .news-title {
+      font-size: 1rem;
+      font-weight: 900;
+      line-height: 1.45;
+      color: var(--text);
+    }
+
+    .news-summary {
+      font-size: 0.91rem;
+      color: #cbd5e1;
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .news-date {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .news-archives-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.14);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 9px 20px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin: 28px auto 0;
+      display: block;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .news-archives-toggle:hover {
+      background: rgba(255,255,255,0.07);
+      color: #fff;
+    }
+
+    .news-archives {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .news-archives.open {
+      display: block;
+    }
+
+    .news-archives-heading {
+      font-size: 0.85rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 760px) {
+      .auth-bar {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .two-up,
+      .three-up,
+      .chat-input-row {
+        grid-template-columns: 1fr;
+      }
+
+      .section { padding: 62px 0; }
+
+      .modal { padding: 28px 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-bar">
+    <span id="auth-user-info"></span>
+    <button class="btn-sm" id="btn-login" onclick="openModal('login')">Sign In</button>
+    <button class="btn-sm" id="btn-signup" onclick="openModal('signup')">Sign Up</button>
+    <button class="btn-sm hidden" id="btn-dashboard" onclick="openModal('dashboard')">Dashboard</button>
+    <button class="btn-sm danger hidden" id="btn-logout" onclick="signOut()">Sign Out</button>
+  </div>
+
+  <div class="admin-bar" id="admin-bar">
+    <span class="admin-label">Admin Preview</span>
+    <button class="btn-sm" onclick="setAdminView('teacher')">Teacher</button>
+    <button class="btn-sm" onclick="setAdminView('student')">Student</button>
+    <button class="btn-sm" onclick="setAdminView('free')">Free User</button>
+    <button class="btn-sm" onclick="setAdminView('plus')">Plus User</button>
+  </div>
+
+  <section class="hero">
+    <span class="hero-emoji">🤖</span>
+    <h1>AI Explorer</h1>
+    <p>
+      A middle-school-friendly AI learning site with a free track, a deeper Plus experience,
+      and a School Enterprise plan for classrooms that want dashboards, progress tracking, and SSO onboarding.
+    </p>
+    <span class="hero-badge">🎓 Learn AI without the boring parts</span>
+  </section>
+
+  <nav>
+    <a href="#modules">🧠 Modules</a>
+    <a href="#news">📰 News</a>
+    <a href="#plans">💳 Plans</a>
+    <a href="#facts">🤯 Facts</a>
+    <a href="#final-quiz">🎮 Final Quiz</a>
+    <a href="#ai-help">💬 AI Help</a>
+  </nav>
+
+  <!-- MODULES SECTION (moved above plans) -->
+  <section class="section reveal" id="modules">
+    <div class="section-header">
+      <span class="emoji">🧠</span>
+      <h2>Explore the Modules <span id="current-set-label" style="display:inline-block;margin-left:10px;font-size:0.85rem;font-weight:700;background:rgba(167,139,250,0.18);color:#c4b5fd;border-radius:999px;padding:3px 12px;vertical-align:middle;">Set 1</span></h2>
+      <p>
+        Free users get a lesson preview + 1 quiz question per module. Plus and Enterprise users unlock the full lesson, all 5 questions, and a video lesson.
+      </p>
+    </div>
+    <div class="module-highlight" style="margin-bottom:24px;">
+      <h3 style="font-size:1.2rem;margin-bottom:8px;">How access works</h3>
+      <p id="access-copy">
+        You are currently browsing as a guest. Sign in to save progress. Click any module for a free preview. Upgrade to Plus or School Enterprise to unlock full lessons, 5 quiz questions, and video content.
+      </p>
+    </div>
+    <div class="module-grid" id="module-grid"></div>
+  </section>
+
+  <!-- Enterprise leaderboard (shown for enterprise students) -->
+  <div class="leaderboard-section hidden" id="enterprise-leaderboard">
+    <div class="leaderboard-card">
+      <h3>🏆 Class Leaderboard</h3>
+      <p style="color:var(--muted);margin-bottom:16px;">Top students in your class by modules completed.</p>
+      <div id="leaderboard-content">
+        <div class="row-list">
+          <div class="row-item">
+            <span>🥇 Alex M.</span><span style="color:#34d399;">8 modules</span>
+          </div>
+          <div class="row-item">
+            <span>🥈 Jordan T.</span><span style="color:#34d399;">6 modules</span>
+          </div>
+          <div class="row-item">
+            <span>🥉 Sam K.</span><span style="color:#34d399;">5 modules</span>
+          </div>
+          <div class="row-item">
+            <span>4. Riley P.</span><span style="color:#a78bfa;">4 modules</span>
+          </div>
+          <div class="row-item">
+            <span>5. You</span><span style="color:#60a5fa;">Loading...</span>
+          </div>
+        </div>
+        <p style="color:var(--muted);font-size:0.82rem;margin-top:12px;">Live leaderboard data hookup coming soon — complete modules to climb the ranks!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS SECTION -->
+  <section class="section reveal" id="news">
+    <div class="section-header">
+      <span class="emoji">📰</span>
+      <h2>AI in Education — Latest News</h2>
+      <p>Stay current with what's happening in AI and schools around the world.</p>
+    </div>
+    <div class="news-grid" id="news-current">
+      <div style="color:var(--muted);text-align:center;grid-column:1/-1;">Loading news...</div>
+    </div>
+    <button class="news-archives-toggle" id="news-archives-btn" onclick="toggleNewsArchives()">📂 View Archives</button>
+    <div class="news-archives" id="news-archives">
+      <div class="news-archives-heading">Earlier Stories</div>
+      <div class="news-grid" id="news-archives-grid"></div>
+    </div>
+  </section>
+
+  <!-- PLANS/PRICING SECTION (moved below modules) -->
+  <section class="section reveal" id="plans">
+    <div class="section-header">
+      <span class="emoji">💳</span>
+      <h2>Choose the Right Plan</h2>
+      <p>
+        Free gets you a preview of every module. Plus unlocks everything for $3/month. School Enterprise adds classrooms, teacher dashboards, and SSO.
+      </p>
+    </div>
+    <div class="plans-grid">
+      <!-- Free Plan -->
+      <div class="plan-card">
+        <div class="plan-label">Free</div>
+        <h3>Explorer Free</h3>
+        <div class="price">$0 <span>forever</span></div>
+        <p class="plan-note">
+          Get a taste of every module — 2 lesson paragraphs + 1 quiz question each. Plus the final quiz.
+        </p>
+        <ul>
+          <li>All 8 module preview cards</li>
+          <li>2-paragraph lesson preview per module</li>
+          <li>1 quiz question per module</li>
+          <li>Final quiz (all 5 questions)</li>
+          <li>Email or Google login</li>
+        </ul>
+        <button class="btn-primary" onclick="openSignupForPlan('free','student')">Start Free</button>
+      </div>
+
+      <!-- Plus Plan -->
+      <div class="plan-card pro">
+        <div class="plan-label">Plus</div>
+        <h3>AI Explorer Plus</h3>
+        <div class="price">$3 <span>/ month</span></div>
+        <p class="plan-note">
+          Unlock the complete experience — full lessons, 5 questions per module, video placeholders, and AI help.
+        </p>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Full lesson text for all 8 modules</li>
+          <li>5 quiz questions per module</li>
+          <li>📹 Video lesson per module (coming soon)</li>
+          <li>Saved progress &amp; AI chatbot</li>
+        </ul>
+        <button class="btn-pro" onclick="goToCheckout('plus')">Get Plus — $3/month</button>
+      </div>
+
+      <!-- Enterprise Plan -->
+      <div class="plan-card enterprise">
+        <div class="plan-label">School Enterprise</div>
+        <h3>School Enterprise</h3>
+        <div class="price" style="font-size:2rem;">$3 <span>/ student / mo</span></div>
+        <p class="price-sub">+ $3 / teacher / month</p>
+        <p class="plan-note">
+          Everything in Plus for every student, plus class management, teacher dashboards, and SSO onboarding.
+        </p>
+        <ul>
+          <li>Everything in Plus for all students</li>
+          <li>Class leaderboard per class</li>
+          <li>Teacher progress dashboard</li>
+          <li>Admin view: all teachers, classes, students</li>
+          <li>SSO via school domain</li>
+        </ul>
+        <button class="btn-enterprise" onclick="openModal('enterprise-register')">Register Your School</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section reveal" id="facts">
+    <div class="section-header">
+      <span class="emoji">🤯</span>
+      <h2>Mind-Blowing AI Facts</h2>
+      <p>Here are a few fast facts that make AI feel very real, very big, and very current.</p>
+    </div>
+    <div class="facts-grid">
+      <div class="fact-card"><span class="fact-num">1956</span><p>The term "Artificial Intelligence" was officially introduced at the Dartmouth workshop.</p></div>
+      <div class="fact-card"><span class="fact-num">100M</span><p>ChatGPT reached 100 million users faster than almost any consumer app before it.</p></div>
+      <div class="fact-card"><span class="fact-num">8</span><p>This site has eight modules — free users get a preview, Plus users get the full experience with video.</p></div>
+      <div class="fact-card"><span class="fact-num">$3</span><p>Plus is just $3/month — full lessons, 5 questions per module, and video content for every learner.</p></div>
+    </div>
+  </section>
+
+  <section class="section reveal" id="final-quiz">
+    <div class="section-header">
+      <span class="emoji">🎮</span>
+      <h2>Final Quiz</h2>
+      <p>
+        Everyone can take the final quiz. Plus and Enterprise learners also get quizzes inside every module.
+      </p>
+    </div>
+    <div class="quiz-shell">
+      <div class="quiz-question" id="final-quiz-question">Loading question...</div>
+      <div class="quiz-options" id="final-quiz-options"></div>
+      <div class="quiz-result" id="final-quiz-result"></div>
+      <button class="btn-primary" id="final-next-btn" style="display:none;max-width:240px;margin:0 auto;" onclick="nextFinalQuestion()">Next Question</button>
+    </div>
+  </section>
+
+  <section class="section reveal hidden" id="ai-help">
+    <div class="section-header">
+      <span class="emoji">💬</span>
+      <h2>Ask the AI Tutor</h2>
+      <p>
+        Plus and School Enterprise learners can ask follow-up questions here. This UI is ready to connect to your secure AI endpoint.
+      </p>
+    </div>
+    <div class="chat-shell">
+      <p class="chat-intro">
+        This chatbot should be wired to a secure backend like a Supabase Edge Function. That keeps your API key off the page.
+      </p>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-message bot">Ask me about machine learning, neural networks, bias, careers, or any of the lesson topics.</div>
+      </div>
+      <div class="chat-input-row">
+        <textarea id="chat-input" placeholder="Type a question about AI..."></textarea>
+        <button class="btn-primary" style="width:auto;padding-inline:24px;" onclick="askAI()">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built for curious students, ambitious teachers, and schools that want a lighter way to teach AI.</p>
+    <p style="margin-top:8px;">Supabase powers auth, profiles, and progress. Paid chatbot access is ready for your secure backend later.</p>
+  </footer>
+
+  <!-- SET COMPLETION MODAL -->
+  <div class="modal-overlay" id="modal-set-complete">
+    <div class="modal narrow" style="text-align:center;">
+      <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+      <h2 id="set-complete-title">Set 1 Complete!</h2>
+      <p class="subtitle" id="set-complete-body" style="margin:12px 0 24px;">You've mastered all 8 modules. Set 2 is now unlocked — 8 brand new advanced topics await.</p>
+      <button class="btn-primary" onclick="unlockNextSet()">Start Set 2 →</button>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal-overlay" id="modal-login">
+    <div class="modal narrow">
+      <button class="modal-close" onclick="closeModal('login')">✕</button>
+      <h2>Welcome back</h2>
+      <p class="subtitle">Sign in with email or continue with your Google account from Supabase.</p>
+      <div class="form-error" id="login-error"></div>
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary" id="login-btn" onclick="signIn()">Sign In</button>
+      <div class="divider-or">or</div>
+      <button class="btn-oauth" onclick="signInWithGoogle('login')">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+      <div class="form-group" style="margin-top:14px;">
+        <label for="login-sso-domain">School SSO email or domain</label>
+        <input type="text" id="login-sso-domain" placeholder="teacher@school.org or school.org" />
+      </div>
+      <button class="btn-secondary" onclick="signInWithSSO()">Continue with School SSO</button>
+      <div class="modal-toggle">Need an account? <a onclick="switchModal('login','signup')">Create one</a></div>
+    </div>
+  </div>
+
+  <!-- SIGNUP MODAL -->
+  <div class="modal-overlay" id="modal-signup">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('signup')">✕</button>
+      <h2>Create your account</h2>
+      <p class="subtitle">Choose Free, Plus, or School Enterprise. Google login uses your Supabase provider setup.</p>
+      <div class="form-error" id="signup-error"></div>
+      <div class="form-success" id="signup-success"></div>
+      <div class="two-up">
+        <div class="form-group">
+          <label for="signup-name">Full Name</label>
+          <input type="text" id="signup-name" placeholder="Your name" />
+        </div>
+        <div class="form-group">
+          <label for="signup-email">Email</label>
+          <input type="email" id="signup-email" placeholder="you@example.com" />
+        </div>
+      </div>
+      <div class="two-up">
+        <div class="form-group">
+          <label for="signup-password">Password</label>
+          <input type="password" id="signup-password" placeholder="At least 8 characters" />
+        </div>
+        <div class="form-group">
+          <label for="signup-role">I am signing up as a...</label>
+          <select id="signup-role" onchange="toggleEnterpriseFields()">
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">School Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="two-up">
+        <div class="form-group">
+          <label for="signup-plan">Plan</label>
+          <select id="signup-plan" onchange="toggleEnterpriseFields()">
+            <option value="free">Free</option>
+            <option value="plus">Plus — $3/month</option>
+            <option value="enterprise">School Enterprise</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="signup-school">School Name</label>
+          <input type="text" id="signup-school" placeholder="Optional unless school plan" />
+        </div>
+      </div>
+
+      <div id="enterprise-fields" class="hidden">
+        <div class="two-up">
+          <div class="form-group">
+            <label for="signup-work-email">Work Email</label>
+            <input type="email" id="signup-work-email" placeholder="teacher@school.org" />
+          </div>
+          <div class="form-group">
+            <label for="signup-sso">Need school SSO?</label>
+            <select id="signup-sso">
+              <option value="yes">Yes, we want SSO</option>
+              <option value="no">Not right now</option>
+            </select>
+          </div>
+        </div>
+        <div class="two-up">
+          <div class="form-group">
+            <label for="signup-seats">Student Seats</label>
+            <input type="number" min="1" id="signup-seats" placeholder="e.g. 120" />
+          </div>
+          <div class="form-group">
+            <label for="signup-classes">Classes / Teachers</label>
+            <input type="number" min="1" id="signup-classes" placeholder="e.g. 6" />
+          </div>
+        </div>
+        <p class="small-note">
+          We will store the work email and SSO request in the profile so you can follow up later about connecting school login and contracts.
+        </p>
+      </div>
+
+      <button class="btn-primary" id="signup-btn" onclick="signUp()">Create Account</button>
+      <div class="divider-or">or</div>
+      <button class="btn-oauth" onclick="signInWithGoogle('signup')">
+        <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+      <div class="modal-toggle">Already have an account? <a onclick="switchModal('signup','login')">Sign in</a></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD MODAL -->
+  <div class="modal-overlay" id="modal-dashboard">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('dashboard')">✕</button>
+      <h2 id="dashboard-title">Dashboard</h2>
+      <p class="subtitle" id="dashboard-subtitle">Your saved learning data</p>
+      <div id="dashboard-content">Loading...</div>
+    </div>
+  </div>
+
+  <!-- MODULE MODAL -->
+  <div class="modal-overlay" id="modal-module">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('module')">✕</button>
+      <h2 id="module-modal-title">Module</h2>
+      <p class="subtitle" id="module-modal-subtitle"></p>
+      <div id="module-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- ENTERPRISE REGISTRATION MODAL -->
+  <div class="modal-overlay" id="modal-enterprise-register">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('enterprise-register')">✕</button>
+      <h2>🏫 Register Your School</h2>
+      <p class="subtitle">Tell us about your school and we'll get your Enterprise account set up. $3/student/month + $3/teacher/month.</p>
+      <div class="form-error" id="enterprise-error"></div>
+      <div class="form-success hidden" id="enterprise-success"></div>
+      <div id="enterprise-form">
+        <div class="form-group">
+          <label for="ent-school-name">School / Organization Name</label>
+          <input type="text" id="ent-school-name" placeholder="Lincoln Middle School" />
+        </div>
+        <div class="two-up">
+          <div class="form-group">
+            <label for="ent-admin-first">Admin First Name</label>
+            <input type="text" id="ent-admin-first" placeholder="Jane" />
+          </div>
+          <div class="form-group">
+            <label for="ent-admin-last">Admin Last Name</label>
+            <input type="text" id="ent-admin-last" placeholder="Smith" />
+          </div>
+        </div>
+        <div class="two-up">
+          <div class="form-group">
+            <label for="ent-admin-email">Admin Email</label>
+            <input type="email" id="ent-admin-email" placeholder="admin@school.edu" />
+          </div>
+          <div class="form-group">
+            <label for="ent-domain">School Domain</label>
+            <input type="text" id="ent-domain" placeholder="school.edu" />
+          </div>
+        </div>
+        <p class="small-note" style="margin-bottom:14px;">The school domain (e.g. school.edu) is used for automatic login routing so students and teachers get to the right sign-in page.</p>
+        <div class="three-up">
+          <div class="form-group">
+            <label for="ent-students">Est. Students</label>
+            <input type="number" min="1" id="ent-students" placeholder="120" />
+          </div>
+          <div class="form-group">
+            <label for="ent-teachers">Est. Teachers</label>
+            <input type="number" min="1" id="ent-teachers" placeholder="6" />
+          </div>
+          <div class="form-group">
+            <label for="ent-classes">Number of Classes</label>
+            <input type="number" min="1" id="ent-classes" placeholder="4" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="ent-notes">Optional Message / Notes</label>
+          <textarea id="ent-notes" placeholder="Any questions, timeline, or details..."></textarea>
+        </div>
+        <button class="btn-enterprise" id="ent-submit-btn" onclick="submitEnterpriseInquiry()">Request Enterprise Access</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://lxdumjtgxrqxrkiypawg.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4ZHVtanRneHJxeHJraXlwYXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjQ0ODUsImV4cCI6MjA5MjA0MDQ4NX0.vpnq3U5GCm__GjfrfbZAd1Awc3waGzcVINXMFqXqv1k';
+    const AI_CHAT_ENDPOINT = '/.netlify/functions/ai-chat';
+
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    const moduleSets = [[
+    // ─── SET 1 ───
+      {
+        number: 1,
+        emoji: '🧠',
+        title: 'What is Artificial Intelligence?',
+        teaser: 'AI is when computers learn to handle tasks that usually need human thinking.',
+        gradient: 'gradient-1',
+        summary: 'Artificial Intelligence is software that learns from data to make predictions and decisions. In 2025, AI systems like ChatGPT, Gemini, and Claude have made AI something hundreds of millions of people use every day.',
+        lesson: [
+          'Artificial Intelligence is a way of building computer systems that can recognize patterns, make decisions, and respond to information in ways that feel smart. It is not magic and it is not alive. It is software trained on huge amounts of examples. In 2025, models like GPT-4o, Gemini 1.5, and Claude 3 can write essays, explain science, generate images, and write working code.',
+          'A helpful mental model: AI is pattern matching at massive scale. When you ask ChatGPT a question, it is not thinking. It is predicting the most useful sequence of words based on billions of examples it trained on. When you use Google Photos and it recognizes your face, that is a narrow AI doing one job very well.',
+          'The key thing to know right now is that AI has moved from labs into everyday life faster than most people expected. The apps you use for school, music, video, and search all have AI running in the background making them smarter.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'Which of these is a real AI assistant used by millions in 2025?', options: ['ChatGPT', 'R2-D2', 'HAL 9000', 'JARVIS'], answer: 0 },
+            { question: 'How does a language model like ChatGPT generate answers?', options: ['It looks up answers in a book', 'It predicts the most useful next words based on training data', 'It calls a human expert', 'It searches Wikipedia in real time'], answer: 1 },
+            { question: 'Which best describes AI in 2025?', options: ['Used only by scientists in labs', 'Part of everyday apps like search, photos, and chat', 'Still a future idea', 'Only useful for robots'], answer: 1 },
+            { question: 'What does it mean when we say AI is "narrow"?', options: ['It only works on small screens', 'It is designed to do one specific type of task well', 'It has limited battery life', 'It can only read narrow text'], answer: 1 },
+            { question: 'Which company created ChatGPT?', options: ['Google', 'Meta', 'OpenAI', 'Apple'], answer: 2 }
+          ]
+        }
+      },
+      {
+        number: 2,
+        emoji: '📚',
+        title: 'How AI Learns',
+        teaser: 'AI learns from examples, patterns, and feedback instead of reading a textbook.',
+        gradient: 'gradient-2',
+        summary: 'AI learns by adjusting millions of internal settings called weights based on examples and feedback. Modern AI models are trained on text, images, code, and more from across the internet.',
+        lesson: [
+          'Most modern AI systems are built on neural networks — structures with millions or billions of tiny adjustable weights. During training, the system sees examples and gets feedback on whether its guess was right. Over many rounds, the weights shift until the model gives better answers.',
+          'Large language models like GPT-4 and Gemini are trained using a process called self-supervised learning. The model reads massive amounts of text and learns to predict what word comes next. Do this billions of times across trillions of words and the model develops surprisingly deep understanding of language, logic, and facts.',
+          'Fine-tuning and reinforcement learning from human feedback (RLHF) are used after the base training to make models more helpful and safe. Humans rate the model\'s responses, and that feedback is used to shape the model\'s behavior. This is how ChatGPT learned to be conversational and follow instructions.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What does RLHF stand for?', options: ['Really Large Human Files', 'Reinforcement Learning from Human Feedback', 'Random Learning from Hard Facts', 'Repeated Logic from Historical Forms'], answer: 1 },
+            { question: 'What are the adjustable settings inside a neural network called?', options: ['Pixels', 'Weights', 'Buttons', 'Tokens'], answer: 1 },
+            { question: 'How did large language models like GPT-4 learn language?', options: ['By reading one textbook', 'By predicting the next word across trillions of text examples', 'By watching YouTube videos only', 'By copying a dictionary'], answer: 1 },
+            { question: 'What is supervised learning?', options: ['Learning with a human teacher in the room', 'Training where examples have correct answers already attached', 'AI watching supervised TV', 'Learning only from images'], answer: 1 },
+            { question: 'What is a neural network?', options: ['A physical brain inside a computer', 'A structure of weighted connections that adjusts during training', 'A type of internet cable', 'A database of facts'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 3,
+        emoji: '🗂️',
+        title: 'Types of AI',
+        teaser: 'From narrow AI to generative AI, different systems are built for different jobs.',
+        gradient: 'gradient-3',
+        summary: 'From narrow task-specific AI to multimodal models that handle text, images, and audio together, there are many kinds of AI systems built for different jobs.',
+        lesson: [
+          'Narrow AI does one kind of job extremely well: translating text, recognizing faces, filtering spam, or recommending content. Most AI you use every day is narrow AI. It is powerful within its domain but cannot generalize beyond it.',
+          'Generative AI is a major category that exploded in 2022–2025. These models create new content — writing, images, code, audio, and video. GPT-4o, DALL-E 3, Midjourney, Sora, and Claude are examples. Multimodal AI can handle multiple types of input at once, so you can show it a photo and ask a question about it.',
+          'Researchers also talk about AGI (Artificial General Intelligence) — a hypothetical system that could reason across all domains like a human. Most experts believe we are not there yet, but companies like OpenAI, Google DeepMind, and Anthropic are actively working toward more general AI capabilities.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'Which of these is a generative AI model?', options: ['DALL-E 3', 'A calculator', 'A search filter', 'A barcode scanner'], answer: 0 },
+            { question: 'What does multimodal AI mean?', options: ['AI that works on multiple devices', 'AI that can handle text, images, audio, and more together', 'AI that speaks multiple languages only', 'AI with multiple login options'], answer: 1 },
+            { question: 'What is AGI?', options: ['A type of graphics card', 'A hypothetical AI that can reason like a human across all domains', 'An AI app for gaming', 'A coding language'], answer: 1 },
+            { question: 'Which company created DALL-E 3?', options: ['Google', 'Meta', 'Anthropic', 'OpenAI'], answer: 3 },
+            { question: 'What can multimodal AI do that text-only AI cannot?', options: ['Run faster', 'Accept and combine different input types like text and images', 'Cost less money', 'Work without internet'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 4,
+        emoji: '🌍',
+        title: 'AI in Everyday Life',
+        teaser: 'Phones, maps, shopping, healthcare, and games all use AI in the background.',
+        gradient: 'gradient-4',
+        summary: 'AI is quietly embedded in phones, healthcare, maps, streaming, social media, and education — making products smarter and more personalized.',
+        lesson: [
+          'AI already shapes ordinary routines. Face unlock, autocorrect, photo filters, route planning, fraud detection, and recommendation systems all depend on models that guess what is most likely or most useful. In 2025, AI writing assistants are used by students and professionals daily.',
+          'In healthcare, AI tools like Google\'s MedPaLM and various radiology assistants help doctors review scans faster and find patterns in data that suggest disease risk. In education, AI tutors can adapt to a student\'s pace and explain concepts multiple ways — platforms like Khan Academy have built AI features powered by GPT-4.',
+          'A useful lesson: AI often feels invisible. The most important AI systems do not look flashy. They run quietly inside apps, making products faster, safer, and more personalized. Understanding this helps you notice AI even when it is not labeled.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'Which education platform added AI tutoring features powered by GPT-4?', options: ['MySpace', 'Khan Academy', 'Napster', 'Ask Jeeves'], answer: 1 },
+            { question: 'What does AI do in fraud detection?', options: ['It guesses passwords', 'It spots unusual patterns in transactions to flag suspicious activity', 'It replaces bank tellers entirely', 'It deletes accounts automatically'], answer: 1 },
+            { question: 'Why does AI often feel invisible?', options: ['Because it only runs at night', 'Because it works quietly inside apps without being labeled as AI', 'Because it is always hidden on purpose', 'Because nobody has built AI yet'], answer: 1 },
+            { question: 'What does a recommendation algorithm do?', options: ['Prints shopping lists', 'Predicts content you are likely to enjoy based on past behavior', 'Blocks ads automatically', 'Replaces customer service'], answer: 1 },
+            { question: 'How does autocorrect use AI?', options: ['It downloads the right spelling', 'It predicts the most likely intended word based on context', 'It calls a dictionary API', 'It copies from nearby text'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 5,
+        emoji: '⏳',
+        title: 'History of AI',
+        teaser: 'AI has been developing for decades, with breakthroughs in games, language, and vision.',
+        gradient: 'gradient-5',
+        summary: 'AI has evolved over 70 years from academic experiments to systems that can write code, generate art, and hold conversations — with a dramatic acceleration between 2020 and 2025.',
+        lesson: [
+          'AI as a field began in the 1950s. Alan Turing proposed the idea of machine intelligence in 1950. Early AI research focused on chess, logic, and rule-based systems. Progress was slow because computers were not powerful enough and data was scarce.',
+          'Key milestones: Deep Blue beat chess world champion Garry Kasparov in 1997. Watson won Jeopardy! in 2011. AlphaGo defeated the Go world champion in 2016. These showed AI mastering tasks once thought uniquely human. Then in 2017 the transformer architecture was invented — the foundation of all modern LLMs.',
+          'From 2020 to 2025, progress accelerated dramatically. GPT-3 (2020) showed that scaling up models produced surprising capabilities. ChatGPT launched in late 2022 and reached 100 million users in two months — the fastest growing app in history. By 2024, AI could generate video, run as autonomous agents, and pass professional exams.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What architecture, invented in 2017, became the foundation of modern AI language models?', options: ['The Matrix', 'The Transformer', 'The Algorithm', 'The Encoder'], answer: 1 },
+            { question: 'How fast did ChatGPT reach 100 million users after launch?', options: ['10 years', 'Two months', 'Five years', 'One decade'], answer: 1 },
+            { question: 'Which AI defeated the world Go champion in 2016?', options: ['DeepBlue', 'Watson', 'AlphaGo', 'ChatGPT'], answer: 2 },
+            { question: 'What happened when GPT-3 was released in 2020?', options: ['It was immediately banned', 'It showed that scaling up models produced surprising new capabilities', 'It replaced all search engines', 'Nothing significant'], answer: 1 },
+            { question: 'What made the transformer architecture important in 2017?', options: ['It was the cheapest AI ever built', 'It became the foundation for modern large language models', 'It was the first AI to walk', 'It invented the internet'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 6,
+        emoji: '⚖️',
+        title: 'AI Ethics',
+        teaser: 'Powerful technology raises questions about fairness, privacy, truth, and responsibility.',
+        gradient: 'gradient-6',
+        summary: 'Powerful AI raises urgent questions about bias, privacy, misinformation, job displacement, and who gets to decide how AI is built and used.',
+        lesson: [
+          'AI can cause harm even when it is not intentional. A biased training dataset can lead to unfair outcomes — like a hiring algorithm that disadvantages certain groups. A facial recognition system trained mostly on one demographic may work poorly for others. These are not theoretical problems. They have been documented in real systems.',
+          'Deepfakes, AI-generated misinformation, and synthetic media are growing concerns in 2025. Generative models can create convincing fake images, audio, and video. This makes it harder to trust what you see online. Researchers, journalists, and platforms are working on detection tools, but it is an active problem without easy solutions.',
+          'The question of who controls AI is also critical. A handful of companies — OpenAI, Google, Meta, Anthropic, Microsoft — make the most powerful models. Governments around the world are debating AI regulation. The EU passed the AI Act in 2024, the first major law specifically regulating AI systems by risk level.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What did the EU AI Act do in 2024?', options: ['Banned all AI in Europe', 'Created the first major law regulating AI systems by risk level', 'Required all AI to be open source', 'Gave AI systems voting rights'], answer: 1 },
+            { question: 'What is a deepfake?', options: ['A type of underwater robot', 'AI-generated fake media that looks real', 'A broken AI model', 'A deep learning textbook'], answer: 1 },
+            { question: 'Which is a real documented problem with AI bias?', options: ['AI that refuses to answer questions', 'Hiring algorithms that disadvantage certain groups due to biased training data', 'AI that charges too much money', 'Models that only work in English'], answer: 1 },
+            { question: 'What makes AI-generated misinformation especially dangerous?', options: ['It is always obvious', 'It can be highly convincing and difficult to detect', 'Only robots read it', 'It only spreads on one platform'], answer: 1 },
+            { question: 'Why does it matter that a few big companies control the most powerful AI?', options: ['It makes AI cheaper', 'It concentrates influence over important technology in very few hands', 'It speeds up progress always', 'It has no effect'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 7,
+        emoji: '🚀',
+        title: 'Careers in AI',
+        teaser: 'AI needs researchers, engineers, designers, teachers, and ethics specialists.',
+        gradient: 'gradient-7',
+        summary: 'AI careers span engineering, research, design, policy, education, and ethics — and the field is growing fast enough that new roles are being invented every year.',
+        lesson: [
+          'AI careers are not limited to coding. Machine learning engineers build and deploy models. Data scientists find patterns in data. AI researchers push the boundaries of what is possible. Prompt engineers figure out how to get the best results from language models. All of these roles are in high demand in 2025.',
+          'Designers and writers matter too. AI products are only useful if people can understand and trust them. UX designers shape how AI features feel. Technical writers explain AI behavior clearly. Ethics researchers evaluate fairness and safety. These roles are growing fast as companies invest in responsible AI.',
+          'New roles are being invented right now. AI trainers evaluate model outputs. Red teamers try to find ways to make models behave badly. Policy analysts advise governments on AI law. If you are curious, good at explaining things, or enjoy solving hard problems, there is a place for you in the AI field.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What does a red teamer do in an AI company?', options: ['They design the logo', 'They try to find ways to make AI models behave badly or unsafely', 'They write marketing copy', 'They run the servers'], answer: 1 },
+            { question: 'What is prompt engineering?', options: ['Building a physical device', 'Designing effective inputs to get better outputs from AI models', 'Writing code in a new language', 'Setting up computer hardware'], answer: 1 },
+            { question: 'Which skills are most valuable for AI careers?', options: ['Only math', 'Curiosity, writing, math, and problem-solving', 'Only coding', 'Only art skills'], answer: 1 },
+            { question: 'What does an AI trainer do?', options: ['Teaches gym classes using AI', 'Evaluates model outputs to help improve AI responses', 'Trains robots to run', 'Builds physical computers'], answer: 1 },
+            { question: 'Why do communication skills matter in AI careers?', options: ['AI only needs coders', 'Explaining AI clearly to non-technical people is increasingly valuable', 'Communication replaced coding', 'Only managers need to communicate'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 8,
+        emoji: '🎯',
+        title: 'AI Project Thinking',
+        teaser: 'Good AI projects need clear goals, strong data, honest testing, and human oversight.',
+        gradient: 'gradient-8',
+        summary: 'Building with AI means defining clear goals, choosing good data, testing honestly, and keeping humans in the loop — whether you are making a school app, a tool, or a product.',
+        lesson: [
+          'Building an AI-powered product starts with a clear problem statement. What do you want the AI to do? Who will use it? What does success look like? Many AI projects fail not because the technology was wrong but because the problem was not clearly defined. Good builders spend more time on the question than the answer.',
+          'Data quality matters more than model size in most real projects. If your training data is biased, incomplete, or mislabeled, the model will reflect those problems. You also need to think about privacy: what data is safe to use? Who owns it? How is it stored? These are not optional questions — they are the foundation of trustworthy AI.',
+          'Human oversight is essential. AI systems make mistakes, sometimes confidently. Every good AI product has a way for users to flag errors, appeal decisions, or get help from a human. This is especially important in high-stakes contexts like school grades, health advice, or financial decisions.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What is the most common reason AI projects fail?', options: ['The computers are too slow', 'The problem was not clearly defined', 'Too many people used it', 'The AI was too smart'], answer: 1 },
+            { question: 'Why does data quality matter in AI projects?', options: ['Better data makes the screen brighter', 'Biased or incomplete data leads to biased or incomplete model behavior', 'Data quality only matters for databases', 'It does not matter at all'], answer: 1 },
+            { question: 'What does human oversight mean in an AI product?', options: ['Humans watch AI all day', 'Having ways for users to flag errors, appeal decisions, or reach a human', 'Turning off the AI sometimes', 'Only humans make decisions, not AI'], answer: 1 },
+            { question: 'What should you do before collecting data for an AI project?', options: ['Start coding immediately', 'Ask who owns the data, what is safe to use, and how it will be stored', 'Download everything available', 'Skip data and use a pre-built model'], answer: 1 },
+            { question: 'What is the risk of an AI system that is "confidently wrong"?', options: ['It is too slow', 'Users may trust incorrect outputs without questioning them', 'It costs more money', 'It breaks the internet'], answer: 1 }
+          ]
+        }
+      }
+    ],
+    // ─── SET 2 ───
+    [
+      {
+        number: 9,
+        emoji: '🤖',
+        title: 'AI Agents',
+        teaser: 'AI agents can plan, use tools, browse the web, and complete multi-step tasks on their own.',
+        gradient: 'gradient-1',
+        summary: 'AI agents are systems that can take actions in the world — browsing the web, writing code, sending emails — not just answering questions. In 2025, agent-based AI is one of the fastest growing areas in the field.',
+        lesson: [
+          'An AI agent is different from a chatbot. A chatbot responds to questions. An agent can take a goal and break it into steps, use tools, make decisions, and complete tasks without someone guiding every move. Think of it as giving AI a to-do list and letting it figure out how to get things done.',
+          'In 2025, agent frameworks like OpenAI Agents, LangChain, and Anthropic\'s tool-use system allow AI to browse the web, read documents, write and run code, call APIs, and manage files — all automatically. Companies are building agents that handle customer support, research, and even software development.',
+          'The challenge with agents is reliability and safety. When an AI agent takes actions in the real world, mistakes can have real consequences. Researchers are working on how to keep agents on task, how to stop them from taking dangerous actions, and how to make sure humans stay in control.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What makes an AI agent different from a regular chatbot?', options: ['Agents are louder', 'Agents can take multi-step actions in the world, not just answer questions', 'Agents are cheaper', 'Agents only work offline'], answer: 1 },
+            { question: 'Which of these is something an AI agent can do that a basic chatbot cannot?', options: ['Type words', 'Browse the web and complete a multi-step task automatically', 'Display text on screen', 'Store a password'], answer: 1 },
+            { question: 'What is the biggest challenge with AI agents taking real-world actions?', options: ['They are too slow to type', 'Mistakes can have real consequences and keeping humans in control is hard', 'They cost too much electricity', 'They only speak one language'], answer: 1 },
+            { question: 'Which company created an agent framework called "Agents" for building autonomous AI?', options: ['Apple', 'Netflix', 'OpenAI', 'Twitter'], answer: 2 },
+            { question: 'What does it mean for an agent to "use tools"?', options: ['It picks up a physical hammer', 'It calls external services like web search, code execution, or APIs to complete tasks', 'It fixes bugs in itself', 'It teaches other AIs'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 10,
+        emoji: '🎨',
+        title: 'Multimodal AI',
+        teaser: 'Modern AI can see, hear, and speak — not just read and write text.',
+        gradient: 'gradient-2',
+        summary: 'Multimodal AI systems can process and generate multiple types of data — text, images, audio, and video — all in one model. GPT-4o, Gemini, and Claude are all multimodal.',
+        lesson: [
+          'Early AI models were unimodal — they handled one type of data. A language model only read text. An image model only saw pictures. Multimodal AI combines these abilities. You can show GPT-4o a photo of a math problem and ask it to solve it. You can describe a scene to Gemini and ask it to generate an image.',
+          'In 2025, multimodal AI is used in real products everywhere. Google Lens uses vision AI to identify objects in photos. Apple Intelligence processes voice and text together. Medical AI reads both patient notes and scan images simultaneously. These systems work because they share a unified representation of different types of information.',
+          'The next frontier is real-time multimodal — AI that can see and hear live, like a video call. OpenAI\'s GPT-4o can respond to live audio with emotional tone and even notice what\'s happening in a shared video feed. This is moving AI from a text box into something closer to a real conversational presence.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What does "multimodal AI" mean?', options: ['AI that works in multiple countries', 'AI that can process and generate text, images, audio, and more', 'AI that uses multiple computers', 'AI that speaks multiple languages only'], answer: 1 },
+            { question: 'Which of these is a multimodal task?', options: ['Typing a sentence', 'Showing an AI a photo and asking it to describe what\'s happening', 'Pressing a calculator button', 'Opening a web browser'], answer: 1 },
+            { question: 'What product uses multimodal vision AI to identify real-world objects?', options: ['Microsoft Word', 'Google Lens', 'Spotify', 'GitHub'], answer: 1 },
+            { question: 'What is "real-time multimodal" AI?', options: ['AI that works faster than normal', 'AI that processes live video, audio, and text simultaneously during a conversation', 'AI that only works during business hours', 'A type of database'], answer: 1 },
+            { question: 'Which model is known for being able to respond to live audio with emotional tone?', options: ['GPT-4o', 'Excel', 'Google Maps', 'Minecraft AI'], answer: 0 }
+          ]
+        }
+      },
+      {
+        number: 11,
+        emoji: '🎭',
+        title: 'AI & Creativity',
+        teaser: 'AI can now write stories, compose music, generate art, and produce video — and it is changing what creativity means.',
+        gradient: 'gradient-3',
+        summary: 'Generative AI has become a powerful creative tool. Artists, writers, musicians, and filmmakers are using it to explore new ideas — and the industry is debating what it means for human creativity.',
+        lesson: [
+          'Generative AI models like DALL-E 3, Midjourney, Sora, and Suno can create stunning images, videos, and music from a text prompt. This has opened creative possibilities that were previously impossible for people without professional training. A student can now generate a book cover illustration or background music for a school project in seconds.',
+          'The creative industry is divided. Some artists see AI as a powerful collaborator — a way to explore ideas faster and push creative limits. Others are concerned that AI trained on their work is being used to replace them without compensation. Legal cases about AI and copyright are ongoing in courts around the world.',
+          'The most interesting creative uses of AI combine human judgment with AI generation. A filmmaker might use AI to storyboard quickly before shooting. A musician might generate 50 chord progressions and pick the one that feels right. AI handles volume; humans bring intention, meaning, and taste.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'Which AI tool is used to generate images from text descriptions?', options: ['Google Maps', 'DALL-E 3', 'Microsoft Excel', 'GitHub'], answer: 1 },
+            { question: 'What is one concern artists have about generative AI?', options: ['It types too fast', 'AI trained on their work may replace them without compensation', 'It only works in black and white', 'It cannot generate text'], answer: 1 },
+            { question: 'What does Sora do?', options: ['Translates languages', 'Generates video from text prompts', 'Checks spelling', 'Manages calendars'], answer: 1 },
+            { question: 'What is the most effective way humans use generative AI creatively?', options: ['Let AI do everything with no human input', 'Use AI for volume and speed while humans provide intention and taste', 'Avoid AI entirely', 'Only use AI for math'], answer: 1 },
+            { question: 'Which field is actively debating AI and copyright law?', options: ['Sports', 'Creative arts and entertainment', 'Agriculture', 'Astronomy'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 12,
+        emoji: '🛡️',
+        title: 'AI Safety & Alignment',
+        teaser: 'Making sure powerful AI systems do what we actually want — and stay safe — is one of the hardest problems in the field.',
+        gradient: 'gradient-4',
+        summary: 'AI safety is the study of how to build AI that reliably does what humans intend, avoids harmful actions, and remains under human control as it becomes more capable.',
+        lesson: [
+          'As AI becomes more capable, the question of how to keep it aligned with human values becomes critical. "Alignment" means building AI that pursues goals we actually want, not goals that look right but have harmful side effects. This sounds simple but is surprisingly hard — AI systems optimise for what they are trained to measure, not always what we truly care about.',
+          'AI safety researchers study problems like: what happens if an AI is given a goal and finds an unexpected shortcut to achieve it? What if a very capable AI decides it needs to acquire resources to accomplish its task, even when we didn\'t ask it to? These are called "misalignment" scenarios, and top researchers at Anthropic, DeepMind, and OpenAI take them seriously.',
+          'Practical AI safety today includes red-teaming (trying to make AI behave badly to find weaknesses), constitutional AI (training models with explicit principles), and interpretability research (trying to understand what is happening inside a model). These are active research areas, not solved problems.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What does "AI alignment" mean?', options: ['Making AI text look straight on the page', 'Building AI that reliably pursues goals humans actually want', 'Aligning AI servers in a data center', 'Teaching AI to walk in a straight line'], answer: 1 },
+            { question: 'What is "red-teaming" in AI safety?', options: ['Painting servers red', 'Deliberately trying to make an AI behave badly to find vulnerabilities', 'A type of data storage', 'A coding language'], answer: 1 },
+            { question: 'What is the "misalignment" problem?', options: ['AI text that is not centered', 'An AI pursuing goals in ways that have unintended or harmful side effects', 'A broken keyboard', 'A slow internet connection'], answer: 1 },
+            { question: 'Which company developed "Constitutional AI" as a safety approach?', options: ['Apple', 'Anthropic', 'Netflix', 'Tesla'], answer: 1 },
+            { question: 'What does "interpretability research" try to do?', options: ['Translate AI into other languages', 'Understand what is happening inside a model when it makes decisions', 'Make AI run faster', 'Count how many words AI uses'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 13,
+        emoji: '🔬',
+        title: 'AI in Science',
+        teaser: 'AI is accelerating scientific discovery in biology, medicine, climate, physics, and more.',
+        gradient: 'gradient-5',
+        summary: 'Some of the most impactful AI work is happening in science — from predicting protein structures to designing new drugs to modelling climate change.',
+        lesson: [
+          'In 2020, DeepMind\'s AlphaFold solved one of biology\'s biggest challenges: predicting how proteins fold from their amino acid sequence. This had stumped scientists for 50 years. AlphaFold did it with AI trained on existing protein data, and the results have already accelerated drug discovery research around the world.',
+          'AI is also being used in climate science to improve weather forecasting, model carbon cycles, and design more efficient solar panels. Google\'s GraphCast AI makes 10-day weather forecasts faster and more accurately than traditional models. In materials science, AI is helping discover new battery chemistries that could power the next generation of electric vehicles.',
+          'In medicine, AI models can detect cancer in medical scans with accuracy that matches or exceeds specialist doctors in some studies. AI is also being used to design new drugs by predicting which molecules will interact with a target protein — dramatically speeding up a process that traditionally takes years. The combination of AI and science is one of the most exciting frontiers of the decade.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What did DeepMind\'s AlphaFold solve?', options: ['How to build faster computers', 'How proteins fold from amino acid sequences', 'How to predict stock prices', 'How to generate images'], answer: 1 },
+            { question: 'How is AI helping climate science?', options: ['By turning off lights', 'By improving weather forecasting and climate modelling', 'By replacing scientists entirely', 'By printing reports faster'], answer: 1 },
+            { question: 'In medicine, what is one way AI is being used?', options: ['Writing prescriptions automatically', 'Detecting cancer in medical scans with high accuracy', 'Replacing all nurses', 'Ordering hospital supplies'], answer: 1 },
+            { question: 'What is Google\'s GraphCast used for?', options: ['Making graphs in spreadsheets', 'AI-powered weather forecasting', 'Designing video games', 'Social media analysis'], answer: 1 },
+            { question: 'How is AI speeding up drug discovery?', options: ['By replacing chemists', 'By predicting which molecules will interact with target proteins', 'By printing pills faster', 'By writing scientific papers'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 14,
+        emoji: '⚡',
+        title: 'AI Infrastructure',
+        teaser: 'The chips, data centers, and cloud systems that power AI are reshaping the global tech industry.',
+        gradient: 'gradient-6',
+        summary: 'Running AI at scale requires massive computing infrastructure — specialised chips like GPUs, enormous data centers, and huge amounts of energy. Understanding this layer helps explain who controls AI and why.',
+        lesson: [
+          'AI models need enormous computing power to train. A model like GPT-4 required thousands of specialised chips running for months. The most important chip for AI is the GPU (Graphics Processing Unit), originally designed for video games but ideal for the parallel math operations AI training requires. NVIDIA dominates this market, which is why its stock has become one of the most watched in finance.',
+          'Data centers that run AI are becoming some of the largest buildings on Earth, consuming as much electricity as small cities. Microsoft, Google, Amazon, and Meta are spending tens of billions of dollars each year building AI infrastructure. This infrastructure race is why understanding AI is also understanding economics and geopolitics — countries that control chip manufacturing have significant power.',
+          'The energy cost of AI is a growing concern. Training a large model can produce as much carbon as several transatlantic flights. Researchers are working on more efficient architectures, smaller models that perform nearly as well as large ones (called "model distillation"), and ways to run AI on lower-power devices. The efficiency of AI infrastructure will be critical to its long-term sustainability.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What type of chip is most important for training AI models?', options: ['CPU', 'GPU', 'RAM', 'SSD'], answer: 1 },
+            { question: 'Which company dominates the AI chip market?', options: ['Apple', 'NVIDIA', 'Samsung', 'Intel'], answer: 1 },
+            { question: 'Why is AI infrastructure important geopolitically?', options: ['Because AI makes maps', 'Because countries that control chip manufacturing have significant technological power', 'Because AI runs elections', 'Because data centers are tourist attractions'], answer: 1 },
+            { question: 'What is "model distillation"?', options: ['Cleaning AI data', 'Creating smaller, efficient models that perform nearly as well as large ones', 'Removing bias from AI', 'A type of data encryption'], answer: 1 },
+            { question: 'What is a growing environmental concern about AI?', options: ['AI makes too much noise', 'Training large models consumes significant energy and can produce substantial carbon emissions', 'AI uses too much paper', 'AI screens are too bright'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 15,
+        emoji: '⚖️',
+        title: 'AI & Law',
+        teaser: 'Governments around the world are racing to regulate AI — with very different approaches.',
+        gradient: 'gradient-7',
+        summary: 'The EU, US, China, and UK are all approaching AI regulation differently. Understanding the legal landscape helps you understand what AI can and cannot do, and who is responsible when it goes wrong.',
+        lesson: [
+          'The European Union passed the AI Act in 2024 — the world\'s first comprehensive AI law. It classifies AI systems by risk level. High-risk AI (used in hiring, credit scoring, law enforcement) faces strict rules. Banned AI includes social scoring systems and real-time mass surveillance. Companies that violate the law face fines of up to 7% of global revenue.',
+          'The United States has taken a lighter touch, relying more on voluntary commitments from AI companies and sector-specific guidance rather than a single sweeping law. The Biden administration issued an Executive Order on AI in 2023. The debate in the US centres on balancing innovation with safety — a tension that plays out differently across political lines.',
+          'Copyright and liability are two of the most active legal battlegrounds. Who owns content created by AI? Can an AI-generated image infringe on an artist\'s copyright? If an AI gives bad medical advice and someone is harmed, who is responsible — the user, the company, or the AI? Courts and lawmakers are working through these questions without clear answers yet.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What did the EU AI Act do?', options: ['Banned all AI in Europe', 'Created a risk-based framework for regulating AI systems', 'Made AI free for everyone', 'Required AI to speak every language'], answer: 1 },
+            { question: 'Under the EU AI Act, which type of AI faces the strictest rules?', options: ['AI used in video games', 'High-risk AI used in hiring, credit scoring, and law enforcement', 'AI used for weather forecasts', 'AI used for music streaming'], answer: 1 },
+            { question: 'What is one of the biggest legal debates around AI and creativity?', options: ['Whether AI can vote', 'Who owns content created by AI and whether it infringes existing copyright', 'Whether AI can drive cars', 'How to spell artificial intelligence'], answer: 1 },
+            { question: 'What approach has the United States taken to AI regulation compared to the EU?', options: ['Much stricter laws', 'A lighter touch with voluntary commitments and sector-specific guidance', 'A complete ban on AI', 'Identical approach to the EU'], answer: 1 },
+            { question: 'What is the maximum fine for violating the EU AI Act?', options: ['$100', '7% of global annual revenue', '$1 million flat fee', 'No fines, just warnings'], answer: 1 }
+          ]
+        }
+      },
+      {
+        number: 16,
+        emoji: '🌌',
+        title: 'The Future of AI',
+        teaser: 'Where is AI heading — and what does it mean for your generation?',
+        gradient: 'gradient-8',
+        summary: 'AI capabilities are advancing faster than most predictions. Understanding where it might go — and what questions we still cannot answer — prepares you for a world that will be shaped by AI for decades.',
+        lesson: [
+          'Predicting AI\'s future is genuinely hard — experts have been wrong in both directions. Progress has been faster than expected in language and image generation, slower than expected in robotics and self-driving cars. What we can say is that the trend lines in computing power, data, and model architecture are still pointing upward, and breakthroughs keep arriving.',
+          'The biggest open question is whether we will reach AGI — Artificial General Intelligence — a system that can match or exceed human intelligence across all domains. Some researchers think it is decades away. Others, including some at OpenAI and DeepMind, think it could be much closer. Nobody knows for certain, and the uncertainty itself matters.',
+          'What is certain is that your generation will live and work in a world shaped by AI more than any before it. The students who understand how AI works — not just how to use it, but what it can and cannot do, where it is biased, and how to build with it responsibly — will be the ones who shape what comes next. That is why learning this now matters.'
+        ],
+        quiz: {
+          questions: [
+            { question: 'What is AGI?', options: ['A graphics card brand', 'Artificial General Intelligence — AI that can match human intelligence across all domains', 'A type of database', 'An AI programming language'], answer: 1 },
+            { question: 'Where has AI progress been slower than expected?', options: ['Language models and text generation', 'Robotics and self-driving cars', 'Image generation', 'Chess playing'], answer: 1 },
+            { question: 'What do the trend lines in AI development currently show?', options: ['Progress is slowing down', 'Computing power, data, and model quality are still improving', 'AI has reached its limits', 'Fewer people are working on AI'], answer: 1 },
+            { question: 'Why does it matter to understand how AI works, not just how to use it?', options: ['It makes you sound smart at parties', 'Understanding limitations, bias, and responsible use helps you shape AI\'s future impact', 'It is required by law', 'It makes AI run faster'], answer: 1 },
+            { question: 'What is one reason predicting AI\'s future is genuinely difficult?', options: ['There are no computers left', 'Progress has been faster than expected in some areas and slower in others, and breakthroughs keep arriving unexpectedly', 'AI stopped improving in 2020', 'Only one person works on AI'], answer: 1 }
+          ]
+        }
+      }
+    ]
+    ]; // end moduleSets
+
+    const finalQuizQuestions = [
+      // Module 1 — What is AI?
+      { q: "What is the best way to think about how AI works?", options: ["It has feelings and thinks like a human", "It finds patterns in data and uses them to make predictions", "It randomly guesses answers", "It copies answers from the internet"], answer: 1 },
+      // Module 2 — How AI Learns
+      { q: "In reinforcement learning, how does an AI improve?", options: ["By reading a textbook", "By receiving rewards or penalties based on its actions", "By copying another AI", "By asking humans every question"], answer: 1 },
+      // Module 3 — Types of AI
+      { q: "Which of these best describes a large language model like Claude or GPT?", options: ["A robot that can walk and talk", "A system that generates text by predicting likely word sequences", "A database of pre-written answers", "A search engine"], answer: 1 },
+      // Module 4 — AI in Everyday Life
+      { q: "When a streaming service suggests a show you might like, what AI technique is it using?", options: ["Voice recognition", "Recommendation algorithms", "Image generation", "Code completion"], answer: 1 },
+      // Module 5 — History of AI
+      { q: "What was significant about the transformer architecture introduced in 2017?", options: ["It was the first robot to walk", "It made computers cheaper", "It became the foundation for modern AI language models", "It replaced all programmers"], answer: 2 },
+      // Module 6 — AI Ethics
+      { q: "Why can AI systems sometimes produce unfair or biased results?", options: ["Because AI is always trying to be mean", "Because the training data itself may contain bias", "Because engineers make them unfair on purpose", "Because AI cannot process numbers"], answer: 1 },
+      // Module 7 — Careers in AI
+      { q: "Which of these is an emerging AI career that did NOT exist 10 years ago?", options: ["Accountant", "Librarian", "Prompt engineer", "Bus driver"], answer: 2 },
+      // Module 8 — AI Project Thinking
+      { q: "Before building an AI product, what is the most important first step?", options: ["Pick the most expensive computer", "Clearly define the problem you are trying to solve", "Write as much code as possible", "Launch immediately and fix later"], answer: 1 },
+      // Bonus cross-module questions
+      { q: "Which company released AlphaGo, the AI that defeated the world Go champion?", options: ["OpenAI", "Meta", "Google DeepMind", "Apple"], answer: 2 },
+      { q: "What does it mean for an AI to 'hallucinate'?", options: ["It generates visual art", "It confidently produces incorrect or made-up information", "It runs too slowly", "It recognizes faces"], answer: 1 }
+    ];
+
+    let currentSetIndex = 0;
+    let modules = moduleSets[currentSetIndex];
+
+    let currentUser = null;
+    let userProfile = null;
+    let moduleCompletionSet = new Set();
+    let finalQuizIndex = 0;
+    let finalQuizScore = 0;
+    let adminMode = localStorage.getItem('aiExplorerAdminMode') === 'true';
+    let adminView = localStorage.getItem('aiExplorerAdminView') || 'teacher';
+    const ADMIN_USERNAME = 'admin/rohan';
+    const ADMIN_PASSWORD = 'admin/rohan';
+
+    sb.auth.onAuthStateChange(async (_event, session) => {
+      const isNewSignIn = _event === 'SIGNED_IN';
+      currentUser = session?.user || null;
+      if (currentUser) {
+        await ensureProfile();
+      } else {
+        userProfile = null;
+        moduleCompletionSet = new Set();
+      }
+      await updateAuthUI();
+      if (isNewSignIn && userProfile) {
+        redirectAfterAuth();
+      }
+    });
+
+    async function init() {
+      // Restore set index from localStorage
+      const savedSet = parseInt(localStorage.getItem('aiExplorerSetIndex') || '0');
+      if (savedSet > 0 && savedSet < moduleSets.length) {
+        currentSetIndex = savedSet;
+        modules = moduleSets[currentSetIndex];
+        const setLabel = document.getElementById('current-set-label');
+        if (setLabel) setLabel.textContent = `Set ${currentSetIndex + 1}`;
+      }
+
+      const { data } = await sb.auth.getSession();
+      currentUser = data.session?.user || null;
+      if (currentUser) {
+        await ensureProfile();
+      }
+      renderModuleGrid();
+      loadFinalQuizQuestion();
+      toggleEnterpriseFields();
+      await updateAuthUI();
+      setupReveal();
+    }
+
+    function getPlanTier() {
+      if (adminMode) {
+        if (adminView === 'free') return 'free';
+        if (adminView === 'plus') return 'plus';
+        return 'enterprise';
+      }
+      return userProfile?.plan_tier || 'free';
+    }
+
+    function hasPaidAccess() {
+      return ['plus', 'enterprise'].includes(getPlanTier());
+    }
+
+    function isEnterpriseUser() {
+      if (adminMode) return adminView === 'teacher' || adminView === 'student';
+      const tier = getPlanTier();
+      const role = userProfile?.role || '';
+      return tier === 'enterprise' || ['enterprise_student', 'enterprise_teacher', 'enterprise_admin'].includes(role);
+    }
+
+    function isTeacherDashboardUser() {
+      if (adminMode) return adminView === 'teacher';
+      return getPlanTier() === 'enterprise' && ['teacher', 'admin', 'enterprise_teacher', 'enterprise_admin'].includes(userProfile?.role);
+    }
+
+    function isEnterpriseAdmin() {
+      if (adminMode) return false;
+      return getPlanTier() === 'enterprise' && ['admin', 'enterprise_admin'].includes(userProfile?.role);
+    }
+
+    function renderModuleGrid() {
+      const grid = document.getElementById('module-grid');
+      const paid = hasPaidAccess();
+      // Guests (no login, no admin mode) see first 2 modules open, rest blurred
+      const isGuest = !currentUser && !adminMode;
+
+      grid.innerHTML = modules.map((module, index) => {
+        const complete = moduleCompletionSet.has(module.number);
+        const stateText = complete ? 'Completed' : paid ? 'Ready' : 'Free Preview';
+        const tierBadge = paid
+          ? `<span class="badge tier-plus">Plus</span>`
+          : `<span class="badge tier-free-preview">Free Preview</span>`;
+        const accessLabel = paid
+          ? 'Full lesson + 5 questions + video'
+          : '2 lesson paragraphs + 2 questions';
+
+        const cardHtml = `
+          <article class="module-card card ${module.gradient}" onclick="openModule(${module.number})">
+            <span class="module-emoji">${module.emoji}</span>
+            <h3>${module.number}. ${module.title}</h3>
+            <p>${module.teaser}</p>
+            <div class="module-meta">
+              <span>${accessLabel}</span>
+              <span class="module-state">${stateText}</span>
+            </div>
+            <div style="margin-top:10px;">${tierBadge}</div>
+          </article>
+        `;
+
+        // For guest users, blur modules 3–8 (index >= 2)
+        if (isGuest && index >= 2) {
+          return `
+            <div class="module-card-locked-wrap"
+                 onclick="openModal('login');showToast('Sign in to unlock all modules', 'error');">
+              ${cardHtml}
+              <div class="lock-overlay">
+                <span class="lock-badge">🔒 Sign in to unlock</span>
+              </div>
+            </div>
+          `;
+        }
+
+        return cardHtml;
+      }).join('');
+    }
+
+    async function ensureProfile() {
+      if (!currentUser) return;
+
+      const pendingRaw = localStorage.getItem('aiExplorerPendingSignup');
+      const pending = pendingRaw ? JSON.parse(pendingRaw) : {};
+      const meta = currentUser.user_metadata || {};
+
+      let existing = null;
+      const { data: profileData } = await sb.from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+      existing = profileData || {};
+
+      const nextProfile = {
+        ...existing,
+        id: currentUser.id,
+        email: existing.email || currentUser.email || pending.email || '',
+        full_name: pending.full_name || existing.full_name || meta.full_name || meta.name || '',
+        role: pending.role || existing.role || meta.role || 'student',
+        plan_tier: pending.plan_tier || existing.plan_tier || meta.plan_tier || 'free',
+        is_pro: ['plus', 'enterprise'].includes(pending.plan_tier || existing.plan_tier || meta.plan_tier || 'free'),
+        school_name: pending.school_name || existing.school_name || meta.school_name || '',
+        work_email: pending.work_email || existing.work_email || meta.work_email || '',
+        seats_requested: pending.seats_requested ?? existing.seats_requested ?? null,
+        classes_requested: pending.classes_requested ?? existing.classes_requested ?? null,
+        wants_sso: pending.wants_sso ?? existing.wants_sso ?? false
+      };
+
+      const { data: upserted } = await sb.from('profiles').upsert(nextProfile).select().maybeSingle();
+      userProfile = upserted || nextProfile;
+      localStorage.removeItem('aiExplorerPendingSignup');
+    }
+
+    async function updateAuthUI() {
+      const userInfo = document.getElementById('auth-user-info');
+      const btnLogin = document.getElementById('btn-login');
+      const btnSignup = document.getElementById('btn-signup');
+      const btnDashboard = document.getElementById('btn-dashboard');
+      const btnLogout = document.getElementById('btn-logout');
+      const accessCopy = document.getElementById('access-copy');
+      const aiHelp = document.getElementById('ai-help');
+      const adminBar = document.getElementById('admin-bar');
+      const leaderboard = document.getElementById('enterprise-leaderboard');
+
+      if (adminMode) {
+        const plan = getPlanTier();
+        const badgeClass = `plan-${plan === 'enterprise' ? 'enterprise' : plan}`;
+        userInfo.innerHTML = `
+          <span class="user-pill">
+            <strong style="color:#fcd34d;">Admin Preview</strong>
+            <span class="badge ${badgeClass}">${adminView}</span>
+          </span>
+        `;
+        btnLogin.classList.add('hidden');
+        btnSignup.classList.add('hidden');
+        btnDashboard.classList.remove('hidden');
+        btnLogout.classList.remove('hidden');
+        adminBar.classList.add('visible');
+
+        if (plan === 'free') {
+          accessCopy.textContent = 'Admin preview: free user view. Module cards show a 2-paragraph preview + 1 quiz question.';
+          aiHelp.classList.add('hidden');
+          leaderboard.classList.add('hidden');
+        } else if (plan === 'plus') {
+          accessCopy.textContent = 'Admin preview: Plus user view. Full lessons, 5 questions, video placeholders, and AI help are available.';
+          aiHelp.classList.remove('hidden');
+          aiHelp.classList.add('revealed');
+          leaderboard.classList.add('hidden');
+        } else {
+          accessCopy.textContent = adminView === 'teacher'
+            ? 'Admin preview: teacher dashboard view (School Enterprise).'
+            : 'Admin preview: enterprise student view — full Plus experience + class leaderboard.';
+          aiHelp.classList.remove('hidden');
+          aiHelp.classList.add('revealed');
+          leaderboard.classList.remove('hidden');
+          leaderboard.classList.add('reveal', 'revealed');
+        }
+      } else if (currentUser && userProfile) {
+        const plan = getPlanTier();
+        const badgeClass = `plan-${plan === 'enterprise' ? 'enterprise' : plan}`;
+        const displayName = userProfile.full_name || currentUser.email?.split('@')[0] || 'Learner';
+        // Only show role label for enterprise users (students/teachers added by a school admin)
+        const isEnterpriseUser = plan === 'enterprise';
+        const roleLabel = isEnterpriseUser && userProfile.role ? `${userProfile.role}` : '';
+
+        userInfo.innerHTML = `
+          <span class="user-pill">
+            Hi, <strong style="color:#fff;">${escapeHtml(displayName)}</strong>
+            <span class="badge ${badgeClass}">${plan === 'enterprise' ? 'School Enterprise' : plan}</span>
+            ${roleLabel ? `<span style="color:#64748b;">${escapeHtml(roleLabel)}</span>` : ''}
+          </span>
+        `;
+
+        btnLogin.classList.add('hidden');
+        btnSignup.classList.add('hidden');
+        btnDashboard.classList.remove('hidden');
+        btnLogout.classList.remove('hidden');
+        adminBar.classList.remove('visible');
+
+        if (plan === 'free') {
+          accessCopy.textContent = 'You are on the Free plan. Click any module for a 2-paragraph preview and 1 quiz question. Upgrade to Plus for full lessons, 5 questions, and video.';
+          aiHelp.classList.add('hidden');
+          leaderboard.classList.add('hidden');
+        } else if (plan === 'plus') {
+          accessCopy.textContent = 'You are on Plus. Every module opens a full lesson, 5-question quiz, and video placeholder. Progress saves to your account.';
+          aiHelp.classList.remove('hidden');
+          aiHelp.classList.add('revealed');
+          leaderboard.classList.add('hidden');
+        } else {
+          accessCopy.textContent = 'You are on School Enterprise. Full Plus experience for all students, plus class leaderboard and teacher dashboard.';
+          aiHelp.classList.remove('hidden');
+          aiHelp.classList.add('revealed');
+          // Show leaderboard for enterprise students (not teachers/admins — they use the dashboard)
+          if (!isTeacherDashboardUser()) {
+            leaderboard.classList.remove('hidden');
+          } else {
+            leaderboard.classList.add('hidden');
+          }
+        }
+
+        await refreshModuleCompletions();
+      } else {
+        userInfo.innerHTML = '';
+        btnLogin.classList.remove('hidden');
+        btnSignup.classList.remove('hidden');
+        btnDashboard.classList.add('hidden');
+        btnLogout.classList.add('hidden');
+        adminBar.classList.remove('visible');
+        aiHelp.classList.add('hidden');
+        leaderboard.classList.add('hidden');
+        accessCopy.textContent = 'You are currently browsing as a guest. Click any module for a free preview. Sign in to save progress. Upgrade to Plus or School Enterprise to unlock full lessons, 5 quiz questions, and video.';
+        moduleCompletionSet = new Set();
+      }
+
+      renderModuleGrid();
+    }
+
+    function openSignupForPlan(plan, role) {
+      openModal('signup');
+      document.getElementById('signup-plan').value = plan;
+      document.getElementById('signup-role').value = role;
+      toggleEnterpriseFields();
+    }
+
+    function toggleEnterpriseFields() {
+      const plan = document.getElementById('signup-plan').value;
+      const enterpriseFields = document.getElementById('enterprise-fields');
+      enterpriseFields.classList.toggle('hidden', plan !== 'enterprise');
+    }
+
+    function getSignupContext() {
+      const plan = document.getElementById('signup-plan').value;
+      const role = document.getElementById('signup-role').value;
+      const payload = {
+        full_name: document.getElementById('signup-name').value.trim(),
+        email: document.getElementById('signup-email').value.trim(),
+        role,
+        plan_tier: plan,
+        school_name: document.getElementById('signup-school').value.trim(),
+        work_email: document.getElementById('signup-work-email').value.trim(),
+        seats_requested: plan === 'enterprise' ? parseInt(document.getElementById('signup-seats').value || '0', 10) || null : null,
+        classes_requested: plan === 'enterprise' ? parseInt(document.getElementById('signup-classes').value || '0', 10) || null : null,
+        wants_sso: plan === 'enterprise' ? document.getElementById('signup-sso').value === 'yes' : false
+      };
+      return payload;
+    }
+
+    function savePendingSignupContext() {
+      localStorage.setItem('aiExplorerPendingSignup', JSON.stringify(getSignupContext()));
+    }
+
+    async function signUp() {
+      const btn = document.getElementById('signup-btn');
+      const errorEl = document.getElementById('signup-error');
+      const successEl = document.getElementById('signup-success');
+      const password = document.getElementById('signup-password').value;
+      const email = document.getElementById('signup-email').value.trim();
+      const payload = getSignupContext();
+
+      errorEl.textContent = '';
+      successEl.textContent = '';
+
+      if (!payload.full_name) { errorEl.textContent = 'Please enter your full name.'; return; }
+      if (!email) { errorEl.textContent = 'Please enter your email.'; return; }
+      if (password.length < 8) { errorEl.textContent = 'Password must be at least 8 characters.'; return; }
+
+      if (payload.plan_tier === 'enterprise') {
+        if (!payload.school_name) { errorEl.textContent = 'School Enterprise needs a school name.'; return; }
+        if (!payload.work_email) { errorEl.textContent = 'Please add the school work email for the Enterprise request.'; return; }
+      }
+
+      savePendingSignupContext();
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      const { data, error } = await sb.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: window.location.href,
+          data: payload
+        }
+      });
+
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+
+      if (error) { errorEl.textContent = error.message; return; }
+      if (data.user) { await ensureProfile(); }
+
+      successEl.textContent = payload.plan_tier === 'enterprise'
+        ? 'Account created. Check your email to confirm, and your Enterprise onboarding details were saved.'
+        : 'Account created. Check your email to confirm your sign-in.';
+    }
+
+    function setAdminView(view) {
+      adminView = view;
+      localStorage.setItem('aiExplorerAdminView', view);
+      updateAuthUI();
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('revealed'));
+      showToast(`Admin preview: ${view} view`, 'success');
+    }
+
+    async function signIn() {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errorEl = document.getElementById('login-error');
+      const btn = document.getElementById('login-btn');
+
+      errorEl.textContent = '';
+
+      if (email === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        adminMode = true;
+        adminView = 'teacher';
+        localStorage.setItem('aiExplorerAdminMode', 'true');
+        localStorage.setItem('aiExplorerAdminView', 'teacher');
+        closeModal('login');
+        await updateAuthUI();
+        document.querySelectorAll('.reveal').forEach(el => el.classList.add('revealed'));
+        document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
+        showToast('Admin preview mode enabled. Viewing as: teacher (Enterprise).', 'success');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+
+      if (error) { errorEl.textContent = error.message; return; }
+
+      closeModal('login');
+      showToast('Signed in successfully.', 'success');
+    }
+
+    async function signInWithGoogle(source) {
+      if (source === 'signup') { savePendingSignupContext(); }
+      const { error } = await sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.href }
+      });
+      if (error) { showToast(error.message, 'error'); }
+    }
+
+    async function signInWithSSO() {
+      const rawValue = document.getElementById('login-sso-domain').value.trim().toLowerCase();
+      if (!rawValue) { showToast('Enter your school email or domain first.', 'error'); return; }
+      const domain = rawValue.includes('@') ? rawValue.split('@').pop() : rawValue;
+      if (!domain || !domain.includes('.')) { showToast('Enter a valid school domain like school.org.', 'error'); return; }
+      const { error } = await sb.auth.signInWithSSO({ domain, options: { redirectTo: window.location.href } });
+      if (error) { showToast(error.message, 'error'); }
+    }
+
+    async function signOut() {
+      if (adminMode) {
+        adminMode = false;
+        adminView = 'teacher';
+        localStorage.removeItem('aiExplorerAdminMode');
+        localStorage.removeItem('aiExplorerAdminView');
+        await updateAuthUI();
+        showToast('Exited admin preview.', 'success');
+        return;
+      }
+      await sb.auth.signOut();
+      userProfile = null;
+      moduleCompletionSet = new Set();
+      renderModuleGrid();
+      showToast('Signed out.', 'success');
+    }
+
+    async function refreshModuleCompletions() {
+      if (!currentUser) { moduleCompletionSet = new Set(); return; }
+      const { data } = await sb.from('module_progress').select('module_number').eq('user_id', currentUser.id);
+      moduleCompletionSet = new Set((data || []).map(item => item.module_number));
+    }
+
+    // Stripe payment links
+    // Plus: prod_UVQYWYVUenBUnV / price_1TWPh2RxSUtozYBPWuCp0FGq ($3/mo)
+    const CHECKOUT_LINKS = {
+      plus: 'https://buy.stripe.com/test_00w5kF8dagpEca65q5eZ203',
+      enterprise: 'https://buy.stripe.com/test_3cIfZj2SQ5L04HEcSxeZ202'
+    };
+
+    // YouTube video IDs for each module (shown to Plus/Enterprise users)
+    const moduleVideos = {
+      1: 'a0_lo_GDcFw',  // CrashCourse AI #1 — What Is Artificial Intelligence?
+      2: 'KNAWp2S3w94',  // Google — Intro to Machine Learning
+      3: 'G2fqAlgmoPo',  // Google — Introduction to Generative AI
+      4: 'ZJixNvx9BAc',  // WIRED — Machine Learning: Living in the Age of AI
+      5: 'UwsrzCVZAb8',  // YouTube Originals — How Far is Too Far? | The Age of A.I.
+      6: 'tJQSyzBUAew',  // Ethics & AI: Equal Access and Algorithmic Bias
+      7: '5q87K1WaoFI',  // WIRED — Computer Scientist Explains ML in 5 Levels
+      8: 'GdTBqBnqhaQ',  // 4 Experiments Where the AI Outsmarted Its Creators
+    };
+
+    function goToCheckout(plan) {
+      if (!currentUser) {
+        openModal('login');
+        showToast('Sign in first, then click the plan button to pay.', 'error');
+        return;
+      }
+      window.location.href = CHECKOUT_LINKS[plan];
+    }
+
+    function redirectAfterAuth() {
+      const plan = getPlanTier();
+      if (plan === 'free') {
+        document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
+        showToast('You\'re on the Free plan. Click any module for a free preview!', 'success');
+      } else if (plan === 'plus') {
+        document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
+        showToast('Welcome! Your Plus lessons are unlocked — click any module to start.', 'success');
+      } else {
+        document.getElementById('modules').scrollIntoView({ behavior: 'smooth' });
+        showToast('Welcome! School Enterprise — all lessons, video, and teacher dashboard ready.', 'success');
+      }
+    }
+
+    async function markModuleComplete(moduleNumber) {
+      if (adminMode) {
+        moduleCompletionSet.add(moduleNumber);
+        renderModuleGrid();
+        showToast(`Admin preview: module ${moduleNumber} marked complete.`, 'success');
+        await checkSetCompletion();
+        return;
+      }
+      if (!currentUser) { openModal('login'); return; }
+
+      const { error } = await sb.from('module_progress').upsert({
+        user_id: currentUser.id,
+        module_number: moduleNumber,
+        completed_at: new Date().toISOString()
+      }, { onConflict: 'user_id,module_number' });
+
+      if (error) { showToast('Could not save module completion yet.', 'error'); return; }
+
+      moduleCompletionSet.add(moduleNumber);
+      renderModuleGrid();
+      showToast(`Module ${moduleNumber} marked complete.`, 'success');
+      await checkSetCompletion();
+    }
+
+    async function checkSetCompletion() {
+      const allComplete = modules.every(m => moduleCompletionSet.has(m.number));
+      if (allComplete && currentSetIndex < moduleSets.length - 1) {
+        // Small delay so the grid re-renders first
+        setTimeout(() => {
+          document.getElementById('set-complete-title').textContent = `🎉 Set ${currentSetIndex + 1} Complete!`;
+          document.getElementById('set-complete-body').textContent =
+            `You've mastered all ${modules.length} modules in Set ${currentSetIndex + 1}. Set ${currentSetIndex + 2} is now unlocked — ${moduleSets[currentSetIndex + 1].length} brand new advanced topics await.`;
+          openModal('set-complete');
+        }, 600);
+      }
+    }
+
+    function unlockNextSet() {
+      currentSetIndex++;
+      modules = moduleSets[currentSetIndex];
+      moduleCompletionSet = new Set();
+      localStorage.setItem('aiExplorerSetIndex', currentSetIndex);
+      closeModal('set-complete');
+      const setLabel = document.getElementById('current-set-label');
+      if (setLabel) setLabel.textContent = `Set ${currentSetIndex + 1}`;
+      renderModuleGrid();
+      showToast(`🚀 Set ${currentSetIndex + 1} unlocked! ${modules.length} new modules ready.`, 'success');
+      window.scrollTo({ top: document.getElementById('modules').offsetTop - 80, behavior: 'smooth' });
+    }
+
+    function renderModuleQuestion(moduleNumber, freeMode) {
+      const module = modules.find(m => m.number === moduleNumber);
+      if (!module) return;
+      const questions = module.quiz.questions;
+      const idx = module._quizIndex;
+      const q = questions[idx];
+      const optionsContainer = document.getElementById('module-quiz-options');
+      const resultEl = document.getElementById('module-quiz-result');
+      const progressEl = document.getElementById('module-quiz-progress');
+      const nextBtn = document.getElementById('module-quiz-next');
+      if (!optionsContainer || !resultEl || !progressEl) return;
+
+      const totalShown = freeMode ? 2 : questions.length;
+      progressEl.textContent = `Question ${idx + 1} of ${totalShown}`;
+      resultEl.textContent = '';
+      resultEl.style.color = '';
+      if (nextBtn) nextBtn.style.display = 'none';
+
+      document.getElementById('module-quiz-question-text').textContent = q.question;
+      optionsContainer.innerHTML = q.options.map((option, index) =>
+        `<button class="quiz-btn" onclick="gradeModuleQuiz(${moduleNumber}, ${index}, ${!!freeMode})">${option}</button>`
+      ).join('');
+    }
+
+    function openModule(moduleNumber) {
+      const module = modules.find(item => item.number === moduleNumber);
+      if (!module) return;
+
+      module._quizIndex = 0;
+      module._quizScore = 0;
+
+      if (!hasPaidAccess()) {
+        // FREE MODE: show 2 paragraphs + 2 quiz questions
+        module._freeMode = true;
+        document.getElementById('module-modal-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
+        document.getElementById('module-modal-subtitle').textContent = 'Free Preview — 2 paragraphs + 2 questions. Upgrade to Plus for the full lesson, 5 questions, and video.';
+        document.getElementById('module-modal-content').innerHTML = `
+          <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">
+            ${module.summary}
+          </div>
+          <div class="dashboard-card" style="margin-bottom:18px;">
+            ${module.lesson.slice(0, 2).map(paragraph => `<p style="margin-bottom:14px;">${paragraph}</p>`).join('')}
+          </div>
+          <div class="quiz-shell" style="text-align:left;">
+            <div style="font-size:1.1rem;font-weight:900;margin-bottom:6px;">Quick Questions</div>
+            <div id="module-quiz-progress" style="font-size:0.9rem;color:#a5b4fc;margin-bottom:10px;">Question 1 of 2</div>
+            <div id="module-quiz-question-text" class="quiz-question" style="text-align:left;font-size:1.1rem;margin-bottom:14px;"></div>
+            <div class="quiz-options" id="module-quiz-options"></div>
+            <div class="quiz-result" id="module-quiz-result"></div>
+            <button id="free-next-btn" class="btn-primary" style="width:auto;display:none;margin-top:10px;" onclick="advanceFreeModuleQuiz(${module.number})">Next Question →</button>
+            <div id="free-upgrade-cta" class="hidden upgrade-cta-box">
+              <p>Upgrade to Plus for the full lesson, 5 questions &amp; video — $3/month</p>
+              <button class="btn-pro" style="width:auto;padding:10px 24px;font-size:0.95rem;" onclick="openSignupForPlan('plus','student');closeModal('module')">Upgrade to Plus — $3/month</button>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
+              <button class="btn-secondary" style="width:auto;" onclick="closeModal('module')">Close</button>
+            </div>
+          </div>
+        `;
+        openModal('module');
+        renderModuleQuestion(moduleNumber, true);
+        return;
+      }
+
+      // PAID MODE: full lesson + YouTube video + 5 questions
+      module._freeMode = false;
+      const ytId = moduleVideos[module.number];
+      const videoEmbed = ytId
+        ? `<div class="yt-embed-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1" title="Module ${module.number} video lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+        : `<div class="video-placeholder"><div class="vp-icon">📹</div><div class="vp-title">Video Lesson — Coming Soon</div><div class="vp-sub">Video lessons are being produced for each module.</div></div>`;
+      document.getElementById('module-modal-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
+      document.getElementById('module-modal-subtitle').textContent = 'Read the full lesson, watch the video, then take the 5-question quiz to save progress.';
+      document.getElementById('module-modal-content').innerHTML = `
+        <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">
+          ${module.summary}
+        </div>
+        <div class="dashboard-card" style="margin-bottom:18px;">
+          ${module.lesson.map(paragraph => `<p style="margin-bottom:14px;">${paragraph}</p>`).join('')}
+        </div>
+        ${videoEmbed}
+        <div class="quiz-shell" style="text-align:left;">
+          <div style="font-size:1.1rem;font-weight:900;margin-bottom:6px;">Module Quiz</div>
+          <div id="module-quiz-progress" style="font-size:0.9rem;color:#a5b4fc;margin-bottom:10px;">Question 1 of 5</div>
+          <div id="module-quiz-question-text" class="quiz-question" style="text-align:left;font-size:1.1rem;margin-bottom:14px;"></div>
+          <div class="quiz-options" id="module-quiz-options"></div>
+          <div class="quiz-result" id="module-quiz-result"></div>
+          <button id="module-quiz-next" class="btn-primary" style="width:auto;display:none;margin-top:10px;" onclick="advanceModuleQuiz(${module.number})">Next Question</button>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
+            <button class="btn-primary" style="width:auto;" onclick="markModuleComplete(${module.number})">Mark Lesson Complete</button>
+            <button class="btn-secondary" style="width:auto;" onclick="closeModal('module')">Close Lesson</button>
+          </div>
+        </div>
+      `;
+      openModal('module');
+      renderModuleQuestion(moduleNumber, false);
+    }
+
+    function advanceFreeModuleQuiz(moduleNumber) {
+      const module = modules.find(m => m.number === moduleNumber);
+      if (!module) return;
+      // Hide the Next button before loading next question
+      const freeNextBtn = document.getElementById('free-next-btn');
+      if (freeNextBtn) freeNextBtn.style.display = 'none';
+      module._quizIndex++;
+      if (module._quizIndex < 2) {
+        renderModuleQuestion(moduleNumber, true);
+      } else {
+        // Shouldn't reach here (gradeModuleQuiz shows CTA on last question)
+        const ctaEl = document.getElementById('free-upgrade-cta');
+        if (ctaEl) ctaEl.classList.remove('hidden');
+      }
+    }
+
+    function advanceModuleQuiz(moduleNumber) {
+      const module = modules.find(m => m.number === moduleNumber);
+      if (!module) return;
+      module._quizIndex++;
+      if (module._quizIndex < module.quiz.questions.length) {
+        renderModuleQuestion(moduleNumber, false);
+      } else {
+        const total = module.quiz.questions.length;
+        const score = module._quizScore;
+        const optionsContainer = document.getElementById('module-quiz-options');
+        const resultEl = document.getElementById('module-quiz-result');
+        const progressEl = document.getElementById('module-quiz-progress');
+        const nextBtn = document.getElementById('module-quiz-next');
+        const questionText = document.getElementById('module-quiz-question-text');
+        if (optionsContainer) optionsContainer.innerHTML = '';
+        if (nextBtn) nextBtn.style.display = 'none';
+        if (progressEl) progressEl.textContent = 'Quiz Complete!';
+        if (questionText) questionText.textContent = '';
+        if (resultEl) {
+          resultEl.textContent = `You got ${score}/${total} correct!`;
+          resultEl.style.color = score === total ? '#34d399' : score >= Math.ceil(total / 2) ? '#fbbf24' : '#f87171';
+        }
+        if (currentUser) {
+          saveQuizScore({ score, total, moduleNumber, quizType: 'module' });
+        }
+      }
+    }
+
+    function gradeModuleQuiz(moduleNumber, selectedIndex, freeMode) {
+      const module = modules.find(item => item.number === moduleNumber);
+      const buttons = Array.from(document.querySelectorAll('#module-quiz-options .quiz-btn'));
+      const result = document.getElementById('module-quiz-result');
+      const nextBtn = document.getElementById('module-quiz-next');
+      if (!module || !result) return;
+
+      const currentQ = module.quiz.questions[module._quizIndex];
+      const correctAnswer = currentQ.answer;
+
+      buttons.forEach((button, index) => {
+        button.disabled = true;
+        if (index === correctAnswer) {
+          button.classList.add('correct');
+        } else if (index === selectedIndex) {
+          button.classList.add('wrong');
+        }
+      });
+
+      const isCorrect = selectedIndex === correctAnswer;
+      if (isCorrect) module._quizScore++;
+
+      result.textContent = isCorrect
+        ? 'Correct! 🎉'
+        : `Not quite. The right answer is "${currentQ.options[correctAnswer]}".`;
+      result.style.color = isCorrect ? '#34d399' : '#f87171';
+
+      if (freeMode) {
+        // Free mode: 2 questions. After Q1 show Next, after Q2 show upgrade CTA.
+        const isLastFreeQuestion = module._quizIndex >= 1; // indices 0 and 1 = 2 questions
+        if (isLastFreeQuestion) {
+          const ctaEl = document.getElementById('free-upgrade-cta');
+          if (ctaEl) ctaEl.classList.remove('hidden');
+        } else {
+          const freeNextBtn = document.getElementById('free-next-btn');
+          if (freeNextBtn) freeNextBtn.style.display = 'inline-block';
+        }
+      } else {
+        const isLastQuestion = module._quizIndex >= module.quiz.questions.length - 1;
+        if (nextBtn) {
+          nextBtn.textContent = isLastQuestion ? 'See Final Score' : 'Next Question';
+          nextBtn.style.display = 'inline-block';
+        }
+      }
+    }
+
+    async function saveQuizScore({ score, total, moduleNumber = null, quizType = 'final' }) {
+      if (!currentUser) return;
+
+      const richInsert = await sb.from('quiz_scores').insert({
+        user_id: currentUser.id,
+        module_number: moduleNumber,
+        quiz_type: quizType,
+        score,
+        total
+      });
+
+      if (!richInsert.error) return;
+
+      await sb.from('quiz_scores').insert({
+        user_id: currentUser.id,
+        score,
+        total
+      });
+    }
+
+    function loadFinalQuizQuestion() {
+      const question = finalQuizQuestions[finalQuizIndex];
+      const questionEl = document.getElementById('final-quiz-question');
+      const optionsEl = document.getElementById('final-quiz-options');
+      const resultEl = document.getElementById('final-quiz-result');
+      const nextBtn = document.getElementById('final-next-btn');
+
+      questionEl.textContent = `Q${finalQuizIndex + 1}/${finalQuizQuestions.length}: ${question.q}`;
+      resultEl.textContent = '';
+      optionsEl.innerHTML = '';
+      nextBtn.style.display = 'none';
+
+      question.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-btn';
+        btn.textContent = option;
+        btn.onclick = () => gradeFinalQuestion(index);
+        optionsEl.appendChild(btn);
+      });
+    }
+
+    async function gradeFinalQuestion(selectedIndex) {
+      const question = finalQuizQuestions[finalQuizIndex];
+      const buttons = Array.from(document.querySelectorAll('#final-quiz-options .quiz-btn'));
+      const resultEl = document.getElementById('final-quiz-result');
+
+      buttons.forEach((button, index) => {
+        button.disabled = true;
+        if (index === question.answer) {
+          button.classList.add('correct');
+        } else if (index === selectedIndex) {
+          button.classList.add('wrong');
+        }
+      });
+
+      if (selectedIndex === question.answer) {
+        finalQuizScore += 1;
+        resultEl.textContent = 'Correct.';
+        resultEl.style.color = '#34d399';
+      } else {
+        resultEl.textContent = `Not quite. The answer was "${question.options[question.answer]}".`;
+        resultEl.style.color = '#f87171';
+      }
+
+      if (finalQuizIndex < finalQuizQuestions.length - 1) {
+        document.getElementById('final-next-btn').style.display = 'block';
+      } else {
+        await showFinalQuizSummary();
+      }
+    }
+
+    function nextFinalQuestion() {
+      finalQuizIndex += 1;
+      loadFinalQuizQuestion();
+    }
+
+    function retakeFinalQuiz() {
+      finalQuizIndex = 0;
+      finalQuizScore = 0;
+      loadFinalQuizQuestion();
+    }
+
+    async function showFinalQuizSummary() {
+      const pct = Math.round((finalQuizScore / finalQuizQuestions.length) * 100);
+      const questionEl = document.getElementById('final-quiz-question');
+      const optionsEl = document.getElementById('final-quiz-options');
+      const resultEl = document.getElementById('final-quiz-result');
+      document.getElementById('final-next-btn').style.display = 'none';
+
+      questionEl.textContent = `You scored ${finalQuizScore}/${finalQuizQuestions.length} (${pct}%)`;
+      optionsEl.innerHTML = `
+        <p style="grid-column:1/-1;color:#cbd5e1;line-height:1.7;">
+          ${pct >= 80 ? 'Great job. You clearly understand the big ideas behind AI Explorer.' : 'Nice work. Review the modules and try another round to improve your score.'}
+        </p>
+        <button class="quiz-btn" style="grid-column:1/-1;margin-top:8px;" onclick="retakeFinalQuiz()">🔄 Retake Quiz</button>
+      `;
+      resultEl.textContent = currentUser ? 'Your final quiz score has been saved.' : 'Sign in if you want to save quiz scores.';
+      resultEl.style.color = '#a78bfa';
+
+      if (currentUser) {
+        await saveQuizScore({
+          score: finalQuizScore,
+          total: finalQuizQuestions.length,
+          moduleNumber: null,
+          quizType: 'final'
+        });
+
+        if (hasPaidAccess()) {
+          await markModuleComplete(8);
+        }
+      }
+    }
+
+    async function openDashboard() {
+      const title = document.getElementById('dashboard-title');
+      const subtitle = document.getElementById('dashboard-subtitle');
+      const content = document.getElementById('dashboard-content');
+
+      if (adminMode) {
+        title.textContent = 'Admin Preview Dashboard';
+        subtitle.textContent = `Viewing as: ${adminView} (${getPlanTier()} plan)`;
+        if (isTeacherDashboardUser()) {
+          content.innerHTML = `
+            <div class="dashboard-card">
+              <h3>Teacher Dashboard Preview</h3>
+              <p>This is what a School Enterprise teacher sees. Real class and student data appears here once Supabase tables are populated.</p>
+            </div>
+            <div class="dashboard-card" style="margin-top:18px;">
+              <h3>My Classes</h3>
+              <div class="row-list">
+                <div class="row-item"><span>Period 1 — AI Basics</span><span style="color:#a78bfa;">3 students</span></div>
+                <div class="row-item"><span>Period 3 — AI Ethics</span><span style="color:#a78bfa;">4 students</span></div>
+              </div>
+            </div>`;
+        } else {
+          content.innerHTML = `
+            <div class="dashboard-card">
+              <h3>Student Dashboard Preview (${getPlanTier()})</h3>
+              <p>This is what a ${getPlanTier()} user sees. Real progress and quiz data appears here for logged-in students.</p>
+            </div>`;
+        }
+        return;
+      }
+
+      if (!currentUser || !userProfile) { openModal('login'); return; }
+
+      if (isEnterpriseAdmin()) {
+        title.textContent = 'Admin Dashboard';
+        subtitle.textContent = 'Enterprise admin view — all teachers, classes, and students.';
+        await renderAdminDashboard(content);
+      } else if (isTeacherDashboardUser()) {
+        title.textContent = 'Teacher Dashboard';
+        subtitle.textContent = 'See students, classes, quiz progress, and Enterprise onboarding details.';
+        await renderTeacherDashboard(content);
+      } else {
+        title.textContent = 'My Dashboard';
+        subtitle.textContent = 'Track progress, plan access, and saved quiz results.';
+        await renderStudentDashboard(content);
+      }
+    }
+
+    async function renderStudentDashboard(container) {
+      const { data: progress } = await sb.from('module_progress').select('*').eq('user_id', currentUser.id);
+      const { data: scores } = await sb.from('quiz_scores').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+
+      const completed = (progress || []).length;
+      const completionPct = Math.round((completed / modules.length) * 100);
+      const latestFinal = (scores || []).find(item => item.quiz_type === 'final') || (scores || [])[0] || null;
+      const moduleQuizCount = (scores || []).filter(item => item.quiz_type === 'module' || item.module_number).length;
+      const plan = getPlanTier();
+
+      const enterpriseLeaderboardHtml = isEnterpriseUser() && !isTeacherDashboardUser() ? `
+        <div class="dashboard-card" style="margin-top:24px;border-color:rgba(52,211,153,0.25);">
+          <h3 style="color:#86efac;">🏆 Class Leaderboard</h3>
+          <p style="margin-bottom:14px;">Your ranking among classmates by modules completed.</p>
+          <div class="row-list">
+            <div class="row-item"><span>🥇 Alex M.</span><span style="color:#34d399;">8 modules</span></div>
+            <div class="row-item"><span>🥈 Jordan T.</span><span style="color:#34d399;">6 modules</span></div>
+            <div class="row-item"><span>🥉 Sam K.</span><span style="color:#34d399;">5 modules</span></div>
+            <div class="row-item"><span>You</span><span style="color:#60a5fa;">${completed} modules</span></div>
+          </div>
+          <p style="color:var(--muted);font-size:0.82rem;margin-top:10px;">Live leaderboard hookup coming soon.</p>
+        </div>
+      ` : '';
+
+      container.innerHTML = `
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Plan</h3>
+            <p><strong style="color:#fff;text-transform:capitalize;">${plan === 'enterprise' ? 'School Enterprise' : plan}</strong></p>
+            <p style="margin-top:10px;">${plan === 'free' ? 'Upgrade for full module lessons, AI help, and saved quiz scores.' : 'Full lessons, 5 questions, video, and saved progress.'}</p>
+          </div>
+          <div class="dashboard-card">
+            <h3>Overall Progress</h3>
+            <p>${completed}/${modules.length} modules marked complete</p>
+            <div class="progress-rail"><div class="progress-fill" style="width:${completionPct}%"></div></div>
+          </div>
+          <div class="dashboard-card">
+            <h3>Quiz Snapshot</h3>
+            <p>Latest final quiz: <strong style="color:#fff;">${latestFinal ? `${latestFinal.score}/${latestFinal.total}` : 'Not taken yet'}</strong></p>
+            <p style="margin-top:10px;">Module quizzes saved: <strong style="color:#fff;">${moduleQuizCount}</strong></p>
+          </div>
+        </div>
+        <div class="dashboard-card" style="margin-top:24px;">
+          <h3>Modules</h3>
+          <div class="row-list">
+            ${modules.map(module => `
+              <div class="row-item">
+                <span>${module.number}. ${module.title}</span>
+                <span style="color:${moduleCompletionSet.has(module.number) ? '#34d399' : '#94a3b8'};">
+                  ${moduleCompletionSet.has(module.number) ? 'Completed' : 'Not completed'}
+                </span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        ${enterpriseLeaderboardHtml}
+        ${plan === 'enterprise' && userProfile.work_email ? `
+          <div class="dashboard-card" style="margin-top:24px;">
+            <h3>Enterprise Request Info</h3>
+            <p>Work email saved: <strong style="color:#fff;">${escapeHtml(userProfile.work_email)}</strong></p>
+            <p style="margin-top:10px;">School: <strong style="color:#fff;">${escapeHtml(userProfile.school_name || 'Not set')}</strong></p>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    async function renderTeacherDashboard(container) {
+      const classesResponse = await sb.from('classes').select('*').eq('teacher_id', currentUser.id);
+      const classes = classesResponse.data || [];
+      const classIds = classes.map(item => item.id);
+
+      let enrollments = [];
+      if (classIds.length) {
+        const enrollmentResponse = await sb.from('class_enrollments')
+          .select('*, profiles(full_name,email), module_progress(module_number), quiz_scores(score,total,quiz_type)')
+          .in('class_id', classIds);
+        enrollments = enrollmentResponse.data || [];
+      }
+
+      const overviewRows = enrollments.length
+        ? enrollments.map(entry => {
+            const progressCount = (entry.module_progress || []).length;
+            const latestQuiz = (entry.quiz_scores || [])[0];
+            return `
+              <tr>
+                <td>${escapeHtml(entry.profiles?.full_name || entry.profiles?.email || 'Unknown')}</td>
+                <td>${progressCount}/8</td>
+                <td>${latestQuiz ? `${latestQuiz.score}/${latestQuiz.total}` : '-'}</td>
+              </tr>
+            `;
+          }).join('')
+        : `<tr><td colspan="3" class="teacher-empty">No student enrollment data yet. Dashboard is ready once Supabase class tables are populated.</td></tr>`;
+
+      container.innerHTML = `
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Enterprise Billing</h3>
+            <p>$3 per student / month + $3 per teacher / month.</p>
+            <p style="margin-top:10px;">School: <strong style="color:#fff;">${escapeHtml(userProfile.school_name || 'Not set')}</strong></p>
+          </div>
+          <div class="dashboard-card">
+            <h3>SSO Follow-up</h3>
+            <p>Work email: <strong style="color:#fff;">${escapeHtml(userProfile.work_email || 'Not provided')}</strong></p>
+            <p style="margin-top:10px;">SSO requested: <strong style="color:#fff;">${userProfile.wants_sso ? 'Yes' : 'No'}</strong></p>
+          </div>
+          <div class="dashboard-card">
+            <h3>Class Setup Request</h3>
+            <p>Student seats: <strong style="color:#fff;">${userProfile.seats_requested || '-'}</strong></p>
+            <p style="margin-top:10px;">Classes / teachers: <strong style="color:#fff;">${userProfile.classes_requested || '-'}</strong></p>
+          </div>
+        </div>
+
+        <div class="dashboard-card" style="margin-top:24px;">
+          <h3>My Classes</h3>
+          ${classes.length
+            ? `<div class="row-list">${classes.map(item => `<div class="row-item"><span>${escapeHtml(item.name)}</span><span style="color:#a78bfa;">${escapeHtml(item.code || '')}</span></div>`).join('')}</div>`
+            : '<p class="teacher-empty">No classes found yet. Once you create classes in Supabase, they will show here.</p>'
+          }
+        </div>
+
+        <div class="dashboard-card" style="margin-top:24px;">
+          <h3>Student Progress Overview</h3>
+          <table class="teacher-table">
+            <thead>
+              <tr><th>Student</th><th>Modules</th><th>Latest Quiz</th></tr>
+            </thead>
+            <tbody>${overviewRows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function renderAdminDashboard(container) {
+      // Fetch aggregate stats for enterprise admin
+      const { data: allStudents } = await sb.from('profiles').select('id,full_name,role').eq('plan_tier', 'enterprise');
+      const allProfiles = allStudents || [];
+      const totalStudents = allProfiles.filter(p => ['student', 'enterprise_student'].includes(p.role)).length;
+      const totalTeachers = allProfiles.filter(p => ['teacher', 'enterprise_teacher'].includes(p.role)).length;
+      const { data: allClasses } = await sb.from('classes').select('id,name');
+      const totalClasses = (allClasses || []).length;
+
+      container.innerHTML = `
+        <div class="dashboard-grid">
+          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
+            <h3 style="color:#86efac;">Total Students</h3>
+            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalStudents}</p>
+            <p>Enterprise student accounts</p>
+          </div>
+          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
+            <h3 style="color:#86efac;">Total Teachers</h3>
+            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalTeachers}</p>
+            <p>Enterprise teacher accounts</p>
+          </div>
+          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
+            <h3 style="color:#86efac;">Total Classes</h3>
+            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalClasses}</p>
+            <p>Classes across all teachers</p>
+          </div>
+        </div>
+        <div class="dashboard-card" style="margin-top:24px;">
+          <h3>All Teachers &amp; Classes</h3>
+          <div class="row-list">
+            ${(allClasses || []).length
+              ? (allClasses || []).map(c => `<div class="row-item"><span>${escapeHtml(c.name)}</span><span style="color:#a78bfa;">Class ID: ${escapeHtml(String(c.id))}</span></div>`).join('')
+              : '<div style="color:var(--muted);">No classes found yet. Classes appear here once Supabase tables are populated.</div>'
+            }
+          </div>
+        </div>
+        <div class="dashboard-card" style="margin-top:24px;">
+          <h3>All Enterprise Accounts</h3>
+          <table class="teacher-table">
+            <thead><tr><th>Name</th><th>Role</th></tr></thead>
+            <tbody>
+              ${allProfiles.length
+                ? allProfiles.map(p => `<tr><td>${escapeHtml(p.full_name || 'Unknown')}</td><td>${escapeHtml(p.role || 'student')}</td></tr>`).join('')
+                : '<tr><td colspan="2" class="teacher-empty">No enterprise accounts found.</td></tr>'
+              }
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function askAI() {
+      if (!hasPaidAccess()) {
+        showToast('AI help is only for Plus and School Enterprise.', 'error');
+        return;
+      }
+
+      const input = document.getElementById('chat-input');
+      const messages = document.getElementById('chat-messages');
+      const prompt = input.value.trim();
+      if (!prompt) return;
+
+      appendChatMessage('user', prompt);
+      input.value = '';
+
+      try {
+        const response = await fetch(AI_CHAT_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: prompt, plan: getPlanTier() })
+        });
+        if (!response.ok) {
+          appendChatMessage('bot', 'The AI tutor backend is not connected yet. To enable it, deploy a Netlify function at /.netlify/functions/ai-chat that calls your AI provider securely.');
+          return;
+        }
+        const data = await response.json();
+        appendChatMessage('bot', data.answer || 'I did not get a valid answer back from the AI endpoint.');
+      } catch (_error) {
+        appendChatMessage('bot', 'The AI tutor backend is not connected yet. To enable it, deploy a Netlify function at /.netlify/functions/ai-chat that calls your AI provider securely.');
+      }
+    }
+
+    function appendChatMessage(role, text) {
+      const messages = document.getElementById('chat-messages');
+      const div = document.createElement('div');
+      div.className = `chat-message ${role}`;
+      div.textContent = text;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    // Enterprise Registration Modal
+    async function submitEnterpriseInquiry() {
+      const btn = document.getElementById('ent-submit-btn');
+      const errorEl = document.getElementById('enterprise-error');
+      const successEl = document.getElementById('enterprise-success');
+      const formEl = document.getElementById('enterprise-form');
+
+      const schoolName = document.getElementById('ent-school-name').value.trim();
+      const adminFirst = document.getElementById('ent-admin-first').value.trim();
+      const adminLast = document.getElementById('ent-admin-last').value.trim();
+      const adminEmail = document.getElementById('ent-admin-email').value.trim();
+      const domain = document.getElementById('ent-domain').value.trim();
+      const estStudents = parseInt(document.getElementById('ent-students').value || '0', 10) || null;
+      const estTeachers = parseInt(document.getElementById('ent-teachers').value || '0', 10) || null;
+      const estClasses = parseInt(document.getElementById('ent-classes').value || '0', 10) || null;
+      const notes = document.getElementById('ent-notes').value.trim();
+
+      errorEl.textContent = '';
+
+      if (!schoolName) { errorEl.textContent = 'Please enter your school name.'; return; }
+      if (!adminFirst || !adminLast) { errorEl.textContent = 'Please enter the admin first and last name.'; return; }
+      if (!adminEmail || !adminEmail.includes('@')) { errorEl.textContent = 'Please enter a valid admin email.'; return; }
+      if (!domain) { errorEl.textContent = 'Please enter your school domain.'; return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      try {
+        const { error } = await sb.from('enterprise_inquiries').insert({
+          school_name: schoolName,
+          admin_first: adminFirst,
+          admin_last: adminLast,
+          admin_email: adminEmail,
+          domain: domain,
+          est_students: estStudents,
+          est_teachers: estTeachers,
+          est_classes: estClasses,
+          notes: notes || null,
+          created_at: new Date().toISOString()
+        });
+
+        btn.disabled = false;
+        btn.textContent = 'Request Enterprise Access';
+
+        if (error) {
+          // Try without created_at if there's a schema issue
+          const { error: error2 } = await sb.from('enterprise_inquiries').insert({
+            school_name: schoolName,
+            admin_first: adminFirst,
+            admin_last: adminLast,
+            admin_email: adminEmail,
+            domain: domain,
+            est_students: estStudents,
+            est_teachers: estTeachers,
+            est_classes: estClasses,
+            notes: notes || null
+          });
+          if (error2) {
+            errorEl.textContent = 'There was a problem submitting. Please email us directly at roroai2026@gmail.com.';
+            return;
+          }
+        }
+
+        // Send email notification via Formsubmit
+        try {
+          await fetch('https://formsubmit.co/ajax/RoROAI2026@gmail.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              _subject: 'New Enterprise Inquiry: ' + schoolName,
+              school_name: schoolName,
+              admin_name: adminFirst + ' ' + adminLast,
+              admin_email: adminEmail,
+              domain: domain,
+              est_students: estStudents,
+              est_teachers: estTeachers,
+              est_classes: estClasses,
+              notes: notes || 'None'
+            })
+          });
+        } catch (e) { /* email failure is non-blocking */ }
+
+        // Success
+        formEl.classList.add('hidden');
+        successEl.classList.remove('hidden');
+        successEl.innerHTML = `
+          <div style="text-align:center;padding:20px 0;">
+            <div style="font-size:2.5rem;margin-bottom:12px;">🎉</div>
+            <div style="font-size:1.15rem;font-weight:900;margin-bottom:8px;color:#34d399;">Request received!</div>
+            <div style="color:#cbd5e1;line-height:1.7;">Thanks! We'll review your request and reach out to <strong style="color:#fff;">${escapeHtml(adminEmail)}</strong> within 1–2 business days.</div>
+          </div>
+        `;
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Request Enterprise Access';
+        errorEl.textContent = 'Something went wrong. Please try again or contact us directly.';
+      }
+    }
+
+    function openModal(name) {
+      document.getElementById(`modal-${name}`).classList.add('open');
+      if (name === 'dashboard') {
+        openDashboard();
+      }
+    }
+
+    function closeModal(name) {
+      document.getElementById(`modal-${name}`).classList.remove('open');
+    }
+
+    function switchModal(from, to) {
+      closeModal(from);
+      openModal(to);
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', event => {
+        if (event.target === overlay) {
+          overlay.classList.remove('open');
+        }
+      });
+    });
+
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3600);
+    }
+
+    function setupReveal() {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal').forEach(node => observer.observe(node));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    // Handle Stripe redirect back
+    (async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const payment = urlParams.get('payment');
+      const plan = urlParams.get('plan');
+      if (payment === 'success' && plan) {
+        history.replaceState({}, '', window.location.pathname);
+        const { data } = await sb.auth.getSession();
+        const user = data.session?.user;
+        if (user) {
+          await sb.from('profiles').update({
+            plan_tier: plan,
+            is_pro: true
+          }).eq('id', user.id);
+          showToast('Payment successful! Your ' + plan + ' plan is now active.', 'success');
+        } else {
+          showToast('Payment received! Sign in to activate your plan.', 'success');
+        }
+      } else if (payment === 'cancelled') {
+        history.replaceState({}, '', window.location.pathname);
+        showToast('Payment cancelled. No charge was made.', 'error');
+      }
+    })();
+
+    // News Section
+    const NEWS_URL = './news.json?t=' + Date.now();
+
+    const TAG_COLORS = {
+      purple: { bg: 'rgba(167,139,250,0.15)', text: '#a78bfa' },
+      blue:   { bg: 'rgba(96,165,250,0.15)',  text: '#60a5fa' },
+      green:  { bg: 'rgba(52,211,153,0.15)',  text: '#34d399' },
+      orange: { bg: 'rgba(251,191,36,0.15)',  text: '#fbbf24' },
+      teal:   { bg: 'rgba(45,212,191,0.15)',  text: '#2dd4bf' }
+    };
+
+    function buildNewsCard(item) {
+      const colors = TAG_COLORS[item.tagColor] || TAG_COLORS.blue;
+      return `
+        <div class="news-card">
+          <div class="news-tag" style="background:${colors.bg};color:${colors.text};">${escapeHtml(item.tag)}</div>
+          <div class="news-title">${escapeHtml(item.title)}</div>
+          <div class="news-summary">${escapeHtml(item.summary)}</div>
+          <div class="news-date">${escapeHtml(item.date)}</div>
+        </div>
+      `;
+    }
+
+    async function loadNews() {
+      const currentEl = document.getElementById('news-current');
+      const archivesEl = document.getElementById('news-archives-grid');
+      try {
+        const resp = await fetch(NEWS_URL);
+        if (!resp.ok) throw new Error('fetch failed');
+        const data = await resp.json();
+        const current = (data.current || []).slice(0, 3);
+        const archives = (data.archives || []).slice(0, 10);
+        currentEl.innerHTML = current.length
+          ? current.map(buildNewsCard).join('')
+          : '<p style="color:var(--muted);">No current news found.</p>';
+        archivesEl.innerHTML = archives.length
+          ? archives.map(buildNewsCard).join('')
+          : '<p style="color:var(--muted);">No archived news found.</p>';
+        const btn = document.getElementById('news-archives-btn');
+        if (!archives.length && btn) btn.style.display = 'none';
+      } catch (err) {
+        currentEl.innerHTML = '<p style="color:var(--muted);text-align:center;">Could not load news right now.</p>';
+      }
+    }
+
+    function toggleNewsArchives() {
+      const archives = document.getElementById('news-archives');
+      const btn = document.getElementById('news-archives-btn');
+      const isOpen = archives.classList.toggle('open');
+      btn.textContent = isOpen ? '✖ Hide Archives' : '📂 View Archives';
+    }
+
+    init();
+    loadNews();
+  </script>
+</body>
+</html>
