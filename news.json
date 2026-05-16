@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "Wake County Freshman Falsely Accused of AI Cheating Sparks Petition for K-12 Detection Policies",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "A North Carolina high school freshman was wrongly flagged by three AI detection tools for an English assignment she wrote herself, prompting a student-led petition demanding that districts establish transparent AI detection guidelines and formal appeals processes before using such tools against students."
+    },
+    {
+      "title": "SUNY Makes AI Literacy a General Education Requirement Across All 64 Campuses Starting Fall 2026",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "The State University of New York adopted a systemwide AI policy requiring all incoming undergraduates to complete AI literacy coursework starting Fall 2026, setting a major precedent for embedding foundational AI education into higher education curricula at scale."
+    },
+    {
+      "title": "FutureEd Tracker: 53 State Bills in 25 States Shape Classroom AI as PISA Readies First AI Literacy Assessment for 2029",
+      "tag": "Research",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "A new FutureEd legislative tracker reveals 53 active state bills across 25 states governing how AI is taught and used in K-12 schools, with urgency building around the news that PISA will for the first time test AI literacy among 15-year-olds worldwide in 2029."
+    }
+  ],
+  "archives": [
+    {
       "title": "31 States Introduce 134 AI Education Bills Targeting Student Data Privacy and Classroom Rules",
       "tag": "Policy",
       "tagColor": "orange",
@@ -21,6 +44,5 @@
       "date": "May 2026",
       "summary": "Multiple states are mandating AI instruction as part of computer science graduation requirements, signaling a national push to build foundational AI literacy among K-12 students before they enter the workforce."
     }
-  ],
-  "archives": []
+  ]
 }
