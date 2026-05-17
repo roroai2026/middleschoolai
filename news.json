@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "Parents Organize Against Unmonitored AI on School Chromebooks as Districts Weigh Access Controls",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "A growing wave of parents across the U.S. is pushing back after discovering that students as young as third grade have unrestricted access to generative AI tools like Google Gemini on school-issued Chromebooks, sparking calls for districts to implement clear age-appropriate guardrails before AI programs expand further."
+    },
+    {
+      "title": "Ohio Becomes First State to Mandate Formal AI Policy for Every Public School District by July 2026",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "Ohio's Department of Education has required all traditional public school districts, community schools, and STEM schools to adopt an official AI use policy by July 1, 2026, making Ohio the first state to enforce a hard deadline for district-level AI governance backed by a statewide model policy framework."
+    },
+    {
+      "title": "Adaptive AI Tutors Like Khanmigo Show Early Gains as 86% of U.S. Educational Organizations Now Use Generative AI",
+      "tag": "Innovation",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI\u2014the highest rate of any industry\u2014while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
+    }
+  ],
+  "archives": [
+    {
       "title": "Wake County Freshman Falsely Accused of AI Cheating Sparks Petition for K-12 Detection Policies",
       "tag": "Classroom AI",
       "tagColor": "purple",
@@ -20,9 +43,7 @@
       "tagColor": "blue",
       "date": "May 2026",
       "summary": "A new FutureEd legislative tracker reveals 53 active state bills across 25 states governing how AI is taught and used in K-12 schools, with urgency building around the news that PISA will for the first time test AI literacy among 15-year-olds worldwide in 2029."
-    }
-  ],
-  "archives": [
+    },
     {
       "title": "31 States Introduce 134 AI Education Bills Targeting Student Data Privacy and Classroom Rules",
       "tag": "Policy",
