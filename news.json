@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "Senators Schiff and Rounds Introduce Bipartisan LIFT AI Act to Bring AI Literacy to Every K-12 School",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "U.S. Senators Adam Schiff and Mike Rounds introduced the bipartisan Literacy in Future Technologies (LIFT) Artificial Intelligence Act, which would fund AI literacy programs in K-12 schools nationwide to ensure students and educators are equipped to compete in an AI-driven economy."
+    },
+    {
+      "title": "National Survey Finds U.S. Teachers Rapidly Adopting AI to Personalize Instruction and Cut Grading Time",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "A McKinsey-backed national survey reveals that the majority of U.S. teachers are now regularly using AI tools to differentiate learning, generate lesson materials, and automate routine grading, with middle and high school educators reporting the highest adoption rates across all subject areas."
+    },
+    {
+      "title": "Educators and Researchers Call for Redesigning Classrooms Around AI-Powered Personalized Learning Models",
+      "tag": "Research",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "A new report from Faculty Focus and leading education researchers argues that schools must move beyond simply adding AI tools to existing structures, instead fundamentally rethinking classroom design, pacing, and assessment to unlock the full potential of AI-driven personalized learning for every student."
+    }
+  ],
+  "archives": [
+    {
       "title": "Parents Organize Against Unmonitored AI on School Chromebooks as Districts Weigh Access Controls",
       "tag": "Classroom AI",
       "tagColor": "purple",
@@ -19,10 +42,8 @@
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI\u2014the highest rate of any industry\u2014while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
-    }
-  ],
-  "archives": [
+      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI—the highest rate of any industry—while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
+    },
     {
       "title": "Wake County Freshman Falsely Accused of AI Cheating Sparks Petition for K-12 Detection Policies",
       "tag": "Classroom AI",
