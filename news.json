@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "Stanford SCALE Initiative Releases First Rigorous Causal Evidence Review of AI Tools in K-12 Education",
+      "tag": "Research",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "Stanford's SCALE Initiative published 'The Evidence Base on AI in K-12: A 2026 Review,' the first comprehensive analysis focusing specifically on causal-impact studies that can determine whether AI tools actually improved outcomes for students and educators."
+    },
+    {
+      "title": "ISTE+ASCD and Google Launch Three-Year Partnership to Train Six Million U.S. Educators in AI Literacy",
+      "tag": "Innovation",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "ISTE+ASCD and Google announced a landmark three-year partnership to deliver free, high-quality AI literacy training to six million K-12 teachers and higher education faculty across the United States, making it the largest educator AI upskilling initiative to date."
+    },
+    {
+      "title": "FullScale and All4Ed Launch Rural AI Strategy Lab Bringing 13 School Teams Together to Integrate AI Thoughtfully",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "K-12 nonprofit FullScale partnered with advocacy organization All4Ed to launch a Rural AI Strategy Lab, uniting 13 rural school and district teams to collaboratively explore how AI can be integrated into teaching and learning in ways that are equitable and community-centered."
+    }
+  ],
+  "archives": [
+    {
       "title": "Senators Schiff and Rounds Introduce Bipartisan LIFT AI Act to Bring AI Literacy to Every K-12 School",
       "tag": "Policy",
       "tagColor": "orange",
@@ -20,9 +43,7 @@
       "tagColor": "blue",
       "date": "May 2026",
       "summary": "A new report from Faculty Focus and leading education researchers argues that schools must move beyond simply adding AI tools to existing structures, instead fundamentally rethinking classroom design, pacing, and assessment to unlock the full potential of AI-driven personalized learning for every student."
-    }
-  ],
-  "archives": [
+    },
     {
       "title": "Parents Organize Against Unmonitored AI on School Chromebooks as Districts Weigh Access Controls",
       "tag": "Classroom AI",
@@ -42,7 +63,7 @@
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI—the highest rate of any industry—while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
+      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI\u2014the highest rate of any industry\u2014while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
     },
     {
       "title": "Wake County Freshman Falsely Accused of AI Cheating Sparks Petition for K-12 Detection Policies",
