@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "FutureEd Tracker Updated: 68 AI Education Bills Across 27 States with 10 Already Enacted in 2026",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "FutureEd's 2026 state AI-in-education legislative tracker, refreshed May 18, now follows 68 bills across 27 states shaping how K-12 schools teach and govern AI, with 10 bills already signed into law—including Alabama's H.B. 329 requiring AI instruction as part of every student's high school graduation requirements."
+    },
+    {
+      "title": "Southern Illinois University Hosts Free All-Day AI Workshop to Equip Educators and Students for the AI Era",
+      "tag": "Innovation",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "Southern Illinois University Carbondale offered a free full-day 'AI @ SIUC' workshop on May 14 covering generative AI foundations, frontier models, and live student demonstrations, representing a growing university trend to translate AI research into hands-on professional development for teachers and regional communities."
+    },
+    {
+      "title": "Alabama Becomes Among First States to Require AI Instruction as a Formal High School Graduation Requirement",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "Alabama's newly enacted H.B. 329 mandates that all high school students complete a computer science course that includes AI instruction before graduating, making Alabama one of the first states to formally embed AI literacy into K-12 graduation standards as national momentum builds toward the 2029 PISA AI literacy assessment."
+    }
+  ],
+  "archives": [
+    {
       "title": "Stanford SCALE Initiative Releases First Rigorous Causal Evidence Review of AI Tools in K-12 Education",
       "tag": "Research",
       "tagColor": "blue",
@@ -20,9 +43,7 @@
       "tagColor": "purple",
       "date": "May 2026",
       "summary": "K-12 nonprofit FullScale partnered with advocacy organization All4Ed to launch a Rural AI Strategy Lab, uniting 13 rural school and district teams to collaboratively explore how AI can be integrated into teaching and learning in ways that are equitable and community-centered."
-    }
-  ],
-  "archives": [
+    },
     {
       "title": "Senators Schiff and Rounds Introduce Bipartisan LIFT AI Act to Bring AI Literacy to Every K-12 School",
       "tag": "Policy",
@@ -63,7 +84,7 @@
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI\u2014the highest rate of any industry\u2014while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
+      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI—the highest rate of any industry—while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
     },
     {
       "title": "Wake County Freshman Falsely Accused of AI Cheating Sparks Petition for K-12 Detection Policies",
