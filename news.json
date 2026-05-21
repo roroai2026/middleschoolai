@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "Forbes: U.S. Schools Shift From AI Bans to AI Literacy, Teaching Students to Use AI Responsibly",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "A May 20 Forbes report documents a turning point in U.S. education: schools are abandoning AI bans in favor of proactive AI literacy programs, with institutions like Northeastern University and Penn State partnering with AI companies to teach students responsible, critical use of AI tools as the White House Task Force on AI Education backs the nationwide shift."
+    },
+    {
+      "title": "China Unveils Global AI Education Platform at World Digital Education Conference, Spanning 220 Countries",
+      "tag": "Global",
+      "tagColor": "green",
+      "date": "May 2026",
+      "summary": "At the 2026 World Digital Education Conference in Hangzhou on May 14, China launched an expanded global AI education service platform building on infrastructure already deployed in 220 countries, adding new AI-powered learning tools and cross-border resource sharing capabilities alongside a domestic plan to integrate tiered AI curriculum from primary school through high school."
+    },
+    {
+      "title": "Classover Launches Embodied AI Robotics Education Platform for K-12 Students",
+      "tag": "Innovation",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "AI-powered education company Classover Holdings (NASDAQ: KIDZ) announced on May 11 the launch of an embodied AI robotics education platform designed to teach K-12 students hands-on AI, coding, and robotics skills through interactive physical robots, marking a new wave of hardware-software learning tools entering schools."
+    }
+  ],
+  "archives": [
+    {
       "title": "FutureEd Tracker Updated: 68 AI Education Bills Across 27 States with 10 Already Enacted in 2026",
       "tag": "Policy",
       "tagColor": "orange",
@@ -20,9 +43,7 @@
       "tagColor": "purple",
       "date": "May 2026",
       "summary": "Alabama's newly enacted H.B. 329 mandates that all high school students complete a computer science course that includes AI instruction before graduating, making Alabama one of the first states to formally embed AI literacy into K-12 graduation standards as national momentum builds toward the 2029 PISA AI literacy assessment."
-    }
-  ],
-  "archives": [
+    },
     {
       "title": "Stanford SCALE Initiative Releases First Rigorous Causal Evidence Review of AI Tools in K-12 Education",
       "tag": "Research",
