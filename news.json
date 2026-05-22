@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "Stanford Education Experts Weigh In on AI Risks and Opportunities, Urge Evidence-Based Rollout in K-12",
+      "tag": "Research",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "Stanford researchers published a May 2026 analysis calling for a measured, evidence-based approach to AI in schools—acknowledging real productivity gains for teachers while warning against deploying AI for high-stakes student decisions until causal research catches up with rapid adoption."
+    },
+    {
+      "title": "California AB 1159 Advances: Bill Would Ban Student Data From Being Used to Train AI Models",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "California's AB 1159, one of 134 AI-in-education bills tracked across 31 states in 2026, would explicitly prohibit schools and EdTech vendors from using K-12 student data to train artificial intelligence models, setting a potential national precedent for student data privacy in the AI era."
+    },
+    {
+      "title": "Frontiers in Education Review: Global AI Personalized Learning Research Expanding Beyond U.S. and China to Broader Asia",
+      "tag": "Global",
+      "tagColor": "green",
+      "date": "May 2026",
+      "summary": "A 2026 systematic review published in Frontiers in Education found that while the U.S., China, and Europe have dominated AI-in-education research, new hotbeds are emerging across Southeast Asia and South Asia, signaling a global broadening of efforts to use AI for personalized student learning."
+    }
+  ],
+  "archives": [
+    {
       "title": "Forbes: U.S. Schools Shift From AI Bans to AI Literacy, Teaching Students to Use AI Responsibly",
       "tag": "Policy",
       "tagColor": "orange",
@@ -20,9 +43,7 @@
       "tagColor": "teal",
       "date": "May 2026",
       "summary": "AI-powered education company Classover Holdings (NASDAQ: KIDZ) announced on May 11 the launch of an embodied AI robotics education platform designed to teach K-12 students hands-on AI, coding, and robotics skills through interactive physical robots, marking a new wave of hardware-software learning tools entering schools."
-    }
-  ],
-  "archives": [
+    },
     {
       "title": "FutureEd Tracker Updated: 68 AI Education Bills Across 27 States with 10 Already Enacted in 2026",
       "tag": "Policy",
