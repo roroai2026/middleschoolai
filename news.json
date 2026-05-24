@@ -1,11 +1,34 @@
 {
   "current": [
     {
+      "title": "Columbus City Schools Unanimously Adopts Comprehensive AI Policy for Students and Staff on May 24",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "The Columbus City Schools Board of Education voted unanimously on May 24 to adopt a formal AI use policy covering teachers, students, and staff—becoming an early Ohio district leader ahead of the state's July 1, 2026 mandate requiring all public school districts to establish official AI governance frameworks."
+    },
+    {
+      "title": "Google Unveils Gemini-Powered AI Writing Coach and Major Classroom Updates at BETT 2026",
+      "tag": "Innovation",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "At the BETT 2026 EdTech conference, Google announced sweeping AI upgrades to Google Classroom—including a Gemini-powered Writing Coach co-developed with Khan Academy, new SAT AI practice tools, and connected classroom features—aimed at helping teachers guide students in responsible, productive AI use."
+    },
+    {
+      "title": "U.S. Schools Remain Deeply Split on AI Integration, With Some Banning and Others Building Full Curricula Around It",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "A May 2026 analysis by The Think Academy finds American K-12 schools are sharply divided on AI—some districts maintaining strict bans while others embed AI tools into core curricula—highlighting the urgent need for consistent federal guidance as the gap between AI-ready and AI-excluded students continues to widen."
+    }
+  ],
+  "archives": [
+    {
       "title": "Schools Pivot From AI Bans to AI Literacy as Forbes Reports Growing Shift Toward Responsible Use Education",
       "tag": "Classroom AI",
       "tagColor": "purple",
       "date": "May 2026",
-      "summary": "A May 20 Forbes analysis finds U.S. schools are abandoning blanket AI restrictions in favor of proactive AI literacy curricula, with institutions teaching students to use AI responsibly and critically as the White House Task Force on AI Education\u2014established by executive order\u2014provides resources and coordinates public-private partnerships for K-12 programs."
+      "summary": "A May 20 Forbes analysis finds U.S. schools are abandoning blanket AI restrictions in favor of proactive AI literacy curricula, with institutions teaching students to use AI responsibly and critically as the White House Task Force on AI Education—established by executive order—provides resources and coordinates public-private partnerships for K-12 programs."
     },
     {
       "title": "White House Task Force on AI Education to Launch Presidential AI Challenge for America's Youth",
@@ -19,16 +42,14 @@
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "A May 2026 review by The AI Educator found that education-specific tools\u2014including Khan Academy's Khanmigo for math, SchoolAI for whole-school management, and Class Companion for writing feedback\u2014are leading K-12 AI adoption by offering pedagogical design and teacher-controlled dashboards that general-purpose chatbots cannot match."
-    }
-  ],
-  "archives": [
+      "summary": "A May 2026 review by The AI Educator found that education-specific tools—including Khan Academy's Khanmigo for math, SchoolAI for whole-school management, and Class Companion for writing feedback—are leading K-12 AI adoption by offering pedagogical design and teacher-controlled dashboards that general-purpose chatbots cannot match."
+    },
     {
       "title": "Stanford Education Experts Weigh In on AI Risks and Opportunities, Urge Evidence-Based Rollout in K-12",
       "tag": "Research",
       "tagColor": "blue",
       "date": "May 2026",
-      "summary": "Stanford researchers published a May 2026 analysis calling for a measured, evidence-based approach to AI in schools\u2014acknowledging real productivity gains for teachers while warning against deploying AI for high-stakes student decisions until causal research catches up with rapid adoption."
+      "summary": "Stanford researchers published a May 2026 analysis calling for a measured, evidence-based approach to AI in schools—acknowledging real productivity gains for teachers while warning against deploying AI for high-stakes student decisions until causal research catches up with rapid adoption."
     },
     {
       "title": "California AB 1159 Advances: Bill Would Ban Student Data From Being Used to Train AI Models",
@@ -70,7 +91,7 @@
       "tag": "Policy",
       "tagColor": "orange",
       "date": "May 2026",
-      "summary": "FutureEd's 2026 state AI-in-education legislative tracker, refreshed May 18, now follows 68 bills across 27 states shaping how K-12 schools teach and govern AI, with 10 bills already signed into law\u2014including Alabama's H.B. 329 requiring AI instruction as part of every student's high school graduation requirements."
+      "summary": "FutureEd's 2026 state AI-in-education legislative tracker, refreshed May 18, now follows 68 bills across 27 states shaping how K-12 schools teach and govern AI, with 10 bills already signed into law—including Alabama's H.B. 329 requiring AI instruction as part of every student's high school graduation requirements."
     },
     {
       "title": "Southern Illinois University Hosts Free All-Day AI Workshop to Equip Educators and Students for the AI Era",
@@ -147,7 +168,7 @@
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI\u2014the highest rate of any industry\u2014while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
+      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI—the highest rate of any industry—while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
     },
     {
       "title": "Wake County Freshman Falsely Accused of AI Cheating Sparks Petition for K-12 Detection Policies",
