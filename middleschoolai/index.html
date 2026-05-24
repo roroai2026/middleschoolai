@@ -1547,8 +1547,17 @@
   <script>
     const SUPABASE_URL = 'https://lxdumjtgxrqxrkiypawg.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4ZHVtanRneHJxeHJraXlwYXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjQ0ODUsImV4cCI6MjA5MjA0MDQ4NX0.vpnq3U5GCm__GjfrfbZAd1Awc3waGzcVINXMFqXqv1k';
-    const GEMINI_API_KEY = 'GEMINI_KEY_PLACEHOLDER';
-    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+    let GEMINI_API_KEY = null;
+    let GEMINI_URL = null;
+    async function loadGeminiKey() {
+      try {
+        const { data } = await sb.from('app_config').select('value').eq('key', 'gemini_api_key').single();
+        if (data?.value) {
+          GEMINI_API_KEY = data.value;
+          GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+        }
+      } catch { /* key not set yet */ }
+    }
 
     const { createClient } = supabase;
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -1956,9 +1965,12 @@
       currentUser = session?.user || null;
       if (currentUser) {
         await ensureProfile();
+        await loadGeminiKey();
       } else {
         userProfile = null;
         moduleCompletionSet = new Set();
+        GEMINI_API_KEY = null;
+        GEMINI_URL = null;
       }
       await updateAuthUI();
       if (isNewSignIn && userProfile) {
@@ -3147,7 +3159,7 @@
       const msg = input.value.trim();
       if (!msg) return;
 
-      if (!GEMINI_API_KEY || GEMINI_API_KEY === 'GEMINI_KEY_PLACEHOLDER') {
+      if (!GEMINI_API_KEY) {
         showToast('AI chat coming soon!', 'info');
         return;
       }
