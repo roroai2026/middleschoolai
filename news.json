@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "NSF Invests $11M to Launch CSTA AI Teacher Training Program Across Six States This Summer",
+      "tag": "Innovation",
+      "tagColor": "teal",
+      "date": "May 2026",
+      "summary": "The Computer Science Teachers Association announced an $11-million NSF-funded initiative to train thousands of K-12 educators in AI and computer science this summer, launching weeklong hands-on 'AI PD Weeks' in Illinois, Indiana, Iowa, Minnesota, New Jersey, and South Carolina as part of President Trump's executive order on advancing AI education."
+    },
+    {
+      "title": "New Research: 30% of K-12 Students Now Use AI Tools Daily, 53% Use AI for Homework Help",
+      "tag": "Research",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "A 2026 analysis of AI education statistics reveals that nearly one-third of K-12 students interact with AI tools on a daily basis, with over half using AI to assist with homework—highlighting how rapidly student AI adoption has outpaced formal school policies and teacher training programs."
+    },
+    {
+      "title": "Global Analysis: AI in Schools Has Reached a 'Substantial Productivity Layer' as International Governance Frameworks Take Hold",
+      "tag": "Global",
+      "tagColor": "green",
+      "date": "May 2026",
+      "summary": "A comprehensive May 2026 review finds that AI in education has matured from the 'ban-or-allow' debate into a structured deployment phase worldwide, serving as a meaningful productivity layer for teachers and administrators while UNESCO guidance and the EU AI Act's phased rollout provide the governance scaffolding schools had been missing."
+    }
+  ],
+  "archives": [
+    {
       "title": "Columbus City Schools Unanimously Adopts Comprehensive AI Policy for Students and Staff on May 24",
       "tag": "Policy",
       "tagColor": "orange",
@@ -20,9 +43,7 @@
       "tagColor": "purple",
       "date": "May 2026",
       "summary": "A May 2026 analysis by The Think Academy finds American K-12 schools are sharply divided on AI—some districts maintaining strict bans while others embed AI tools into core curricula—highlighting the urgent need for consistent federal guidance as the gap between AI-ready and AI-excluded students continues to widen."
-    }
-  ],
-  "archives": [
+    },
     {
       "title": "Schools Pivot From AI Bans to AI Literacy as Forbes Reports Growing Shift Toward Responsible Use Education",
       "tag": "Classroom AI",
