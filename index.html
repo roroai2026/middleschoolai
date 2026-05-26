@@ -1960,6 +1960,9 @@
     const ADMIN_USERNAME = 'admin/rohan';
     const ADMIN_PASSWORD = 'admin/rohan';
 
+    // Load Gemini key for all users (key is client-side anyway, no security benefit to gating on auth)
+    loadGeminiKey();
+
     sb.auth.onAuthStateChange(async (_event, session) => {
       const isNewSignIn = _event === 'SIGNED_IN';
       currentUser = session?.user || null;
@@ -1969,8 +1972,6 @@
       } else {
         userProfile = null;
         moduleCompletionSet = new Set();
-        GEMINI_API_KEY = null;
-        GEMINI_URL = null;
       }
       await updateAuthUI();
       if (isNewSignIn && userProfile) {
