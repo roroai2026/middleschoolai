@@ -1526,10 +1526,38 @@
     </div>
   </div>
 
+  <!-- Class Picker Modal (SSO flow for new enterprise students) -->
+  <div class="modal-overlay" id="modal-class-picker">
+    <div class="modal narrow">
+      <h2>Select Your Class</h2>
+      <p class="subtitle">Choose the class you're in. Your teacher set this up.</p>
+      <div id="class-picker-list" class="row-list" style="margin-bottom:20px;"></div>
+      <div id="class-code-entry" class="hidden">
+        <p style="margin-bottom:12px;color:var(--muted);">Enter the class code your teacher gave you:</p>
+        <div class="form-group">
+          <input type="text" id="class-code-input" placeholder="e.g. XK7F2M" style="text-transform:uppercase;letter-spacing:0.1em;" maxlength="6" />
+        </div>
+        <div class="form-error" id="class-code-error"></div>
+        <button class="btn-primary" onclick="submitClassCode()">Join Class</button>
+        <button class="btn-secondary" style="margin-top:10px;" onclick="document.getElementById('class-code-entry').classList.add('hidden');selectedClassId=null;">Back</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const SUPABASE_URL = 'https://lxdumjtgxrqxrkiypawg.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx4ZHVtanRneHJxeHJraXlwYXdnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0NjQ0ODUsImV4cCI6MjA5MjA0MDQ4NX0.vpnq3U5GCm__GjfrfbZAd1Awc3waGzcVINXMFqXqv1k';
-    const AI_CHAT_ENDPOINT = '/.netlify/functions/ai-chat';
+    let GEMINI_API_KEY = null;
+    let GEMINI_URL = null;
+    async function loadGeminiKey() {
+      try {
+        const { data } = await sb.from('app_config').select('value').eq('key', 'gemini_api_key').single();
+        if (data?.value) {
+          GEMINI_API_KEY = data.value;
+          GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+        }
+      } catch { /* key not set yet */ }
+    }
 
     const { createClient } = supabase;
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -1926,6 +1954,9 @@
     let finalQuizScore = 0;
     let adminMode = localStorage.getItem('aiExplorerAdminMode') === 'true';
     let adminView = localStorage.getItem('aiExplorerAdminView') || 'teacher';
+    let chatHistory = [];
+    let displayName = 'Student';
+    let selectedClassId = null;
     const ADMIN_USERNAME = 'admin/rohan';
     const ADMIN_PASSWORD = 'admin/rohan';
 
@@ -1934,9 +1965,12 @@
       currentUser = session?.user || null;
       if (currentUser) {
         await ensureProfile();
+        await loadGeminiKey();
       } else {
         userProfile = null;
         moduleCompletionSet = new Set();
+        GEMINI_API_KEY = null;
+        GEMINI_URL = null;
       }
       await updateAuthUI();
       if (isNewSignIn && userProfile) {
@@ -1964,6 +1998,17 @@
       toggleEnterpriseFields();
       await updateAuthUI();
       setupReveal();
+
+      // Enter key sends chat message (Shift+Enter = newline)
+      const chatInput = document.getElementById('chat-input');
+      if (chatInput) {
+        chatInput.addEventListener('keydown', e => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            askAI();
+          }
+        });
+      }
     }
 
     function getPlanTier() {
@@ -2071,6 +2116,24 @@
       const { data: upserted } = await sb.from('profiles').upsert(nextProfile).select().maybeSingle();
       userProfile = upserted || nextProfile;
       localStorage.removeItem('aiExplorerPendingSignup');
+
+      // Resolve display name: class_roster > profiles.display_name > profiles.full_name > 'Student'
+      const userEmail = currentUser.email || '';
+      if (userEmail) {
+        const { data: rosterEntry } = await sb.from('class_roster')
+          .select('student_name').eq('student_email', userEmail).maybeSingle();
+        if (rosterEntry?.student_name) {
+          displayName = rosterEntry.student_name;
+        } else if (userProfile.display_name) {
+          displayName = userProfile.display_name;
+        } else if (userProfile.full_name) {
+          displayName = userProfile.full_name;
+        } else {
+          displayName = 'Student';
+        }
+      } else {
+        displayName = userProfile.display_name || userProfile.full_name || 'Student';
+      }
     }
 
     async function updateAuthUI() {
@@ -2120,7 +2183,6 @@
       } else if (currentUser && userProfile) {
         const plan = getPlanTier();
         const badgeClass = `plan-${plan === 'enterprise' ? 'enterprise' : plan}`;
-        const displayName = userProfile.full_name || currentUser.email?.split('@')[0] || 'Learner';
         // Only show role label for enterprise users (students/teachers added by a school admin)
         const isEnterpriseUser = plan === 'enterprise';
         const roleLabel = isEnterpriseUser && userProfile.role ? `${userProfile.role}` : '';
@@ -2155,10 +2217,15 @@
           // Show leaderboard for enterprise students (not teachers/admins — they use the dashboard)
           if (!isTeacherDashboardUser()) {
             leaderboard.classList.remove('hidden');
+            leaderboard.classList.add('reveal', 'revealed');
+            loadLeaderboard();
           } else {
             leaderboard.classList.add('hidden');
           }
         }
+
+        // Check if student needs class enrollment (SSO flow)
+        await checkStudentEnrollment();
 
         await refreshModuleCompletions();
       } else {
@@ -2329,8 +2396,13 @@
       await sb.auth.signOut();
       userProfile = null;
       moduleCompletionSet = new Set();
+      displayName = 'Student';
+      chatHistory = [];
+      window.location.hash = '';
+      window.scrollTo(0, 0);
       renderModuleGrid();
       showToast('Signed out.', 'success');
+      await updateAuthUI();
     }
 
     async function refreshModuleCompletions() {
@@ -2846,118 +2918,233 @@
     }
 
     async function renderTeacherDashboard(container) {
-      const classesResponse = await sb.from('classes').select('*').eq('teacher_id', currentUser.id);
-      const classes = classesResponse.data || [];
-      const classIds = classes.map(item => item.id);
+      // Fetch the teacher's class
+      const { data: teacherClass } = await sb.from('classes').select('*').eq('teacher_id', currentUser.id).maybeSingle();
 
-      let enrollments = [];
-      if (classIds.length) {
-        const enrollmentResponse = await sb.from('class_enrollments')
-          .select('*, profiles(full_name,email), module_progress(module_number), quiz_scores(score,total,quiz_type)')
-          .in('class_id', classIds);
-        enrollments = enrollmentResponse.data || [];
+      if (!teacherClass) {
+        container.innerHTML = `
+          <div class="dashboard-card">
+            <h3>Teacher Dashboard</h3>
+            <p style="color:var(--muted);">No class assigned yet. Contact your school admin to be assigned to a class.</p>
+          </div>
+        `;
+        return;
       }
 
-      const overviewRows = enrollments.length
-        ? enrollments.map(entry => {
-            const progressCount = (entry.module_progress || []).length;
-            const latestQuiz = (entry.quiz_scores || [])[0];
+      // Fetch enrollments for this class
+      const { data: enrollments } = await sb.from('class_enrollments')
+        .select('student_id').eq('class_id', teacherClass.id);
+
+      const studentIds = (enrollments || []).map(e => e.student_id);
+
+      let students = [];
+      let allProgress = [];
+      if (studentIds.length) {
+        const { data: studentProfiles } = await sb.from('profiles')
+          .select('id, full_name, display_name, email').in('id', studentIds);
+        students = studentProfiles || [];
+
+        const { data: progressData } = await sb.from('module_progress')
+          .select('user_id, module_number').in('user_id', studentIds);
+        allProgress = progressData || [];
+      }
+
+      // Build progress map: student_id -> count of completed modules
+      const progressMap = {};
+      studentIds.forEach(id => progressMap[id] = 0);
+      allProgress.forEach(p => {
+        progressMap[p.user_id] = (progressMap[p.user_id] || 0) + 1;
+      });
+
+      const TOTAL_MODULES = 18;
+
+      const tableRows = students.length
+        ? students.map(s => {
+            const count = progressMap[s.id] || 0;
+            const pct = Math.round((count / TOTAL_MODULES) * 100);
+            const name = s.display_name || s.full_name || s.email || 'Student';
             return `
               <tr>
-                <td>${escapeHtml(entry.profiles?.full_name || entry.profiles?.email || 'Unknown')}</td>
-                <td>${progressCount}/8</td>
-                <td>${latestQuiz ? `${latestQuiz.score}/${latestQuiz.total}` : '-'}</td>
+                <td>${escapeHtml(name)}</td>
+                <td>${count} / ${TOTAL_MODULES}</td>
+                <td><div class="progress-rail"><div class="progress-fill" style="width:${pct}%"></div></div></td>
               </tr>
             `;
           }).join('')
-        : `<tr><td colspan="3" class="teacher-empty">No student enrollment data yet. Dashboard is ready once Supabase class tables are populated.</td></tr>`;
+        : `<tr><td colspan="3" class="teacher-empty">No students enrolled yet. Share class code <strong>${escapeHtml(teacherClass.code || '')}</strong> with students.</td></tr>`;
 
       container.innerHTML = `
-        <div class="dashboard-grid">
-          <div class="dashboard-card">
-            <h3>Enterprise Billing</h3>
-            <p>$3 per student / month + $3 per teacher / month.</p>
-            <p style="margin-top:10px;">School: <strong style="color:#fff;">${escapeHtml(userProfile.school_name || 'Not set')}</strong></p>
-          </div>
-          <div class="dashboard-card">
-            <h3>SSO Follow-up</h3>
-            <p>Work email: <strong style="color:#fff;">${escapeHtml(userProfile.work_email || 'Not provided')}</strong></p>
-            <p style="margin-top:10px;">SSO requested: <strong style="color:#fff;">${userProfile.wants_sso ? 'Yes' : 'No'}</strong></p>
-          </div>
-          <div class="dashboard-card">
-            <h3>Class Setup Request</h3>
-            <p>Student seats: <strong style="color:#fff;">${userProfile.seats_requested || '-'}</strong></p>
-            <p style="margin-top:10px;">Classes / teachers: <strong style="color:#fff;">${userProfile.classes_requested || '-'}</strong></p>
-          </div>
+        <div class="dashboard-card">
+          <h3>My Class: ${escapeHtml(teacherClass.name)}</h3>
+          <p>Class code: <code style="background:rgba(167,139,250,0.15);color:#c4b5fd;padding:3px 10px;border-radius:6px;font-size:1rem;letter-spacing:0.1em;">${escapeHtml(teacherClass.code || '')}</code></p>
+          <p style="margin-top:10px;color:var(--muted);">Share this code with students to join your class.</p>
         </div>
 
         <div class="dashboard-card" style="margin-top:24px;">
-          <h3>My Classes</h3>
-          ${classes.length
-            ? `<div class="row-list">${classes.map(item => `<div class="row-item"><span>${escapeHtml(item.name)}</span><span style="color:#a78bfa;">${escapeHtml(item.code || '')}</span></div>`).join('')}</div>`
-            : '<p class="teacher-empty">No classes found yet. Once you create classes in Supabase, they will show here.</p>'
-          }
-        </div>
-
-        <div class="dashboard-card" style="margin-top:24px;">
-          <h3>Student Progress Overview</h3>
+          <h3>Student Progress (${students.length} student${students.length !== 1 ? 's' : ''})</h3>
           <table class="teacher-table">
             <thead>
-              <tr><th>Student</th><th>Modules</th><th>Latest Quiz</th></tr>
+              <tr><th>Student</th><th>Modules Done</th><th>Progress</th></tr>
             </thead>
-            <tbody>${overviewRows}</tbody>
+            <tbody>${tableRows}</tbody>
           </table>
         </div>
       `;
     }
 
+    function generateClassCode() {
+      return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    async function addAdminClass() {
+      const nameInput = document.getElementById('new-class-name');
+      const name = (nameInput?.value || '').trim();
+      if (!name) { showToast('Enter a class name first.', 'error'); return; }
+      const code = generateClassCode();
+      const { error } = await sb.from('classes').insert({
+        school_id: currentUser.id,
+        name,
+        code,
+        teacher_id: null
+      });
+      if (error) { showToast('Could not create class: ' + error.message, 'error'); return; }
+      showToast(`Class "${name}" created (code: ${code})`, 'success');
+      if (nameInput) nameInput.value = '';
+      openDashboard(); // refresh
+    }
+
+    async function renameAdminClass(classId, currentName) {
+      const newName = prompt('Rename class:', currentName);
+      if (!newName || newName.trim() === currentName) return;
+      const { error } = await sb.from('classes').update({ name: newName.trim() }).eq('id', classId);
+      if (error) { showToast('Could not rename: ' + error.message, 'error'); return; }
+      showToast('Class renamed.', 'success');
+      openDashboard();
+    }
+
+    async function viewClassRoster(classId, className) {
+      const modal = document.getElementById('modal-dashboard');
+      const content = modal.querySelector('#dashboard-content');
+      const title = modal.querySelector('#dashboard-title');
+      title.textContent = `Roster: ${className}`;
+
+      const { data: roster } = await sb.from('class_roster').select('*').eq('class_id', classId).order('created_at', { ascending: true });
+      const { data: enrollments } = await sb.from('class_enrollments').select('student_id').eq('class_id', classId);
+      const enrolledIds = new Set((enrollments || []).map(e => e.student_id));
+
+      // Check enrolled status by email lookup in profiles
+      const emails = (roster || []).map(r => r.student_email).filter(Boolean);
+      let profilesMap = {};
+      if (emails.length) {
+        const { data: profs } = await sb.from('profiles').select('id, email').in('email', emails);
+        (profs || []).forEach(p => { profilesMap[p.email] = p.id; });
+      }
+
+      const rows = (roster || []).map(r => {
+        const profileId = profilesMap[r.student_email];
+        const enrolled = profileId ? enrolledIds.has(profileId) : false;
+        return `<tr>
+          <td>${escapeHtml(r.student_name || '')}</td>
+          <td>${escapeHtml(r.student_email || '')}</td>
+          <td style="color:${enrolled ? '#34d399' : '#94a3b8'}">${enrolled ? '✓' : '—'}</td>
+          <td><button class="btn-sm danger" onclick="deleteRosterEntry('${r.id}', '${classId}', ${JSON.stringify(className)})">Remove</button></td>
+        </tr>`;
+      }).join('');
+
+      content.innerHTML = `
+        <button class="btn-secondary" style="margin-bottom:18px;" onclick="openDashboard()">← Back to Classes</button>
+        <div class="dashboard-card">
+          <h3>Students (${(roster || []).length})</h3>
+          <table class="teacher-table">
+            <thead><tr><th>Name</th><th>Email</th><th>Enrolled?</th><th></th></tr></thead>
+            <tbody>${rows || '<tr><td colspan="4" class="teacher-empty">No students yet.</td></tr>'}</tbody>
+          </table>
+        </div>
+        <div class="dashboard-card" style="margin-top:18px;">
+          <h3>Add Student</h3>
+          <div class="form-group" style="display:flex;gap:10px;flex-wrap:wrap;">
+            <input type="text" id="roster-add-name" placeholder="Student name" style="flex:1;min-width:140px;" />
+            <input type="email" id="roster-add-email" placeholder="student@school.edu" style="flex:1;min-width:180px;" />
+            <button class="btn-primary" style="width:auto;padding-inline:20px;" onclick="addRosterStudent('${classId}', ${JSON.stringify(className)})">Add</button>
+          </div>
+        </div>
+        <div class="dashboard-card" style="margin-top:18px;">
+          <h3>Bulk Add</h3>
+          <p style="color:var(--muted);margin-bottom:10px;font-size:0.88rem;">One student per line: <em>Name, email</em></p>
+          <textarea id="roster-bulk" rows="5" placeholder="Alice Smith, alice@school.edu&#10;Bob Jones, bob@school.edu" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:10px;color:#fff;padding:10px;font-family:inherit;"></textarea>
+          <button class="btn-secondary" style="margin-top:10px;" onclick="bulkAddRoster('${classId}', ${JSON.stringify(className)})">Bulk Add</button>
+        </div>
+      `;
+    }
+
+    async function addRosterStudent(classId, className) {
+      const name = (document.getElementById('roster-add-name')?.value || '').trim();
+      const email = (document.getElementById('roster-add-email')?.value || '').trim();
+      if (!name || !email) { showToast('Enter both name and email.', 'error'); return; }
+      const { error } = await sb.from('class_roster').insert({ class_id: classId, student_name: name, student_email: email });
+      if (error) { showToast('Error: ' + error.message, 'error'); return; }
+      showToast(`${name} added.`, 'success');
+      viewClassRoster(classId, className);
+    }
+
+    async function bulkAddRoster(classId, className) {
+      const raw = (document.getElementById('roster-bulk')?.value || '').trim();
+      if (!raw) return;
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      const rows = lines.map(line => {
+        const [name, ...rest] = line.split(',');
+        return { class_id: classId, student_name: name.trim(), student_email: rest.join(',').trim() };
+      }).filter(r => r.student_name && r.student_email);
+      if (!rows.length) { showToast('No valid rows found.', 'error'); return; }
+      const { error } = await sb.from('class_roster').insert(rows);
+      if (error) { showToast('Bulk add error: ' + error.message, 'error'); return; }
+      showToast(`${rows.length} student(s) added.`, 'success');
+      viewClassRoster(classId, className);
+    }
+
+    async function deleteRosterEntry(entryId, classId, className) {
+      if (!confirm('Remove this student from the roster?')) return;
+      await sb.from('class_roster').delete().eq('id', entryId);
+      showToast('Student removed.', 'success');
+      viewClassRoster(classId, className);
+    }
+
     async function renderAdminDashboard(container) {
-      // Fetch aggregate stats for enterprise admin
-      const { data: allStudents } = await sb.from('profiles').select('id,full_name,role').eq('plan_tier', 'enterprise');
-      const allProfiles = allStudents || [];
-      const totalStudents = allProfiles.filter(p => ['student', 'enterprise_student'].includes(p.role)).length;
-      const totalTeachers = allProfiles.filter(p => ['teacher', 'enterprise_teacher'].includes(p.role)).length;
-      const { data: allClasses } = await sb.from('classes').select('id,name');
-      const totalClasses = (allClasses || []).length;
+      // Fetch this admin's classes
+      const { data: adminClasses } = await sb.from('classes').select('*').eq('school_id', currentUser.id).order('created_at', { ascending: true });
+      const classes = adminClasses || [];
+
+      // Count enrollments per class
+      const classIds = classes.map(c => c.id);
+      let enrollCountMap = {};
+      if (classIds.length) {
+        const { data: allEnrollments } = await sb.from('class_enrollments').select('class_id').in('class_id', classIds);
+        (allEnrollments || []).forEach(e => {
+          enrollCountMap[e.class_id] = (enrollCountMap[e.class_id] || 0) + 1;
+        });
+      }
+
+      const classRows = classes.map(c => `
+        <div class="row-item" style="flex-wrap:wrap;gap:10px;align-items:center;">
+          <span style="flex:1;min-width:120px;">${escapeHtml(c.name)}</span>
+          <code style="background:rgba(167,139,250,0.15);color:#c4b5fd;padding:2px 10px;border-radius:6px;letter-spacing:0.1em;font-size:0.9rem;">${escapeHtml(c.code || '')}</code>
+          <span style="color:#34d399;font-size:0.88rem;">${enrollCountMap[c.id] || 0} student${(enrollCountMap[c.id] || 0) !== 1 ? 's' : ''}</span>
+          <button class="btn-sm" onclick="renameAdminClass('${c.id}', ${JSON.stringify(c.name)})">Rename</button>
+          <button class="btn-sm" onclick="viewClassRoster('${c.id}', ${JSON.stringify(c.name)})">Roster</button>
+        </div>
+      `).join('');
 
       container.innerHTML = `
-        <div class="dashboard-grid">
-          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
-            <h3 style="color:#86efac;">Total Students</h3>
-            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalStudents}</p>
-            <p>Enterprise student accounts</p>
+        <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
+          <h3 style="color:#86efac;">My Classes (${classes.length})</h3>
+          ${classes.length
+            ? `<div class="row-list">${classRows}</div>`
+            : '<p style="color:var(--muted);">No classes yet — add one below.</p>'
+          }
+          <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;">
+            <input type="text" id="new-class-name" placeholder="Class name (e.g. Period 1 — AI)" style="flex:1;min-width:180px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:#fff;padding:10px 14px;font-family:inherit;" />
+            <button class="btn-primary" style="width:auto;padding-inline:20px;" onclick="addAdminClass()">+ Add Class</button>
           </div>
-          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
-            <h3 style="color:#86efac;">Total Teachers</h3>
-            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalTeachers}</p>
-            <p>Enterprise teacher accounts</p>
-          </div>
-          <div class="dashboard-card" style="border-color:rgba(52,211,153,0.3);">
-            <h3 style="color:#86efac;">Total Classes</h3>
-            <p style="font-size:2rem;font-weight:900;color:#fff;">${totalClasses}</p>
-            <p>Classes across all teachers</p>
-          </div>
-        </div>
-        <div class="dashboard-card" style="margin-top:24px;">
-          <h3>All Teachers &amp; Classes</h3>
-          <div class="row-list">
-            ${(allClasses || []).length
-              ? (allClasses || []).map(c => `<div class="row-item"><span>${escapeHtml(c.name)}</span><span style="color:#a78bfa;">Class ID: ${escapeHtml(String(c.id))}</span></div>`).join('')
-              : '<div style="color:var(--muted);">No classes found yet. Classes appear here once Supabase tables are populated.</div>'
-            }
-          </div>
-        </div>
-        <div class="dashboard-card" style="margin-top:24px;">
-          <h3>All Enterprise Accounts</h3>
-          <table class="teacher-table">
-            <thead><tr><th>Name</th><th>Role</th></tr></thead>
-            <tbody>
-              ${allProfiles.length
-                ? allProfiles.map(p => `<tr><td>${escapeHtml(p.full_name || 'Unknown')}</td><td>${escapeHtml(p.role || 'student')}</td></tr>`).join('')
-                : '<tr><td colspan="2" class="teacher-empty">No enterprise accounts found.</td></tr>'
-              }
-            </tbody>
-          </table>
         </div>
       `;
     }
@@ -2969,37 +3156,196 @@
       }
 
       const input = document.getElementById('chat-input');
-      const messages = document.getElementById('chat-messages');
-      const prompt = input.value.trim();
-      if (!prompt) return;
+      const msg = input.value.trim();
+      if (!msg) return;
 
-      appendChatMessage('user', prompt);
+      if (!GEMINI_API_KEY) {
+        showToast('AI chat coming soon!', 'info');
+        return;
+      }
+
+      appendChatMessage('user', msg);
       input.value = '';
+      const loadingId = appendChatMessage('bot', '🤔 Thinking...');
+
+      const contents = [
+        { role: 'user', parts: [{ text: 'You are a helpful AI tutor for middle school students learning about artificial intelligence. Keep answers simple, encouraging, and concise (2-4 sentences). Only discuss AI-related topics.\n\nHello!' }] },
+        { role: 'model', parts: [{ text: 'Hi! I\'m your AI learning assistant. Ask me anything about artificial intelligence! 🤖' }] },
+        ...chatHistory.slice(-10).map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] })),
+        { role: 'user', parts: [{ text: msg }] }
+      ];
 
       try {
-        const response = await fetch(AI_CHAT_ENDPOINT, {
+        const res = await fetch(GEMINI_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: prompt, plan: getPlanTier() })
+          body: JSON.stringify({ contents, generationConfig: { temperature: 0.7, maxOutputTokens: 300 } })
         });
-        if (!response.ok) {
-          appendChatMessage('bot', 'The AI tutor backend is not connected yet. To enable it, deploy a Netlify function at /.netlify/functions/ai-chat that calls your AI provider securely.');
-          return;
-        }
-        const data = await response.json();
-        appendChatMessage('bot', data.answer || 'I did not get a valid answer back from the AI endpoint.');
-      } catch (_error) {
-        appendChatMessage('bot', 'The AI tutor backend is not connected yet. To enable it, deploy a Netlify function at /.netlify/functions/ai-chat that calls your AI provider securely.');
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I had trouble answering that.';
+        updateChatMessage(loadingId, reply);
+        chatHistory.push({ role: 'user', content: msg }, { role: 'assistant', content: reply });
+        if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+      } catch {
+        updateChatMessage(loadingId, 'Connection error. Please try again.');
       }
     }
 
     function appendChatMessage(role, text) {
-      const messages = document.getElementById('chat-messages');
+      const msgs = document.getElementById('chat-messages');
+      const id = 'msg-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
       const div = document.createElement('div');
       div.className = `chat-message ${role}`;
+      div.id = id;
       div.textContent = text;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return id;
+    }
+
+    function updateChatMessage(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    // Live class leaderboard
+    async function loadLeaderboard() {
+      if (!currentUser) return;
+      const leaderboardEl = document.getElementById('leaderboard-content');
+      if (!leaderboardEl) return;
+
+      // Find student's class
+      const { data: enrollment } = await sb.from('class_enrollments')
+        .select('class_id').eq('student_id', currentUser.id).maybeSingle();
+      if (!enrollment) return;
+
+      // Get all students in the class
+      const { data: classmates } = await sb.from('class_enrollments')
+        .select('student_id').eq('class_id', enrollment.class_id);
+      if (!classmates?.length) return;
+
+      const studentIds = classmates.map(c => c.student_id);
+
+      // Get module counts and display names in parallel
+      const [{ data: progress }, { data: profiles }] = await Promise.all([
+        sb.from('module_progress').select('user_id, module_number').in('user_id', studentIds),
+        sb.from('profiles').select('id, display_name, full_name').in('id', studentIds)
+      ]);
+
+      const nameMap = {};
+      (profiles || []).forEach(p => { nameMap[p.id] = p.display_name || p.full_name || 'Student'; });
+
+      const counts = {};
+      studentIds.forEach(id => counts[id] = 0);
+      (progress || []).forEach(p => { counts[p.user_id] = (counts[p.user_id] || 0) + 1; });
+
+      const ranked = Object.entries(counts)
+        .sort((a, b) => b[1] - a[1])
+        .map(([id, count], i) => ({
+          rank: i + 1,
+          name: nameMap[id] || 'Student',
+          count,
+          isMe: id === currentUser.id
+        }));
+
+      const medals = ['🥇', '🥈', '🥉'];
+      const html = ranked.slice(0, 10).map(s => `
+        <div class="row-item" style="${s.isMe ? 'background:rgba(167,139,250,0.1);border-radius:8px;padding:8px;' : ''}">
+          <span>${medals[s.rank - 1] || s.rank + '.'} ${s.isMe ? `<strong>${escapeHtml(s.name)}</strong>` : escapeHtml(s.name)}</span>
+          <span style="color:#34d399;">${s.count} module${s.count !== 1 ? 's' : ''}</span>
+        </div>
+      `).join('');
+
+      leaderboardEl.innerHTML = `<div class="row-list">${html}</div>`;
+    }
+
+    // Check if newly-logged-in student needs to pick a class (SSO flow)
+    async function checkStudentEnrollment() {
+      if (!currentUser || !userProfile) return;
+      const role = userProfile.role || '';
+      // Only run for enterprise students
+      if (!['student', 'enterprise_student'].includes(role) && !isEnterpriseUser()) return;
+
+      // Already enrolled? Skip.
+      const { data: existing } = await sb.from('class_enrollments')
+        .select('id').eq('student_id', currentUser.id).maybeSingle();
+      if (existing) return;
+
+      // Find a school admin with matching domain
+      const userEmail = currentUser.email || '';
+      const domain = userEmail.includes('@') ? userEmail.split('@').pop() : '';
+      if (!domain) return;
+
+      const { data: adminProfile } = await sb.from('profiles')
+        .select('id, school_domain').eq('school_domain', domain)
+        .in('role', ['admin', 'enterprise_admin']).maybeSingle();
+      if (!adminProfile) return;
+
+      // Fetch classes for this school
+      const { data: schoolClasses } = await sb.from('classes')
+        .select('id, name, code').eq('school_id', adminProfile.id);
+      if (!schoolClasses?.length) return;
+
+      // Show class picker
+      const listEl = document.getElementById('class-picker-list');
+      if (listEl) {
+        listEl.innerHTML = schoolClasses.map(c => `
+          <div class="row-item" style="cursor:pointer;border-radius:10px;padding:12px;transition:background 0.2s;"
+               onclick="selectPickerClass('${c.id}')">
+            <span>${escapeHtml(c.name)}</span>
+            <span style="color:#a78bfa;font-size:0.85rem;">Select →</span>
+          </div>
+        `).join('');
+        // Store classes for code verification
+        window._pickerClasses = schoolClasses;
+      }
+      document.getElementById('class-code-entry')?.classList.add('hidden');
+      document.getElementById('class-code-error') && (document.getElementById('class-code-error').textContent = '');
+      openModal('class-picker');
+    }
+
+    function selectPickerClass(classId) {
+      selectedClassId = classId;
+      document.getElementById('class-code-entry')?.classList.remove('hidden');
+      document.getElementById('class-code-input') && (document.getElementById('class-code-input').value = '');
+      document.getElementById('class-code-error') && (document.getElementById('class-code-error').textContent = '');
+    }
+
+    async function submitClassCode() {
+      const enteredCode = (document.getElementById('class-code-input')?.value || '').trim().toUpperCase();
+      const errorEl = document.getElementById('class-code-error');
+      if (!selectedClassId || !enteredCode) {
+        if (errorEl) errorEl.textContent = 'Please select a class and enter the code.';
+        return;
+      }
+      const classes = window._pickerClasses || [];
+      const match = classes.find(c => c.id === selectedClassId && c.code === enteredCode);
+      if (!match) {
+        if (errorEl) errorEl.textContent = 'Incorrect code. Ask your teacher for the right one.';
+        return;
+      }
+      // Enroll the student
+      const { error } = await sb.from('class_enrollments').insert({
+        class_id: selectedClassId,
+        student_id: currentUser.id
+      });
+      if (error && !error.message.includes('duplicate')) {
+        if (errorEl) errorEl.textContent = 'Enrollment error: ' + error.message;
+        return;
+      }
+      // Update display_name from class_roster if available
+      const userEmail = currentUser.email || '';
+      if (userEmail) {
+        const { data: rosterEntry } = await sb.from('class_roster')
+          .select('student_name').eq('class_id', selectedClassId).eq('student_email', userEmail).maybeSingle();
+        if (rosterEntry?.student_name) {
+          await sb.from('profiles').update({ display_name: rosterEntry.student_name }).eq('id', currentUser.id);
+          displayName = rosterEntry.student_name;
+        }
+      }
+      closeModal('class-picker');
+      showToast(`Joined ${match.name}! Welcome to class.`, 'success');
+      await updateAuthUI();
     }
 
     // Enterprise Registration Modal
