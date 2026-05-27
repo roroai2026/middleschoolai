@@ -1,6 +1,29 @@
 {
   "current": [
     {
+      "title": "ExcelinEd Report: States Hit AI Policy Milestones as Nearly 100 K-12 Bills Advance Through Legislatures",
+      "tag": "Policy",
+      "tagColor": "orange",
+      "date": "May 2026",
+      "summary": "ExcelinEd's May 26 analysis finds states have reached significant AI governance milestones in 2026, with nearly 100 bills directly affecting K-12 AI use advancing through legislatures, as policymakers shift from reactive bans to building long-term frameworks that balance innovation with student privacy and safety."
+    },
+    {
+      "title": "Ohio Districts Embrace AI in Classrooms While Racing to Protect Student Learning Ahead of July Deadline",
+      "tag": "Classroom AI",
+      "tagColor": "purple",
+      "date": "May 2026",
+      "summary": "A Columbus Dispatch investigation published May 24 finds Ohio school districts are rapidly deploying AI tools in K-12 classrooms, even as educators and parents wrestle with how to preserve critical thinking and authentic student work ahead of the state's July 1 mandate requiring every district to adopt a formal AI policy."
+    },
+    {
+      "title": "New Analysis: AI Tutoring Outcomes Vary Widely in K-12, With Active Teacher Integration the Key to Success",
+      "tag": "Research",
+      "tagColor": "blue",
+      "date": "May 2026",
+      "summary": "A SchoolZone review of real-world AI tutoring rollouts across K-12 districts finds meaningful learning gains in classrooms where teachers actively incorporate AI into lesson plans, while warning that a growing 'digital divide' risks leaving underfunded schools behind as personalized AI learning tools go mainstream."
+    }
+  ],
+  "archives": [
+    {
       "title": "EdWeek: AI Chatbots Blur Lines Between Digital and Human Connection, Raising Student Well-Being Alarms",
       "tag": "Research",
       "tagColor": "blue",
@@ -15,65 +38,63 @@
       "summary": "An EdWeek Research Center survey of 651 K-12 teachers released May 18 found the share receiving no AI professional development dropped from 60% in late 2024 to 42% in 2026, yet experts warn most training covers only basic productivity tasks like email drafting rather than meaningful instructional integration."
     },
     {
-      "title": "Washington State District Uses AI 'Vibe Coding' to Build Custom Ed-Tech Tools, Projects $200K in Annual Savings",
+      "title": "Washington State District Uses AI ‘Vibe Coding’ to Build Custom Ed-Tech Tools, Projects $200K in Annual Savings",
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "Peninsula School District in Washington is using AI-powered plain-language coding tools like Claude Code to build custom educational apps\u2014including choose-your-own-adventure history games and special education aids\u2014expecting to save roughly $220,000 annually by creating tools in-house instead of buying them from vendors."
-    }
-  ],
-  "archives": [
+      "summary": "Peninsula School District in Washington is using AI-powered plain-language coding tools like Claude Code to build custom educational apps—including choose-your-own-adventure history games and special education aids—expecting to save roughly $220,000 annually by creating tools in-house instead of buying them from vendors."
+    },
     {
       "title": "NSF Invests $11M to Launch CSTA AI Teacher Training Program Across Six States This Summer",
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "The Computer Science Teachers Association announced an $11-million NSF-funded initiative to train thousands of K-12 educators in AI and computer science this summer, launching weeklong hands-on 'AI PD Weeks' in Illinois, Indiana, Iowa, Minnesota, New Jersey, and South Carolina as part of President Trump's executive order on advancing AI education."
+      "summary": "The Computer Science Teachers Association announced an $11-million NSF-funded initiative to train thousands of K-12 educators in AI and computer science this summer, launching weeklong hands-on ‘AI PD Weeks’ in Illinois, Indiana, Iowa, Minnesota, New Jersey, and South Carolina as part of President Trump’s executive order on advancing AI education."
     },
     {
       "title": "New Research: 30% of K-12 Students Now Use AI Tools Daily, 53% Use AI for Homework Help",
       "tag": "Research",
       "tagColor": "blue",
       "date": "May 2026",
-      "summary": "A 2026 analysis of AI education statistics reveals that nearly one-third of K-12 students interact with AI tools on a daily basis, with over half using AI to assist with homework\u2014highlighting how rapidly student AI adoption has outpaced formal school policies and teacher training programs."
+      "summary": "A 2026 analysis of AI education statistics reveals that nearly one-third of K-12 students interact with AI tools on a daily basis, with over half using AI to assist with homework—highlighting how rapidly student AI adoption has outpaced formal school policies and teacher training programs."
     },
     {
-      "title": "Global Analysis: AI in Schools Has Reached a 'Substantial Productivity Layer' as International Governance Frameworks Take Hold",
+      "title": "Global Analysis: AI in Schools Has Reached a ‘Substantial Productivity Layer’ as International Governance Frameworks Take Hold",
       "tag": "Global",
       "tagColor": "green",
       "date": "May 2026",
-      "summary": "A comprehensive May 2026 review finds that AI in education has matured from the 'ban-or-allow' debate into a structured deployment phase worldwide, serving as a meaningful productivity layer for teachers and administrators while UNESCO guidance and the EU AI Act's phased rollout provide the governance scaffolding schools had been missing."
+      "summary": "A comprehensive May 2026 review finds that AI in education has matured from the ‘ban-or-allow’ debate into a structured deployment phase worldwide, serving as a meaningful productivity layer for teachers and administrators while UNESCO guidance and the EU AI Act’s phased rollout provide the governance scaffolding schools had been missing."
     },
     {
       "title": "Columbus City Schools Unanimously Adopts Comprehensive AI Policy for Students and Staff on May 24",
       "tag": "Policy",
       "tagColor": "orange",
       "date": "May 2026",
-      "summary": "The Columbus City Schools Board of Education voted unanimously on May 24 to adopt a formal AI use policy covering teachers, students, and staff\u2014becoming an early Ohio district leader ahead of the state's July 1, 2026 mandate requiring all public school districts to establish official AI governance frameworks."
+      "summary": "The Columbus City Schools Board of Education voted unanimously on May 24 to adopt a formal AI use policy covering teachers, students, and staff—becoming an early Ohio district leader ahead of the state’s July 1, 2026 mandate requiring all public school districts to establish official AI governance frameworks."
     },
     {
       "title": "Google Unveils Gemini-Powered AI Writing Coach and Major Classroom Updates at BETT 2026",
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "At the BETT 2026 EdTech conference, Google announced sweeping AI upgrades to Google Classroom\u2014including a Gemini-powered Writing Coach co-developed with Khan Academy, new SAT AI practice tools, and connected classroom features\u2014aimed at helping teachers guide students in responsible, productive AI use."
+      "summary": "At the BETT 2026 EdTech conference, Google announced sweeping AI upgrades to Google Classroom—including a Gemini-powered Writing Coach co-developed with Khan Academy, new SAT AI practice tools, and connected classroom features—aimed at helping teachers guide students in responsible, productive AI use."
     },
     {
       "title": "U.S. Schools Remain Deeply Split on AI Integration, With Some Banning and Others Building Full Curricula Around It",
       "tag": "Classroom AI",
       "tagColor": "purple",
       "date": "May 2026",
-      "summary": "A May 2026 analysis by The Think Academy finds American K-12 schools are sharply divided on AI\u2014some districts maintaining strict bans while others embed AI tools into core curricula\u2014highlighting the urgent need for consistent federal guidance as the gap between AI-ready and AI-excluded students continues to widen."
+      "summary": "A May 2026 analysis by The Think Academy finds American K-12 schools are sharply divided on AI—some districts maintaining strict bans while others embed AI tools into core curricula—highlighting the urgent need for consistent federal guidance as the gap between AI-ready and AI-excluded students continues to widen."
     },
     {
       "title": "Schools Pivot From AI Bans to AI Literacy as Forbes Reports Growing Shift Toward Responsible Use Education",
       "tag": "Classroom AI",
       "tagColor": "purple",
       "date": "May 2026",
-      "summary": "A May 20 Forbes analysis finds U.S. schools are abandoning blanket AI restrictions in favor of proactive AI literacy curricula, with institutions teaching students to use AI responsibly and critically as the White House Task Force on AI Education\u2014established by executive order\u2014provides resources and coordinates public-private partnerships for K-12 programs."
+      "summary": "A May 20 Forbes analysis finds U.S. schools are abandoning blanket AI restrictions in favor of proactive AI literacy curricula, with institutions teaching students to use AI responsibly and critically as the White House Task Force on AI Education—established by executive order—provides resources and coordinates public-private partnerships for K-12 programs."
     },
     {
-      "title": "White House Task Force on AI Education to Launch Presidential AI Challenge for America's Youth",
+      "title": "White House Task Force on AI Education to Launch Presidential AI Challenge for America’s Youth",
       "tag": "Policy",
       "tagColor": "orange",
       "date": "May 2026",
@@ -84,21 +105,21 @@
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "A May 2026 review by The AI Educator found that education-specific tools\u2014including Khan Academy's Khanmigo for math, SchoolAI for whole-school management, and Class Companion for writing feedback\u2014are leading K-12 AI adoption by offering pedagogical design and teacher-controlled dashboards that general-purpose chatbots cannot match."
+      "summary": "A May 2026 review by The AI Educator found that education-specific tools—including Khan Academy’s Khanmigo for math, SchoolAI for whole-school management, and Class Companion for writing feedback—are leading K-12 AI adoption by offering pedagogical design and teacher-controlled dashboards that general-purpose chatbots cannot match."
     },
     {
       "title": "Stanford Education Experts Weigh In on AI Risks and Opportunities, Urge Evidence-Based Rollout in K-12",
       "tag": "Research",
       "tagColor": "blue",
       "date": "May 2026",
-      "summary": "Stanford researchers published a May 2026 analysis calling for a measured, evidence-based approach to AI in schools\u2014acknowledging real productivity gains for teachers while warning against deploying AI for high-stakes student decisions until causal research catches up with rapid adoption."
+      "summary": "Stanford researchers published a May 2026 analysis calling for a measured, evidence-based approach to AI in schools—acknowledging real productivity gains for teachers while warning against deploying AI for high-stakes student decisions until causal research catches up with rapid adoption."
     },
     {
       "title": "California AB 1159 Advances: Bill Would Ban Student Data From Being Used to Train AI Models",
       "tag": "Policy",
       "tagColor": "orange",
       "date": "May 2026",
-      "summary": "California's AB 1159, one of 134 AI-in-education bills tracked across 31 states in 2026, would explicitly prohibit schools and EdTech vendors from using K-12 student data to train artificial intelligence models, setting a potential national precedent for student data privacy in the AI era."
+      "summary": "California’s AB 1159, one of 134 AI-in-education bills tracked across 31 states in 2026, would explicitly prohibit schools and EdTech vendors from using K-12 student data to train artificial intelligence models, setting a potential national precedent for student data privacy in the AI era."
     },
     {
       "title": "Frontiers in Education Review: Global AI Personalized Learning Research Expanding Beyond U.S. and China to Broader Asia",
@@ -133,28 +154,28 @@
       "tag": "Policy",
       "tagColor": "orange",
       "date": "May 2026",
-      "summary": "FutureEd's 2026 state AI-in-education legislative tracker, refreshed May 18, now follows 68 bills across 27 states shaping how K-12 schools teach and govern AI, with 10 bills already signed into law\u2014including Alabama's H.B. 329 requiring AI instruction as part of every student's high school graduation requirements."
+      "summary": "FutureEd’s 2026 state AI-in-education legislative tracker, refreshed May 18, now follows 68 bills across 27 states shaping how K-12 schools teach and govern AI, with 10 bills already signed into law—including Alabama’s H.B. 329 requiring AI instruction as part of every student’s high school graduation requirements."
     },
     {
       "title": "Southern Illinois University Hosts Free All-Day AI Workshop to Equip Educators and Students for the AI Era",
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "Southern Illinois University Carbondale offered a free full-day 'AI @ SIUC' workshop on May 14 covering generative AI foundations, frontier models, and live student demonstrations, representing a growing university trend to translate AI research into hands-on professional development for teachers and regional communities."
+      "summary": "Southern Illinois University Carbondale offered a free full-day ‘AI @ SIUC’ workshop on May 14 covering generative AI foundations, frontier models, and live student demonstrations, representing a growing university trend to translate AI research into hands-on professional development for teachers and regional communities."
     },
     {
       "title": "Alabama Becomes Among First States to Require AI Instruction as a Formal High School Graduation Requirement",
       "tag": "Classroom AI",
       "tagColor": "purple",
       "date": "May 2026",
-      "summary": "Alabama's newly enacted H.B. 329 mandates that all high school students complete a computer science course that includes AI instruction before graduating, making Alabama one of the first states to formally embed AI literacy into K-12 graduation standards as national momentum builds toward the 2029 PISA AI literacy assessment."
+      "summary": "Alabama’s newly enacted H.B. 329 mandates that all high school students complete a computer science course that includes AI instruction before graduating, making Alabama one of the first states to formally embed AI literacy into K-12 graduation standards as national momentum builds toward the 2029 PISA AI literacy assessment."
     },
     {
       "title": "Stanford SCALE Initiative Releases First Rigorous Causal Evidence Review of AI Tools in K-12 Education",
       "tag": "Research",
       "tagColor": "blue",
       "date": "May 2026",
-      "summary": "Stanford's SCALE Initiative published 'The Evidence Base on AI in K-12: A 2026 Review,' the first comprehensive analysis focusing specifically on causal-impact studies that can determine whether AI tools actually improved outcomes for students and educators."
+      "summary": "Stanford’s SCALE Initiative published ‘The Evidence Base on AI in K-12: A 2026 Review,’ the first comprehensive analysis focusing specifically on causal-impact studies that can determine whether AI tools actually improved outcomes for students and educators."
     },
     {
       "title": "ISTE+ASCD and Google Launch Three-Year Partnership to Train Six Million U.S. Educators in AI Literacy",
@@ -203,35 +224,14 @@
       "tag": "Policy",
       "tagColor": "orange",
       "date": "May 2026",
-      "summary": "Ohio's Department of Education has required all traditional public school districts, community schools, and STEM schools to adopt an official AI use policy by July 1, 2026, making Ohio the first state to enforce a hard deadline for district-level AI governance backed by a statewide model policy framework."
+      "summary": "Ohio’s Department of Education has required all traditional public school districts, community schools, and STEM schools to adopt an official AI use policy by July 1, 2026, making Ohio the first state to enforce a hard deadline for district-level AI governance backed by a statewide model policy framework."
     },
     {
       "title": "Adaptive AI Tutors Like Khanmigo Show Early Gains as 86% of U.S. Educational Organizations Now Use Generative AI",
       "tag": "Innovation",
       "tagColor": "teal",
       "date": "May 2026",
-      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI\u2014the highest rate of any industry\u2014while platforms like Khan Academy's Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
-    },
-    {
-      "title": "Wake County Freshman Falsely Accused of AI Cheating Sparks Petition for K-12 Detection Policies",
-      "tag": "Classroom AI",
-      "tagColor": "purple",
-      "date": "May 2026",
-      "summary": "A North Carolina high school freshman was wrongly flagged by three AI detection tools for an English assignment she wrote herself, prompting a student-led petition demanding that districts establish transparent AI detection guidelines and formal appeals processes before using such tools against students."
-    },
-    {
-      "title": "SUNY Makes AI Literacy a General Education Requirement Across All 64 Campuses Starting Fall 2026",
-      "tag": "Policy",
-      "tagColor": "orange",
-      "date": "May 2026",
-      "summary": "The State University of New York adopted a systemwide AI policy requiring all incoming undergraduates to complete AI literacy coursework starting Fall 2026, setting a major precedent for embedding foundational AI education into higher education curricula at scale."
-    },
-    {
-      "title": "FutureEd Tracker: 53 State Bills in 25 States Shape Classroom AI as PISA Readies First AI Literacy Assessment for 2029",
-      "tag": "Research",
-      "tagColor": "blue",
-      "date": "May 2026",
-      "summary": "A new FutureEd legislative tracker reveals 53 active state bills across 25 states governing how AI is taught and used in K-12 schools, with urgency building around the news that PISA will for the first time test AI literacy among 15-year-olds worldwide in 2029."
+      "summary": "New data shows 86% of U.S. educational organizations have adopted generative AI—the highest rate of any industry—while platforms like Khan Academy’s Khanmigo and other adaptive AI tutors are reporting measurable learning-gap improvements for K-12 students through personalized, real-time instruction."
     }
   ]
 }
