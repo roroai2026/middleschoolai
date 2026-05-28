@@ -3230,14 +3230,16 @@ Hello!' }] },
 
       let students = [];
       let allProgress = [];
+      let allQuestions = [];
       if (studentIds.length) {
-        const { data: studentProfiles } = await sb.from('profiles')
-          .select('id, full_name, display_name, email').in('id', studentIds);
+        const [{ data: studentProfiles }, { data: progressData }, { data: questionData }] = await Promise.all([
+          sb.from('profiles').select('id, full_name, display_name, email').in('id', studentIds),
+          sb.from('module_progress').select('user_id, module_number').in('user_id', studentIds),
+          sb.from('module_questions').select('student_id, module_number, question, created_at').in('student_id', studentIds).order('created_at', { ascending: false })
+        ]);
         students = studentProfiles || [];
-
-        const { data: progressData } = await sb.from('module_progress')
-          .select('user_id, module_number').in('user_id', studentIds);
         allProgress = progressData || [];
+        allQuestions = questionData || [];
       }
 
       // Build progress map: student_id -> count of completed modules
@@ -3247,22 +3249,50 @@ Hello!' }] },
         progressMap[p.user_id] = (progressMap[p.user_id] || 0) + 1;
       });
 
+      // Build questions map: student_id -> array of {module_number, question, created_at}
+      const questionsMap = {};
+      studentIds.forEach(id => questionsMap[id] = []);
+      allQuestions.forEach(q => {
+        if (questionsMap[q.student_id]) questionsMap[q.student_id].push(q);
+      });
+
       const TOTAL_MODULES = 18;
 
-      const tableRows = students.length
+      const studentRows = students.length
         ? students.map(s => {
             const count = progressMap[s.id] || 0;
             const pct = Math.round((count / TOTAL_MODULES) * 100);
             const name = s.display_name || s.full_name || s.email || 'Student';
+            const questions = questionsMap[s.id] || [];
+            const qHtml = questions.length
+              ? questions.slice(0, 5).map(q => `
+                  <div style="margin-top:6px;padding:7px 10px;background:rgba(167,139,250,0.08);border-left:3px solid rgba(167,139,250,0.5);border-radius:0 8px 8px 0;font-size:0.85rem;">
+                    <span style="color:#a78bfa;font-weight:700;margin-right:6px;">M${q.module_number}</span>
+                    <span style="color:#e2e8f0;">${escapeHtml(q.question)}</span>
+                    <span style="float:right;color:#64748b;font-size:0.78rem;">${new Date(q.created_at).toLocaleDateString()}</span>
+                  </div>
+                `).join('')
+              : '<span style="color:#475569;font-size:0.84rem;">No questions yet</span>';
             return `
               <tr>
-                <td>${escapeHtml(name)}</td>
-                <td>${count} / ${TOTAL_MODULES}</td>
-                <td><div class="progress-rail"><div class="progress-fill" style="width:${pct}%"></div></div></td>
+                <td style="vertical-align:top;">
+                  <strong>${escapeHtml(name)}</strong>
+                  <div style="margin-top:4px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <span style="font-size:0.82rem;color:#94a3b8;">${count}/${TOTAL_MODULES} modules</span>
+                    </div>
+                    <div class="progress-rail" style="margin-top:6px;"><div class="progress-fill" style="width:${pct}%"></div></div>
+                  </div>
+                </td>
+                <td style="vertical-align:top;">
+                  <div style="font-size:0.8rem;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">AI Questions Asked (${questions.length})</div>
+                  ${qHtml}
+                  ${questions.length > 5 ? `<div style="color:#64748b;font-size:0.8rem;margin-top:6px;">+ ${questions.length - 5} more</div>` : ''}
+                </td>
               </tr>
             `;
           }).join('')
-        : `<tr><td colspan="3" class="teacher-empty">No students enrolled yet. Share class code <strong>${escapeHtml(teacherClass.code || '')}</strong> with students.</td></tr>`;
+        : `<tr><td colspan="2" class="teacher-empty">No students enrolled yet. Share class code <strong>${escapeHtml(teacherClass.code || '')}</strong> with students.</td></tr>`;
 
       container.innerHTML = `
         <div class="dashboard-card">
@@ -3272,12 +3302,12 @@ Hello!' }] },
         </div>
 
         <div class="dashboard-card" style="margin-top:24px;">
-          <h3>Student Progress (${students.length} student${students.length !== 1 ? 's' : ''})</h3>
+          <h3>Students &amp; AI Questions (${students.length} student${students.length !== 1 ? 's' : ''})</h3>
           <table class="teacher-table">
             <thead>
-              <tr><th>Student</th><th>Modules Done</th><th>Progress</th></tr>
+              <tr><th style="width:35%;">Student / Progress</th><th>AI Questions Asked in Modules</th></tr>
             </thead>
-            <tbody>${tableRows}</tbody>
+            <tbody>${studentRows}</tbody>
           </table>
         </div>
       `;
