@@ -746,6 +746,149 @@
 
     .modal.narrow { width: min(480px, 100%); }
 
+    /* ── FULLSCREEN MODULE VIEW ── */
+    #fs-module {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      background: #0f0c29;
+      flex-direction: row;
+    }
+    #fs-module.open { display: flex; }
+
+    /* Lesson panel (left) */
+    #fs-lesson-panel {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    #fs-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    #fs-header h2 { flex: 1; font-size: 1.1rem; font-weight: 900; margin: 0; }
+    #fs-timer {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--violet);
+      background: rgba(167,139,250,0.12);
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 8px;
+      padding: 4px 12px;
+      min-width: 54px;
+      text-align: center;
+    }
+    #fs-timer.done { color: var(--green); background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.3); }
+    #fs-close-btn {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+    #fs-close-btn:hover { background: rgba(255,255,255,0.12); }
+    #fs-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+    }
+    #fs-quiz-area {
+      padding: 0 28px 24px;
+      flex-shrink: 0;
+    }
+    #fs-quiz-locked {
+      text-align: center;
+      padding: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border: 1px dashed rgba(255,255,255,0.1);
+      margin-bottom: 12px;
+    }
+
+    /* Chat panel (right) */
+    #fs-chat-panel {
+      width: 340px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,0.02);
+    }
+    #fs-chat-header {
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      flex-shrink: 0;
+    }
+    #fs-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .fs-msg {
+      max-width: 88%;
+      padding: 9px 13px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .fs-msg.user { align-self: flex-end; background: linear-gradient(135deg,#6d28d9,#2563eb); color: #fff; border-radius: 14px 14px 4px 14px; }
+    .fs-msg.bot { align-self: flex-start; background: rgba(255,255,255,0.08); color: var(--text); border-radius: 14px 14px 14px 4px; }
+    #fs-chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    #fs-chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 9px 12px;
+      resize: none;
+      height: 48px;
+    }
+    #fs-chat-input:focus { outline: none; border-color: var(--violet); }
+    #fs-send-btn {
+      background: linear-gradient(135deg,#6d28d9,#2563eb);
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.88rem;
+      border-radius: 10px;
+      padding: 0 16px;
+      cursor: pointer;
+    }
+    #fs-send-btn:hover { opacity: 0.9; }
+
+    @media (max-width: 700px) {
+      #fs-module { flex-direction: column; }
+      #fs-chat-panel { width: 100%; height: 240px; border-right: none; border-top: 1px solid rgba(255,255,255,0.1); }
+    }
+
     .modal-close {
       position: absolute;
       top: 16px;
@@ -1098,205 +1241,6 @@
 
       .modal { padding: 28px 22px; }
     }
-    /* ── FULLSCREEN MODULE VIEW ─────────────────────────── */
-    #modal-module.fullscreen-module {
-      display: flex;
-      padding: 0;
-      background: rgba(0,0,0,0.97);
-      backdrop-filter: none;
-      align-items: stretch;
-      justify-content: stretch;
-    }
-
-    #modal-module.fullscreen-module .fs-shell {
-      display: flex;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* Hide nav/header when fullscreen module is open */
-    body.module-fullscreen .auth-bar,
-    body.module-fullscreen nav {
-      display: none !important;
-    }
-
-    /* ── MODULE CONTENT PANE (70%) ────────────────────── */
-    .fs-content-pane {
-      flex: 0 0 70%;
-      width: 70%;
-      height: 100%;
-      overflow-y: auto;
-      padding: 40px 44px 40px 44px;
-      background: #12102a;
-      position: relative;
-    }
-
-    .fs-close-btn {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      z-index: 2000;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 999px;
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 900;
-      cursor: pointer;
-      padding: 6px 14px;
-      transition: background 0.2s;
-    }
-    .fs-close-btn:hover { background: rgba(255,255,255,0.2); }
-
-    /* ── TIMER BANNER ─────────────────────────────────── */
-    .module-timer-bar {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: rgba(167,139,250,0.1);
-      border: 1px solid rgba(167,139,250,0.25);
-      border-radius: 12px;
-      padding: 12px 18px;
-      margin-bottom: 20px;
-      font-size: 0.95rem;
-    }
-    .module-timer-bar .timer-countdown {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: #a78bfa;
-      min-width: 58px;
-    }
-    .module-timer-bar .timer-label { color: var(--muted); flex: 1; }
-    .timer-done { color: #34d399 !important; }
-
-    /* ── CHAT SIDEBAR (30%) ───────────────────────────── */
-    .fs-chat-pane {
-      flex: 0 0 30%;
-      width: 30%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      background: #0e0c22;
-      border-left: 1px solid rgba(255,255,255,0.08);
-      padding: 0;
-    }
-
-    .fs-chat-header {
-      padding: 16px 18px;
-      font-weight: 900;
-      font-size: 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: #0e0c22;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .fs-chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 14px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .fs-chat-message {
-      max-width: 95%;
-      padding: 10px 13px;
-      border-radius: 12px;
-      font-size: 0.88rem;
-      line-height: 1.55;
-      word-break: break-word;
-    }
-    .fs-chat-message.user {
-      align-self: flex-end;
-      background: rgba(167,139,250,0.2);
-      border: 1px solid rgba(167,139,250,0.3);
-      color: #e0d9ff;
-    }
-    .fs-chat-message.bot {
-      align-self: flex-start;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: #cbd5e1;
-    }
-
-    .fs-chat-input-row {
-      padding: 12px 14px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-    }
-    .fs-chat-input-row textarea {
-      flex: 1;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 10px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 0.88rem;
-      padding: 8px 12px;
-      resize: none;
-      min-height: 40px;
-      max-height: 100px;
-    }
-    .fs-chat-input-row button {
-      padding: 8px 14px;
-      font-size: 0.85rem;
-      border-radius: 10px;
-      white-space: nowrap;
-    }
-
-    /* ── MOBILE: collapsible bottom drawer ───────────── */
-    @media (max-width: 767px) {
-      #modal-module.fullscreen-module .fs-shell {
-        flex-direction: column;
-      }
-      .fs-content-pane {
-        flex: 1 1 auto;
-        width: 100%;
-        height: auto;
-        min-height: 0;
-        padding: 20px 18px 12px;
-      }
-      .fs-chat-pane {
-        flex: 0 0 auto;
-        width: 100%;
-        height: 0;
-        overflow: hidden;
-        border-left: none;
-        border-top: 1px solid rgba(255,255,255,0.1);
-        transition: height 0.3s ease;
-      }
-      .fs-chat-pane.drawer-open {
-        height: 45vh;
-      }
-      .fs-chat-toggle-btn {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        position: fixed;
-        bottom: 16px;
-        right: 16px;
-        z-index: 2001;
-        background: rgba(167,139,250,0.9);
-        color: #fff;
-        font-weight: 800;
-        border: none;
-        border-radius: 999px;
-        padding: 10px 18px;
-        font-size: 0.9rem;
-        cursor: pointer;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      }
-    }
-    @media (min-width: 768px) {
-      .fs-chat-toggle-btn { display: none; }
-    }
   </style>
 </head>
 <body>
@@ -1398,6 +1342,73 @@
     </div>
   </section>
 
+  <!-- PLANS/PRICING SECTION (moved below modules) -->
+  <section class="section reveal" id="plans">
+    <div class="section-header">
+      <span class="emoji">💳</span>
+      <h2>Choose the Right Plan</h2>
+      <p>
+        Free gets you a preview of every module. Plus unlocks everything for $3/month. School Enterprise adds classrooms, teacher dashboards, and SSO.
+      </p>
+    </div>
+    <div class="plans-grid">
+      <!-- Free Plan -->
+      <div class="plan-card">
+        <div class="plan-label">Free</div>
+        <h3>Explorer Free</h3>
+        <div class="price">$0 <span>forever</span></div>
+        <p class="plan-note">
+          Get a taste of every module — 2 lesson paragraphs + 1 quiz question each. Plus the final quiz.
+        </p>
+        <ul>
+          <li>All 8 module preview cards</li>
+          <li>2-paragraph lesson preview per module</li>
+          <li>1 quiz question per module</li>
+          <li>Final quiz (all 5 questions)</li>
+          <li>Email or Google login</li>
+        </ul>
+        <button class="btn-primary" onclick="openSignupForPlan('free','student')">Start Free</button>
+      </div>
+
+      <!-- Plus Plan -->
+      <div class="plan-card pro">
+        <div class="plan-label">Plus</div>
+        <h3>AI Explorer Plus</h3>
+        <div class="price">$3 <span>/ month</span></div>
+        <p class="plan-note">
+          Unlock the complete experience — full lessons, 5 questions per module, video placeholders, and AI help.
+        </p>
+        <ul>
+          <li>Everything in Free</li>
+          <li>Full lesson text for all 8 modules</li>
+          <li>5 quiz questions per module</li>
+          <li>📹 Video lesson per module (coming soon)</li>
+          <li>Saved progress &amp; AI chatbot</li>
+        </ul>
+        <button class="btn-pro" onclick="goToCheckout('plus')">Get Plus — $3/month</button>
+      </div>
+
+      <!-- Enterprise Plan -->
+      <div class="plan-card enterprise">
+        <div class="plan-label">School Enterprise</div>
+        <h3>School Enterprise</h3>
+        <div class="price" style="font-size:2rem;">$3 <span>/ student / mo</span></div>
+        <p class="price-sub">+ $3 / teacher / month</p>
+        <p class="plan-note">
+          Everything in Plus for every student, plus class management, teacher dashboards, and SSO onboarding.
+        </p>
+        <ul>
+          <li>Everything in Plus for all students</li>
+          <li>Class leaderboard per class</li>
+          <li>Teacher progress dashboard</li>
+          <li>Admin view: all teachers, classes, students</li>
+          <li>SSO via school domain</li>
+        </ul>
+        <button class="btn-enterprise" onclick="openModal('enterprise-register')">Register Your School</button>
+      </div>
+    </div>
+  </section>
+
   <section class="section reveal" id="facts">
     <div class="section-header">
       <span class="emoji">🤯</span>
@@ -1407,7 +1418,8 @@
     <div class="facts-grid">
       <div class="fact-card"><span class="fact-num">1956</span><p>The term "Artificial Intelligence" was officially introduced at the Dartmouth workshop.</p></div>
       <div class="fact-card"><span class="fact-num">100M</span><p>ChatGPT reached 100 million users faster than almost any consumer app before it.</p></div>
-
+      <div class="fact-card"><span class="fact-num">8</span><p>This site has eight modules — free users get a preview, Plus users get the full experience with video.</p></div>
+      <div class="fact-card"><span class="fact-num">$3</span><p>Plus is just $3/month — full lessons, 5 questions per module, and video content for every learner.</p></div>
     </div>
   </section>
 
@@ -1436,7 +1448,9 @@
       </p>
     </div>
     <div class="chat-shell">
-
+      <p class="chat-intro">
+        This chatbot should be wired to a secure backend like a Supabase Edge Function. That keeps your API key off the page.
+      </p>
       <div class="chat-messages" id="chat-messages">
         <div class="chat-message bot">Ask me about machine learning, neural networks, bias, careers, or any of the lesson topics.</div>
       </div>
@@ -1447,76 +1461,9 @@
     </div>
   </section>
 
-  <!-- PLANS/PRICING SECTION (bottom of page) -->
-  <section class="section reveal" id="plans">
-    <div class="section-header">
-      <span class="emoji">💳</span>
-      <h2>Choose the Right Plan</h2>
-      <p>
-        Free gets you a preview of every module. Plus unlocks everything for $3/month. School Enterprise adds classrooms, teacher dashboards, and SSO.
-      </p>
-    </div>
-    <div class="plans-grid">
-      <!-- Free Plan -->
-      <div class="plan-card">
-        <div class="plan-label">Free</div>
-        <h3>Explorer Free</h3>
-        <div class="price">$0 <span>forever</span></div>
-        <p class="plan-note">
-          Get a taste of every module — 2 lesson paragraphs + 1 quiz question each. Plus the final quiz.
-        </p>
-        <ul>
-          <li>All module preview cards</li>
-          <li>2-paragraph lesson preview per module</li>
-          <li>1 quiz question per module</li>
-          <li>Final quiz (all 5 questions)</li>
-          <li>Email or Google login</li>
-        </ul>
-        <button class="btn-primary" onclick="openSignupForPlan('free','student')">Start Free</button>
-      </div>
-
-      <!-- Plus Plan -->
-      <div class="plan-card pro">
-        <div class="plan-label">Plus</div>
-        <h3>AI Explorer Plus</h3>
-        <div class="price">$3 <span>/ month</span></div>
-        <p class="plan-note">
-          Unlock the complete experience — full lessons, 5 questions per module, video placeholders, and AI help.
-        </p>
-        <ul>
-          <li>Everything in Free</li>
-          <li>Full lesson text for all modules</li>
-          <li>5 quiz questions per module</li>
-          <li>📹 Video lesson per module</li>
-          <li>Saved progress &amp; AI chatbot</li>
-        </ul>
-        <button class="btn-pro" onclick="goToCheckout('plus')">Get Plus — $3/month</button>
-      </div>
-
-      <!-- Enterprise Plan -->
-      <div class="plan-card enterprise">
-        <div class="plan-label">School Enterprise</div>
-        <h3>School Enterprise</h3>
-        <div class="price" style="font-size:2rem;">$3 <span>/ student / mo</span></div>
-        <p class="price-sub">+ $3 / teacher / month</p>
-        <p class="plan-note">
-          Everything in Plus for every student, plus class management, teacher dashboards, and SSO onboarding.
-        </p>
-        <ul>
-          <li>Everything in Plus for all students</li>
-          <li>Class leaderboard per class</li>
-          <li>Teacher progress dashboard</li>
-          <li>Admin view: all teachers, classes, students</li>
-          <li>SSO via school domain</li>
-        </ul>
-        <button class="btn-enterprise" onclick="openModal('enterprise-register')">Register Your School</button>
-      </div>
-    </div>
-  </section>
-
   <footer>
     <p>Built for curious students, ambitious teachers, and schools that want a lighter way to teach AI.</p>
-
+    <p style="margin-top:8px;">Supabase powers auth, profiles, and progress. Paid chatbot access is ready for your secure backend later.</p>
   </footer>
 
   <!-- SET COMPLETION MODAL -->
@@ -1656,33 +1603,34 @@
   </div>
 
   <!-- MODULE MODAL -->
-  <div class="modal-overlay fullscreen-module" id="modal-module">
-    <div class="fs-shell">
-      <!-- X close button (top-right) -->
-      <button class="fs-close-btn" onclick="closeFullscreenModule()">✕ Exit</button>
-      <!-- Mobile chat toggle -->
-      <button class="fs-chat-toggle-btn" id="fs-chat-toggle" onclick="toggleMobileChat()">💬 AI Chat</button>
-      <!-- 70% Module content -->
-      <div class="fs-content-pane">
-        <h2 id="module-modal-title" style="font-size:1.6rem;font-weight:900;margin-bottom:6px;">Module</h2>
-        <p class="subtitle" id="module-modal-subtitle"></p>
-        <!-- 4-minute timer -->
-        <div class="module-timer-bar" id="module-timer-bar">
-          <span class="timer-countdown" id="module-timer-display">4:00</span>
-          <span class="timer-label" id="module-timer-label">Unlocks in 4:00 — read the lesson to activate the quiz.</span>
-        </div>
-        <div id="module-modal-content"></div>
+  <div class="modal-overlay" id="modal-module">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('module')">✕</button>
+      <h2 id="module-modal-title">Module</h2>
+      <p class="subtitle" id="module-modal-subtitle"></p>
+      <div id="module-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN MODULE VIEW (paid users) -->
+  <div id="fs-module">
+    <div id="fs-lesson-panel">
+      <div id="fs-header">
+        <h2 id="fs-title">Module</h2>
+        <div id="fs-timer">4:00</div>
+        <button id="fs-close-btn" onclick="closeFullscreenModule()">✕ Close</button>
       </div>
-      <!-- 30% AI Chat sidebar -->
-      <div class="fs-chat-pane" id="fs-chat-pane">
-        <div class="fs-chat-header">💬 AI Tutor</div>
-        <div class="fs-chat-messages" id="fs-chat-messages">
-          <div class="fs-chat-message bot">Hi! Ask me anything about this module or AI in general.</div>
-        </div>
-        <div class="fs-chat-input-row">
-          <textarea id="fs-chat-input" placeholder="Ask about this module..." rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendFsChat();}"></textarea>
-          <button class="btn-primary" onclick="sendFsChat()">Send</button>
-        </div>
+      <div id="fs-body"></div>
+      <div id="fs-quiz-area"></div>
+    </div>
+    <div id="fs-chat-panel">
+      <div id="fs-chat-header">💬 AI Tutor</div>
+      <div id="fs-chat-messages">
+        <div class="fs-msg bot">Hi! Ask me anything about this module or AI in general.</div>
+      </div>
+      <div id="fs-chat-input-row">
+        <textarea id="fs-chat-input" placeholder="Ask a question..."></textarea>
+        <button id="fs-send-btn" onclick="fsAskAI()">Send</button>
       </div>
     </div>
   </div>
@@ -1772,7 +1720,7 @@
         const { data } = await sb.from('app_config').select('value').eq('key', 'gemini_api_key').single();
         if (data?.value) {
           GEMINI_API_KEY = data.value;
-          GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+          GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
         }
       } catch { /* key not set yet */ }
     }
@@ -2178,9 +2126,6 @@
     const ADMIN_USERNAME = 'admin/rohan';
     const ADMIN_PASSWORD = 'admin/rohan';
 
-    // Load Gemini key for all users (key is client-side anyway, no security benefit to gating on auth)
-    loadGeminiKey();
-
     sb.auth.onAuthStateChange(async (_event, session) => {
       const isNewSignIn = _event === 'SIGNED_IN';
       currentUser = session?.user || null;
@@ -2190,6 +2135,8 @@
       } else {
         userProfile = null;
         moduleCompletionSet = new Set();
+        GEMINI_API_KEY = null;
+        GEMINI_URL = null;
       }
       await updateAuthUI();
       if (isNewSignIn && userProfile) {
@@ -2225,6 +2172,16 @@
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             askAI();
+          }
+        });
+      }
+      // Enter key for fullscreen module chat
+      const fsChatInput = document.getElementById('fs-chat-input');
+      if (fsChatInput) {
+        fsChatInput.addEventListener('keydown', e => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            fsAskAI();
           }
         });
       }
@@ -2647,15 +2604,6 @@
       6: 'tJQSyzBUAew',  // Ethics & AI: Equal Access and Algorithmic Bias
       7: '5q87K1WaoFI',  // WIRED — Computer Scientist Explains ML in 5 Levels
       8: 'GdTBqBnqhaQ',  // 4 Experiments Where the AI Outsmarted Its Creators
-      // Set 2 placeholders (real videos TBD)
-      9:  'dQw4w9WgXcQ',  // Module 9: AI Agents — placeholder
-      10: 'dQw4w9WgXcQ',  // Module 10: Multimodal AI — placeholder
-      11: 'dQw4w9WgXcQ',  // Module 11: AI & Creativity — placeholder
-      12: 'dQw4w9WgXcQ',  // Module 12: AI Safety & Alignment — placeholder
-      13: 'dQw4w9WgXcQ',  // Module 13: AI in Science — placeholder
-      14: 'dQw4w9WgXcQ',  // Module 14: AI Infrastructure — placeholder
-      15: 'dQw4w9WgXcQ',  // Module 15: AI & Law — placeholder
-      16: 'dQw4w9WgXcQ',  // Module 16: The Future of AI — placeholder
     };
 
     function goToCheckout(plan) {
@@ -2755,186 +2703,12 @@
       ).join('');
     }
 
-    // ── MODULE TIMER STATE ─────────────────────────────────────
-    const MODULE_MIN_SECONDS = 240; // 4 minutes
-    let _moduleTimerInterval = null;
-    let _moduleTimerSecondsLeft = MODULE_MIN_SECONDS;
-    let _moduleTimerDone = false;
-
-    function startModuleTimer() {
-      clearInterval(_moduleTimerInterval);
-      _moduleTimerSecondsLeft = MODULE_MIN_SECONDS;
-      _moduleTimerDone = false;
-      _updateTimerDisplay();
-      _setQuizButtonsLocked(true);
-      _moduleTimerInterval = setInterval(() => {
-        _moduleTimerSecondsLeft--;
-        _updateTimerDisplay();
-        if (_moduleTimerSecondsLeft <= 0) {
-          clearInterval(_moduleTimerInterval);
-          _moduleTimerDone = true;
-          const timerBar = document.getElementById('module-timer-bar');
-          const label = document.getElementById('module-timer-label');
-          const disp = document.getElementById('module-timer-display');
-          if (disp) { disp.textContent = '0:00'; disp.classList.add('timer-done'); }
-          if (label) label.textContent = 'Quiz unlocked! ✅ Take it below.';
-          if (timerBar) timerBar.style.background = 'rgba(52,211,153,0.1)';
-          _setQuizButtonsLocked(false);
-        }
-      }, 1000);
-    }
-
-    function _updateTimerDisplay() {
-      const m = Math.floor(_moduleTimerSecondsLeft / 60);
-      const s = _moduleTimerSecondsLeft % 60;
-      const str = `${m}:${String(s).padStart(2,'0')}`;
-      const disp = document.getElementById('module-timer-display');
-      const label = document.getElementById('module-timer-label');
-      if (disp) disp.textContent = str;
-      if (label && !_moduleTimerDone) label.textContent = `Unlocks in ${str} — read the lesson to activate the quiz.`;
-    }
-
-    function _setQuizButtonsLocked(locked) {
-      // Lock/unlock quiz buttons and complete button
-      ['module-quiz-next','free-next-btn'].forEach(id => {
-        const el = document.getElementById(id);
-        // These are shown/hidden by quiz logic, don't force-show them
-      });
-      // Lock the entire quiz-shell interaction area
-      const quizShell = document.querySelector('#module-modal-content .quiz-shell');
-      if (quizShell) {
-        quizShell.style.opacity = locked ? '0.4' : '1';
-        quizShell.style.pointerEvents = locked ? 'none' : '';
-      }
-      // Lock complete button
-      const completeBtn = document.getElementById('module-complete-btn');
-      if (completeBtn) {
-        completeBtn.disabled = locked;
-        completeBtn.title = locked ? 'Read for 4 minutes to unlock' : '';
-      }
-    }
-
-    function stopModuleTimer() {
-      clearInterval(_moduleTimerInterval);
-      _moduleTimerInterval = null;
-    }
-
-    function closeFullscreenModule() {
-      stopModuleTimer();
-      document.body.classList.remove('module-fullscreen');
-      closeModal('module');
-      // Reset chat pane on mobile
-      const chatPane = document.getElementById('fs-chat-pane');
-      if (chatPane) chatPane.classList.remove('drawer-open');
-    }
-
-    function toggleMobileChat() {
-      const chatPane = document.getElementById('fs-chat-pane');
-      const btn = document.getElementById('fs-chat-toggle');
-      if (!chatPane) return;
-      const isOpen = chatPane.classList.toggle('drawer-open');
-      if (btn) btn.textContent = isOpen ? '✕ Close Chat' : '💬 AI Chat';
-    }
-
-    // ── In-module AI chat ───────────────────────────────────
-    let _fsChatHistory = [];
-    let _currentModuleContext = '';
-
-    function _appendFsMsg(role, text) {
-      const msgs = document.getElementById('fs-chat-messages');
-      if (!msgs) return null;
-      const id = 'fsmsg-' + Date.now() + '-' + Math.random().toString(36).slice(2,6);
-      const div = document.createElement('div');
-      div.className = `fs-chat-message ${role}`;
-      div.id = id;
-      div.textContent = text;
-      msgs.appendChild(div);
-      msgs.scrollTop = msgs.scrollHeight;
-      return id;
-    }
-
-    function _updateFsMsg(id, text) {
-      const el = document.getElementById(id);
-      if (el) el.textContent = text;
-    }
-
-    async function sendFsChat() {
-      if (!hasPaidAccess()) {
-        showToast('AI chat is for Plus and School Enterprise members.', 'error');
-        return;
-      }
-      const input = document.getElementById('fs-chat-input');
-      if (!input) return;
-      const msg = input.value.trim();
-      if (!msg) return;
-
-      _appendFsMsg('user', msg);
-      input.value = '';
-
-      // Log question to Supabase
-      if (currentUser) {
-        try {
-          await sb.from('student_questions').insert({
-            student_id: currentUser.id,
-            module_id: String(_currentModuleContext),
-            question: msg
-          });
-        } catch(e) { /* non-blocking */ }
-      }
-
-      if (!GEMINI_API_KEY) {
-        _appendFsMsg('bot', 'AI chat coming soon! Your question has been logged.');
-        return;
-      }
-
-      const loadingId = _appendFsMsg('bot', '🤔 Thinking...');
-      const systemPrompt = `You are a helpful AI tutor for middle school students. The student is currently studying: "${_currentModuleContext}". Keep answers simple, encouraging, and concise (2-4 sentences). Only discuss AI-related topics.`;
-
-      const contents = [
-        { role: 'user', parts: [{ text: systemPrompt + '\n\nHello!' }] },
-        { role: 'model', parts: [{ text: 'Hi! I\'m your AI learning assistant. Ask me anything about this module! 🤖' }] },
-        ..._fsChatHistory.slice(-10).map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.content }] })),
-        { role: 'user', parts: [{ text: msg }] }
-      ];
-
-      try {
-        const res = await fetch(GEMINI_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents, generationConfig: { temperature: 0.7, maxOutputTokens: 300 } })
-        });
-        const data = await res.json();
-        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I had trouble answering that.';
-        _updateFsMsg(loadingId, reply);
-        _fsChatHistory.push({ role: 'user', content: msg }, { role: 'assistant', content: reply });
-        if (_fsChatHistory.length > 20) _fsChatHistory = _fsChatHistory.slice(-20);
-      } catch {
-        _updateFsMsg(loadingId, 'Connection error. Please try again.');
-      }
-    }
-
     function openModule(moduleNumber) {
       const module = modules.find(item => item.number === moduleNumber);
       if (!module) return;
 
       module._quizIndex = 0;
       module._quizScore = 0;
-      _fsChatHistory = [];
-      _currentModuleContext = `Module ${module.number}: ${module.title}`;
-
-      // Reset chat pane
-      const fsChat = document.getElementById('fs-chat-messages');
-      if (fsChat) {
-        fsChat.innerHTML = `<div class="fs-chat-message bot">Hi! I\'m your AI tutor for <strong>${module.title}</strong>. Ask me anything about this module!</div>`;
-      }
-
-      // Enter fullscreen mode
-      document.body.classList.add('module-fullscreen');
-      // Reset mobile chat drawer
-      const chatPane = document.getElementById('fs-chat-pane');
-      if (chatPane) chatPane.classList.remove('drawer-open');
-      const chatToggle = document.getElementById('fs-chat-toggle');
-      if (chatToggle) chatToggle.textContent = '💬 AI Chat';
 
       if (!hasPaidAccess()) {
         // FREE MODE: show 2 paragraphs + 2 quiz questions
@@ -2957,36 +2731,42 @@
             <button id="free-next-btn" class="btn-primary" style="width:auto;display:none;margin-top:10px;" onclick="advanceFreeModuleQuiz(${module.number})">Next Question →</button>
             <div id="free-upgrade-cta" class="hidden upgrade-cta-box">
               <p>Upgrade to Plus for the full lesson, 5 questions &amp; video — $3/month</p>
-              <button class="btn-pro" style="width:auto;padding:10px 24px;font-size:0.95rem;" onclick="openSignupForPlan('plus','student');closeFullscreenModule()">Upgrade to Plus — $3/month</button>
+              <button class="btn-pro" style="width:auto;padding:10px 24px;font-size:0.95rem;" onclick="openSignupForPlan('plus','student');closeModal('module')">Upgrade to Plus — $3/month</button>
             </div>
             <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
-              <button class="btn-secondary" style="width:auto;" onclick="closeFullscreenModule()">Close</button>
+              <button class="btn-secondary" style="width:auto;" onclick="closeModal('module')">Close</button>
             </div>
           </div>
         `;
         openModal('module');
-        startModuleTimer();
         renderModuleQuestion(moduleNumber, true);
         return;
       }
 
-      // PAID MODE: full lesson + YouTube video + 5 questions
+      // PAID MODE: fullscreen split view with 4-min timer + AI chat
       module._freeMode = false;
+      openFullscreenModule(module, moduleNumber);
+    }
+
+    // ── FULLSCREEN MODULE (paid) ──────────────────────────────────────────
+    let _moduleTimerInterval = null;
+
+    function openFullscreenModule(module, moduleNumber) {
       const ytId = moduleVideos[module.number];
       const videoEmbed = ytId
         ? `<div class="yt-embed-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1" title="Module ${module.number} video lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
         : `<div class="video-placeholder"><div class="vp-icon">📹</div><div class="vp-title">Video Lesson — Coming Soon</div><div class="vp-sub">Video lessons are being produced for each module.</div></div>`;
-      document.getElementById('module-modal-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
-      document.getElementById('module-modal-subtitle').textContent = 'Read the full lesson, watch the video, then take the 5-question quiz to save progress.';
-      document.getElementById('module-modal-content').innerHTML = `
-        <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">
-          ${module.summary}
-        </div>
-        <div class="dashboard-card" style="margin-bottom:18px;">
-          ${module.lesson.map(paragraph => `<p style="margin-bottom:14px;">${paragraph}</p>`).join('')}
-        </div>
+
+      document.getElementById('fs-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
+      document.getElementById('fs-body').innerHTML = `
+        <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">${module.summary}</div>
+        <div class="dashboard-card" style="margin-bottom:18px;">${module.lesson.map(p => `<p style="margin-bottom:14px;">${p}</p>`).join('')}</div>
         ${videoEmbed}
-        <div class="quiz-shell" style="text-align:left;">
+      `;
+
+      document.getElementById('fs-quiz-area').innerHTML = `
+        <div id="fs-quiz-locked" style="text-align:center;padding:18px;color:var(--muted);font-size:0.95rem;background:rgba(255,255,255,0.03);border-radius:12px;border:1px dashed rgba(255,255,255,0.1);margin-bottom:12px;">⏳ Read the full lesson above. Quiz unlocks when the timer reaches 0.</div>
+        <div class="quiz-shell" style="text-align:left;display:none;" id="fs-quiz-shell">
           <div style="font-size:1.1rem;font-weight:900;margin-bottom:6px;">Module Quiz</div>
           <div id="module-quiz-progress" style="font-size:0.9rem;color:#a5b4fc;margin-bottom:10px;">Question 1 of 5</div>
           <div id="module-quiz-question-text" class="quiz-question" style="text-align:left;font-size:1.1rem;margin-bottom:14px;"></div>
@@ -2994,17 +2774,124 @@
           <div class="quiz-result" id="module-quiz-result"></div>
           <button id="module-quiz-next" class="btn-primary" style="width:auto;display:none;margin-top:10px;" onclick="advanceModuleQuiz(${module.number})">Next Question</button>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
-            <button id="module-complete-btn" class="btn-primary" style="width:auto;" onclick="markModuleComplete(${module.number})" disabled title="Read for 4 minutes to unlock">Mark Lesson Complete</button>
+            <button class="btn-primary" style="width:auto;" onclick="markModuleComplete(${module.number})">Mark Lesson Complete</button>
             <button class="btn-secondary" style="width:auto;" onclick="closeFullscreenModule()">Close Lesson</button>
           </div>
         </div>
       `;
-      openModal('module');
-      startModuleTimer();
-      renderModuleQuestion(moduleNumber, false);
+
+      const chatMsgs = document.getElementById('fs-chat-messages');
+      chatMsgs.innerHTML = '<div class="fs-msg bot">Hi! Ask me anything about this module or AI in general.</div>';
+      window._fsModuleNumber = moduleNumber;
+      window._fsChatHistory = [];
+
+      document.getElementById('fs-module').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      startModuleTimer(moduleNumber);
     }
 
-    function advanceFreeModuleQuiz(moduleNumber) {
+    function startModuleTimer(moduleNumber) {
+      if (_moduleTimerInterval) clearInterval(_moduleTimerInterval);
+      let secondsLeft = 4 * 60;
+      const timerEl = document.getElementById('fs-timer');
+      const updateTimer = () => {
+        const m = Math.floor(secondsLeft / 60);
+        const s = secondsLeft % 60;
+        if (timerEl) timerEl.textContent = `${m}:${String(s).padStart(2, '0')}`;
+        if (secondsLeft <= 0) {
+          clearInterval(_moduleTimerInterval);
+          _moduleTimerInterval = null;
+          if (timerEl) { timerEl.textContent = '✓ Done'; timerEl.classList.add('done'); }
+          const locked = document.getElementById('fs-quiz-locked');
+          const shell = document.getElementById('fs-quiz-shell');
+          if (locked) locked.style.display = 'none';
+          if (shell) shell.style.display = 'block';
+          renderModuleQuestion(moduleNumber, false);
+        }
+        secondsLeft--;
+      };
+      updateTimer();
+      _moduleTimerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function closeFullscreenModule() {
+      if (_moduleTimerInterval) { clearInterval(_moduleTimerInterval); _moduleTimerInterval = null; }
+      document.getElementById('fs-module').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    async function fsAskAI() {
+      const input = document.getElementById('fs-chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+      if (!GEMINI_API_KEY) { showToast('AI chat not available.', 'error'); return; }
+
+      fsChatAppend('user', msg);
+      input.value = '';
+      const loadingId = fsChatAppend('bot', '🤔 Thinking...');
+
+      // Log question to Supabase for teacher visibility
+      if (currentUser && window._fsModuleNumber) {
+        try {
+          await sb.from('module_questions').insert({
+            student_id: currentUser.id,
+            student_email: currentUser.email,
+            module_number: window._fsModuleNumber,
+            question: msg,
+            created_at: new Date().toISOString()
+          });
+        } catch(e) { /* table may not exist yet — silently ignore */ }
+      }
+
+      const history = (window._fsChatHistory || []).slice(-10).map(m => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.content }]
+      }));
+      const contents = [
+        { role: 'user', parts: [{ text: 'You are a helpful AI tutor for middle school students learning about artificial intelligence. Keep answers simple, encouraging, and concise (2-4 sentences). Only discuss AI-related topics.
+
+Hello!' }] },
+        { role: 'model', parts: [{ text: 'Hi! I'm your AI learning assistant. Ask me anything about artificial intelligence! 🤖' }] },
+        ...history,
+        { role: 'user', parts: [{ text: msg }] }
+      ];
+
+      try {
+        const res = await fetch(GEMINI_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents, generationConfig: { temperature: 0.7, maxOutputTokens: 300 } })
+        });
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I had trouble answering that.';
+        fsChatUpdate(loadingId, reply);
+        if (!window._fsChatHistory) window._fsChatHistory = [];
+        window._fsChatHistory.push({ role: 'user', content: msg }, { role: 'assistant', content: reply });
+        if (window._fsChatHistory.length > 20) window._fsChatHistory = window._fsChatHistory.slice(-20);
+      } catch {
+        fsChatUpdate(loadingId, 'Connection error. Please try again.');
+      }
+    }
+
+    function fsChatAppend(role, text) {
+      const msgs = document.getElementById('fs-chat-messages');
+      const id = 'fsmsg-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+      const div = document.createElement('div');
+      div.className = `fs-msg ${role}`;
+      div.id = id;
+      div.textContent = text;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return id;
+    }
+
+    function fsChatUpdate(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
+        function advanceFreeModuleQuiz(moduleNumber) {
       const module = modules.find(m => m.number === moduleNumber);
       if (!module) return;
       // Hide the Next button before loading next question
@@ -3343,14 +3230,16 @@
 
       let students = [];
       let allProgress = [];
+      let allQuestions = [];
       if (studentIds.length) {
-        const { data: studentProfiles } = await sb.from('profiles')
-          .select('id, full_name, display_name, email').in('id', studentIds);
+        const [{ data: studentProfiles }, { data: progressData }, { data: questionData }] = await Promise.all([
+          sb.from('profiles').select('id, full_name, display_name, email').in('id', studentIds),
+          sb.from('module_progress').select('user_id, module_number').in('user_id', studentIds),
+          sb.from('module_questions').select('student_id, module_number, question, created_at').in('student_id', studentIds).order('created_at', { ascending: false })
+        ]);
         students = studentProfiles || [];
-
-        const { data: progressData } = await sb.from('module_progress')
-          .select('user_id, module_number').in('user_id', studentIds);
         allProgress = progressData || [];
+        allQuestions = questionData || [];
       }
 
       // Build progress map: student_id -> count of completed modules
@@ -3360,59 +3249,50 @@
         progressMap[p.user_id] = (progressMap[p.user_id] || 0) + 1;
       });
 
+      // Build questions map: student_id -> array of {module_number, question, created_at}
+      const questionsMap = {};
+      studentIds.forEach(id => questionsMap[id] = []);
+      allQuestions.forEach(q => {
+        if (questionsMap[q.student_id]) questionsMap[q.student_id].push(q);
+      });
+
       const TOTAL_MODULES = 18;
 
-      const tableRows = students.length
+      const studentRows = students.length
         ? students.map(s => {
             const count = progressMap[s.id] || 0;
             const pct = Math.round((count / TOTAL_MODULES) * 100);
             const name = s.display_name || s.full_name || s.email || 'Student';
+            const questions = questionsMap[s.id] || [];
+            const qHtml = questions.length
+              ? questions.slice(0, 5).map(q => `
+                  <div style="margin-top:6px;padding:7px 10px;background:rgba(167,139,250,0.08);border-left:3px solid rgba(167,139,250,0.5);border-radius:0 8px 8px 0;font-size:0.85rem;">
+                    <span style="color:#a78bfa;font-weight:700;margin-right:6px;">M${q.module_number}</span>
+                    <span style="color:#e2e8f0;">${escapeHtml(q.question)}</span>
+                    <span style="float:right;color:#64748b;font-size:0.78rem;">${new Date(q.created_at).toLocaleDateString()}</span>
+                  </div>
+                `).join('')
+              : '<span style="color:#475569;font-size:0.84rem;">No questions yet</span>';
             return `
               <tr>
-                <td>${escapeHtml(name)}</td>
-                <td>${count} / ${TOTAL_MODULES}</td>
-                <td><div class="progress-rail"><div class="progress-fill" style="width:${pct}%"></div></div></td>
+                <td style="vertical-align:top;">
+                  <strong>${escapeHtml(name)}</strong>
+                  <div style="margin-top:4px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <span style="font-size:0.82rem;color:#94a3b8;">${count}/${TOTAL_MODULES} modules</span>
+                    </div>
+                    <div class="progress-rail" style="margin-top:6px;"><div class="progress-fill" style="width:${pct}%"></div></div>
+                  </div>
+                </td>
+                <td style="vertical-align:top;">
+                  <div style="font-size:0.8rem;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;">AI Questions Asked (${questions.length})</div>
+                  ${qHtml}
+                  ${questions.length > 5 ? `<div style="color:#64748b;font-size:0.8rem;margin-top:6px;">+ ${questions.length - 5} more</div>` : ''}
+                </td>
               </tr>
             `;
           }).join('')
-        : `<tr><td colspan="3" class="teacher-empty">No students enrolled yet. Share class code <strong>${escapeHtml(teacherClass.code || '')}</strong> with students.</td></tr>`;
-
-      // Fetch recent student questions for this class
-      let recentQuestionsHtml = '';
-      if (studentIds.length) {
-        const { data: recentQs } = await sb.from('student_questions')
-          .select('student_id, module_id, question, asked_at')
-          .in('student_id', studentIds)
-          .order('asked_at', { ascending: false })
-          .limit(20);
-
-        const nameMap = {};
-        students.forEach(s => { nameMap[s.id] = s.display_name || s.full_name || s.email || 'Student'; });
-
-        if (recentQs && recentQs.length) {
-          const qRows = recentQs.map(q => `
-            <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
-              <div style="font-size:0.82rem;color:#a78bfa;font-weight:700;">${escapeHtml(nameMap[q.student_id] || 'Student')} — Module ${escapeHtml(q.module_id || '')}</div>
-              <div style="color:#e2e8f0;font-size:0.9rem;">${escapeHtml(q.question)}</div>
-              <div style="color:var(--muted);font-size:0.76rem;">${new Date(q.asked_at).toLocaleString()}</div>
-            </div>
-          `).join('');
-          recentQuestionsHtml = `
-            <div class="dashboard-card" style="margin-top:24px;">
-              <h3>💬 Recent Student Questions</h3>
-              <p style="color:var(--muted);margin-bottom:14px;font-size:0.87rem;">Questions students asked the AI tutor while studying modules.</p>
-              <div class="row-list">${qRows}</div>
-            </div>
-          `;
-        } else {
-          recentQuestionsHtml = `
-            <div class="dashboard-card" style="margin-top:24px;">
-              <h3>💬 Recent Student Questions</h3>
-              <p style="color:var(--muted);">No student questions yet. Questions appear here as students use the AI tutor.</p>
-            </div>
-          `;
-        }
-      }
+        : `<tr><td colspan="2" class="teacher-empty">No students enrolled yet. Share class code <strong>${escapeHtml(teacherClass.code || '')}</strong> with students.</td></tr>`;
 
       container.innerHTML = `
         <div class="dashboard-card">
@@ -3422,16 +3302,14 @@
         </div>
 
         <div class="dashboard-card" style="margin-top:24px;">
-          <h3>Student Progress (${students.length} student${students.length !== 1 ? 's' : ''})</h3>
+          <h3>Students &amp; AI Questions (${students.length} student${students.length !== 1 ? 's' : ''})</h3>
           <table class="teacher-table">
             <thead>
-              <tr><th>Student</th><th>Modules Done</th><th>Progress</th></tr>
+              <tr><th style="width:35%;">Student / Progress</th><th>AI Questions Asked in Modules</th></tr>
             </thead>
-            <tbody>${tableRows}</tbody>
+            <tbody>${studentRows}</tbody>
           </table>
         </div>
-
-        ${recentQuestionsHtml}
       `;
     }
 
@@ -3609,18 +3487,6 @@
 
       appendChatMessage('user', msg);
       input.value = '';
-
-      // Log to Supabase student_questions
-      if (currentUser) {
-        try {
-          await sb.from('student_questions').insert({
-            student_id: currentUser.id,
-            module_id: 'ai-help',
-            question: msg
-          });
-        } catch(e) { /* non-blocking */ }
-      }
-
       const loadingId = appendChatMessage('bot', '🤔 Thinking...');
 
       const contents = [
@@ -3911,10 +3777,6 @@
 
     function closeModal(name) {
       document.getElementById(`modal-${name}`).classList.remove('open');
-      if (name === 'module') {
-        stopModuleTimer();
-        document.body.classList.remove('module-fullscreen');
-      }
     }
 
     function switchModal(from, to) {
@@ -3924,8 +3786,6 @@
 
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', event => {
-        // Fullscreen module: don't close on background click (use the X button)
-        if (overlay.id === 'modal-module') return;
         if (event.target === overlay) {
           overlay.classList.remove('open');
         }
