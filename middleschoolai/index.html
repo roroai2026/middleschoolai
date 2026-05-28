@@ -746,6 +746,149 @@
 
     .modal.narrow { width: min(480px, 100%); }
 
+    /* ── FULLSCREEN MODULE VIEW ── */
+    #fs-module {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: none;
+      background: #0f0c29;
+      flex-direction: row;
+    }
+    #fs-module.open { display: flex; }
+
+    /* Lesson panel (left) */
+    #fs-lesson-panel {
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    #fs-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    #fs-header h2 { flex: 1; font-size: 1.1rem; font-weight: 900; margin: 0; }
+    #fs-timer {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--violet);
+      background: rgba(167,139,250,0.12);
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: 8px;
+      padding: 4px 12px;
+      min-width: 54px;
+      text-align: center;
+    }
+    #fs-timer.done { color: var(--green); background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.3); }
+    #fs-close-btn {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+    #fs-close-btn:hover { background: rgba(255,255,255,0.12); }
+    #fs-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+    }
+    #fs-quiz-area {
+      padding: 0 28px 24px;
+      flex-shrink: 0;
+    }
+    #fs-quiz-locked {
+      text-align: center;
+      padding: 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      border: 1px dashed rgba(255,255,255,0.1);
+      margin-bottom: 12px;
+    }
+
+    /* Chat panel (right) */
+    #fs-chat-panel {
+      width: 340px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255,255,255,0.02);
+    }
+    #fs-chat-header {
+      padding: 14px 18px;
+      font-weight: 800;
+      font-size: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      flex-shrink: 0;
+    }
+    #fs-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .fs-msg {
+      max-width: 88%;
+      padding: 9px 13px;
+      border-radius: 14px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .fs-msg.user { align-self: flex-end; background: linear-gradient(135deg,#6d28d9,#2563eb); color: #fff; border-radius: 14px 14px 4px 14px; }
+    .fs-msg.bot { align-self: flex-start; background: rgba(255,255,255,0.08); color: var(--text); border-radius: 14px 14px 14px 4px; }
+    #fs-chat-input-row {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      flex-shrink: 0;
+    }
+    #fs-chat-input {
+      flex: 1;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.88rem;
+      padding: 9px 12px;
+      resize: none;
+      height: 48px;
+    }
+    #fs-chat-input:focus { outline: none; border-color: var(--violet); }
+    #fs-send-btn {
+      background: linear-gradient(135deg,#6d28d9,#2563eb);
+      border: none;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.88rem;
+      border-radius: 10px;
+      padding: 0 16px;
+      cursor: pointer;
+    }
+    #fs-send-btn:hover { opacity: 0.9; }
+
+    @media (max-width: 700px) {
+      #fs-module { flex-direction: column; }
+      #fs-chat-panel { width: 100%; height: 240px; border-right: none; border-top: 1px solid rgba(255,255,255,0.1); }
+    }
+
     .modal-close {
       position: absolute;
       top: 16px;
@@ -1469,6 +1612,29 @@
     </div>
   </div>
 
+  <!-- FULLSCREEN MODULE VIEW (paid users) -->
+  <div id="fs-module">
+    <div id="fs-lesson-panel">
+      <div id="fs-header">
+        <h2 id="fs-title">Module</h2>
+        <div id="fs-timer">4:00</div>
+        <button id="fs-close-btn" onclick="closeFullscreenModule()">✕ Close</button>
+      </div>
+      <div id="fs-body"></div>
+      <div id="fs-quiz-area"></div>
+    </div>
+    <div id="fs-chat-panel">
+      <div id="fs-chat-header">💬 AI Tutor</div>
+      <div id="fs-chat-messages">
+        <div class="fs-msg bot">Hi! Ask me anything about this module or AI in general.</div>
+      </div>
+      <div id="fs-chat-input-row">
+        <textarea id="fs-chat-input" placeholder="Ask a question..."></textarea>
+        <button id="fs-send-btn" onclick="fsAskAI()">Send</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ENTERPRISE REGISTRATION MODAL -->
   <div class="modal-overlay" id="modal-enterprise-register">
     <div class="modal">
@@ -2006,6 +2172,16 @@
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             askAI();
+          }
+        });
+      }
+      // Enter key for fullscreen module chat
+      const fsChatInput = document.getElementById('fs-chat-input');
+      if (fsChatInput) {
+        fsChatInput.addEventListener('keydown', e => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            fsAskAI();
           }
         });
       }
@@ -2567,23 +2743,30 @@
         return;
       }
 
-      // PAID MODE: full lesson + YouTube video + 5 questions
+      // PAID MODE: fullscreen split view with 4-min timer + AI chat
       module._freeMode = false;
+      openFullscreenModule(module, moduleNumber);
+    }
+
+    // ── FULLSCREEN MODULE (paid) ──────────────────────────────────────────
+    let _moduleTimerInterval = null;
+
+    function openFullscreenModule(module, moduleNumber) {
       const ytId = moduleVideos[module.number];
       const videoEmbed = ytId
         ? `<div class="yt-embed-wrap"><iframe src="https://www.youtube.com/embed/${ytId}?rel=0&modestbranding=1" title="Module ${module.number} video lesson" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
         : `<div class="video-placeholder"><div class="vp-icon">📹</div><div class="vp-title">Video Lesson — Coming Soon</div><div class="vp-sub">Video lessons are being produced for each module.</div></div>`;
-      document.getElementById('module-modal-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
-      document.getElementById('module-modal-subtitle').textContent = 'Read the full lesson, watch the video, then take the 5-question quiz to save progress.';
-      document.getElementById('module-modal-content').innerHTML = `
-        <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">
-          ${module.summary}
-        </div>
-        <div class="dashboard-card" style="margin-bottom:18px;">
-          ${module.lesson.map(paragraph => `<p style="margin-bottom:14px;">${paragraph}</p>`).join('')}
-        </div>
+
+      document.getElementById('fs-title').textContent = `${module.emoji} Module ${module.number}: ${module.title}`;
+      document.getElementById('fs-body').innerHTML = `
+        <div style="background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-size:1rem;line-height:1.6;color:#c7d2fe;">${module.summary}</div>
+        <div class="dashboard-card" style="margin-bottom:18px;">${module.lesson.map(p => `<p style="margin-bottom:14px;">${p}</p>`).join('')}</div>
         ${videoEmbed}
-        <div class="quiz-shell" style="text-align:left;">
+      `;
+
+      document.getElementById('fs-quiz-area').innerHTML = `
+        <div id="fs-quiz-locked" style="text-align:center;padding:18px;color:var(--muted);font-size:0.95rem;background:rgba(255,255,255,0.03);border-radius:12px;border:1px dashed rgba(255,255,255,0.1);margin-bottom:12px;">⏳ Read the full lesson above. Quiz unlocks when the timer reaches 0.</div>
+        <div class="quiz-shell" style="text-align:left;display:none;" id="fs-quiz-shell">
           <div style="font-size:1.1rem;font-weight:900;margin-bottom:6px;">Module Quiz</div>
           <div id="module-quiz-progress" style="font-size:0.9rem;color:#a5b4fc;margin-bottom:10px;">Question 1 of 5</div>
           <div id="module-quiz-question-text" class="quiz-question" style="text-align:left;font-size:1.1rem;margin-bottom:14px;"></div>
@@ -2592,15 +2775,123 @@
           <button id="module-quiz-next" class="btn-primary" style="width:auto;display:none;margin-top:10px;" onclick="advanceModuleQuiz(${module.number})">Next Question</button>
           <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;">
             <button class="btn-primary" style="width:auto;" onclick="markModuleComplete(${module.number})">Mark Lesson Complete</button>
-            <button class="btn-secondary" style="width:auto;" onclick="closeModal('module')">Close Lesson</button>
+            <button class="btn-secondary" style="width:auto;" onclick="closeFullscreenModule()">Close Lesson</button>
           </div>
         </div>
       `;
-      openModal('module');
-      renderModuleQuestion(moduleNumber, false);
+
+      const chatMsgs = document.getElementById('fs-chat-messages');
+      chatMsgs.innerHTML = '<div class="fs-msg bot">Hi! Ask me anything about this module or AI in general.</div>';
+      window._fsModuleNumber = moduleNumber;
+      window._fsChatHistory = [];
+
+      document.getElementById('fs-module').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      startModuleTimer(moduleNumber);
     }
 
-    function advanceFreeModuleQuiz(moduleNumber) {
+    function startModuleTimer(moduleNumber) {
+      if (_moduleTimerInterval) clearInterval(_moduleTimerInterval);
+      let secondsLeft = 4 * 60;
+      const timerEl = document.getElementById('fs-timer');
+      const updateTimer = () => {
+        const m = Math.floor(secondsLeft / 60);
+        const s = secondsLeft % 60;
+        if (timerEl) timerEl.textContent = `${m}:${String(s).padStart(2, '0')}`;
+        if (secondsLeft <= 0) {
+          clearInterval(_moduleTimerInterval);
+          _moduleTimerInterval = null;
+          if (timerEl) { timerEl.textContent = '✓ Done'; timerEl.classList.add('done'); }
+          const locked = document.getElementById('fs-quiz-locked');
+          const shell = document.getElementById('fs-quiz-shell');
+          if (locked) locked.style.display = 'none';
+          if (shell) shell.style.display = 'block';
+          renderModuleQuestion(moduleNumber, false);
+        }
+        secondsLeft--;
+      };
+      updateTimer();
+      _moduleTimerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function closeFullscreenModule() {
+      if (_moduleTimerInterval) { clearInterval(_moduleTimerInterval); _moduleTimerInterval = null; }
+      document.getElementById('fs-module').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    async function fsAskAI() {
+      const input = document.getElementById('fs-chat-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+      if (!GEMINI_API_KEY) { showToast('AI chat not available.', 'error'); return; }
+
+      fsChatAppend('user', msg);
+      input.value = '';
+      const loadingId = fsChatAppend('bot', '🤔 Thinking...');
+
+      // Log question to Supabase for teacher visibility
+      if (currentUser && window._fsModuleNumber) {
+        try {
+          await sb.from('module_questions').insert({
+            student_id: currentUser.id,
+            student_email: currentUser.email,
+            module_number: window._fsModuleNumber,
+            question: msg,
+            created_at: new Date().toISOString()
+          });
+        } catch(e) { /* table may not exist yet — silently ignore */ }
+      }
+
+      const history = (window._fsChatHistory || []).slice(-10).map(m => ({
+        role: m.role === 'user' ? 'user' : 'model',
+        parts: [{ text: m.content }]
+      }));
+      const contents = [
+        { role: 'user', parts: [{ text: 'You are a helpful AI tutor for middle school students learning about artificial intelligence. Keep answers simple, encouraging, and concise (2-4 sentences). Only discuss AI-related topics.
+
+Hello!' }] },
+        { role: 'model', parts: [{ text: 'Hi! I'm your AI learning assistant. Ask me anything about artificial intelligence! 🤖' }] },
+        ...history,
+        { role: 'user', parts: [{ text: msg }] }
+      ];
+
+      try {
+        const res = await fetch(GEMINI_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents, generationConfig: { temperature: 0.7, maxOutputTokens: 300 } })
+        });
+        const data = await res.json();
+        const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I had trouble answering that.';
+        fsChatUpdate(loadingId, reply);
+        if (!window._fsChatHistory) window._fsChatHistory = [];
+        window._fsChatHistory.push({ role: 'user', content: msg }, { role: 'assistant', content: reply });
+        if (window._fsChatHistory.length > 20) window._fsChatHistory = window._fsChatHistory.slice(-20);
+      } catch {
+        fsChatUpdate(loadingId, 'Connection error. Please try again.');
+      }
+    }
+
+    function fsChatAppend(role, text) {
+      const msgs = document.getElementById('fs-chat-messages');
+      const id = 'fsmsg-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+      const div = document.createElement('div');
+      div.className = `fs-msg ${role}`;
+      div.id = id;
+      div.textContent = text;
+      msgs.appendChild(div);
+      msgs.scrollTop = msgs.scrollHeight;
+      return id;
+    }
+
+    function fsChatUpdate(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
+        function advanceFreeModuleQuiz(moduleNumber) {
       const module = modules.find(m => m.number === moduleNumber);
       if (!module) return;
       // Hide the Next button before loading next question
